@@ -2,24 +2,858 @@
 <html lang="ru">
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
-<title>SHOHIN WEATHER</title>
+    <meta
+        name="theme-color"
+        content="#07111f"
+    >
 
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+    <title>SHOHIN WEATHER</title>
 
-<link
-    rel="stylesheet"
-    href="css/style.css"
-/>
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: #07111f;
+            color: white;
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* =================================================
+           MAP
+        ================================================= */
+
+        #map {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 9px;
+        }
+
+        /* =================================================
+           TOP BAR
+        ================================================= */
+
+        .topbar {
+            position: absolute;
+            z-index: 1000;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            pointer-events: none;
+        }
+
+        .brand {
+            pointer-events: auto;
+
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 10px 14px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(5, 15, 28, .82);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,.25);
+        }
+
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9f1c,
+                    #ff5c35
+                );
+
+            font-size: 18px;
+        }
+
+        .brand-title {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: .8px;
+        }
+
+        .brand-sub {
+            font-size: 9px;
+            opacity: .55;
+            margin-top: 1px;
+        }
+
+        /* =================================================
+           SEARCH
+        ================================================= */
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+
+            pointer-events: auto;
+        }
+
+        #searchInput {
+            width: 100%;
+            height: 46px;
+
+            padding:
+                0 18px
+                0 44px;
+
+            border: 1px solid
+                rgba(255,255,255,.13);
+
+            outline: none;
+
+            border-radius: 15px;
+
+            background:
+                rgba(5,15,28,.84);
+
+            color: white;
+
+            font-size: 14px;
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,.25);
+        }
+
+        #searchInput::placeholder {
+            color:
+                rgba(255,255,255,.55);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            opacity: .7;
+
+            pointer-events: none;
+        }
+
+        #searchResults {
+            display: none;
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            top: 53px;
+
+            max-height: 330px;
+            overflow-y: auto;
+
+            border-radius: 15px;
+
+            background:
+                rgba(5,15,28,.95);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,.4);
+        }
+
+        .search-result {
+            padding: 12px 15px;
+
+            cursor: pointer;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.07);
+        }
+
+        .search-result:last-child {
+            border-bottom: 0;
+        }
+
+        .search-result:hover {
+            background:
+                rgba(255,255,255,.08);
+        }
+
+        .search-result strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .search-result small {
+            display: block;
+            margin-top: 3px;
+
+            font-size: 10px;
+            opacity: .55;
+        }
+
+        /* =================================================
+           WEATHER CARD
+        ================================================= */
+
+        #locationCard {
+            position: absolute;
+            z-index: 900;
+
+            left: 16px;
+            bottom: 90px;
+
+            width: 300px;
+            max-width:
+                calc(100% - 32px);
+
+            padding: 18px;
+
+            border-radius: 24px;
+
+            background:
+                rgba(5,15,28,.82);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(22px);
+
+            -webkit-backdrop-filter:
+                blur(22px);
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.35);
+        }
+
+        .location-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 12px;
+        }
+
+        #locationName {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        #locationCoords {
+            margin-top: 4px;
+
+            font-size: 10px;
+            opacity: .5;
+        }
+
+        #closeCard {
+            width: 30px;
+            height: 30px;
+
+            border: 0;
+            border-radius: 10px;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.08);
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+        .weather-main {
+            margin-top: 15px;
+        }
+
+        .weather-temperature {
+            font-size: 46px;
+            line-height: 1;
+
+            font-weight: 800;
+
+            letter-spacing: -2px;
+        }
+
+        .weather-description {
+            margin-top: 8px;
+
+            font-size: 13px;
+            opacity: .75;
+        }
+
+        .weather-mini-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 8px;
+
+            margin-top: 16px;
+        }
+
+        .weather-mini-grid > div {
+            padding: 10px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(255,255,255,.06);
+        }
+
+        .weather-mini-grid span {
+            display: block;
+
+            font-size: 10px;
+            opacity: .5;
+        }
+
+        .weather-mini-grid strong {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 13px;
+        }
+
+        .weather-extra {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 8px;
+
+            margin-top: 8px;
+        }
+
+        .weather-extra div {
+            padding: 9px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,.04);
+        }
+
+        .weather-extra span {
+            display: block;
+
+            font-size: 9px;
+            opacity: .5;
+        }
+
+        .weather-extra strong {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 12px;
+        }
+
+        /* =================================================
+           MAP BUTTONS
+        ================================================= */
+
+        .map-controls {
+            position: absolute;
+            z-index: 950;
+
+            right: 14px;
+            bottom: 115px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+        .map-btn {
+            width: 43px;
+            height: 43px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid
+                rgba(255,255,255,.13);
+
+            border-radius: 13px;
+
+            background:
+                rgba(5,15,28,.82);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+            backdrop-filter:
+                blur(16px);
+
+            -webkit-backdrop-filter:
+                blur(16px);
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,.25);
+        }
+
+        .map-btn:hover {
+            background:
+                rgba(255,255,255,.14);
+        }
+
+        /* =================================================
+           LAYER PANEL
+        ================================================= */
+
+        .layers {
+            position: absolute;
+            z-index: 950;
+
+            top: 75px;
+            right: 14px;
+
+            display: flex;
+            gap: 6px;
+
+            padding: 6px;
+
+            max-width:
+                calc(100% - 28px);
+
+            overflow-x: auto;
+
+            border-radius: 15px;
+
+            background:
+                rgba(5,15,28,.78);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+        }
+
+        .layer-button {
+            flex: 0 0 auto;
+
+            height: 36px;
+
+            padding:
+                0 12px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                transparent;
+
+            color: white;
+
+            opacity: .72;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .layer-button:hover {
+            background:
+                rgba(255,255,255,.08);
+
+            opacity: 1;
+        }
+
+        .layer-button.active {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9f1c,
+                    #ff6335
+                );
+
+            opacity: 1;
+
+            box-shadow:
+                0 5px 18px
+                rgba(255,120,30,.25);
+        }
+
+        /* =================================================
+           GPS
+        ================================================= */
+
+        #gpsButton {
+            position: absolute;
+
+            z-index: 950;
+
+            right: 14px;
+            bottom: 60px;
+
+            width: 48px;
+            height: 48px;
+
+            border: 1px solid
+                rgba(255,255,255,.13);
+
+            border-radius: 15px;
+
+            background:
+                rgba(5,15,28,.85);
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,.3);
+        }
+
+        /* =================================================
+           BOTTOM NAV
+        ================================================= */
+
+        .bottom-nav {
+            position: absolute;
+
+            z-index: 1000;
+
+            left: 50%;
+            bottom: 12px;
+
+            transform:
+                translateX(-50%);
+
+            width:
+                calc(100% - 24px);
+
+            max-width: 560px;
+
+            height: 58px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 5px;
+
+            padding: 5px;
+
+            border-radius: 19px;
+
+            background:
+                rgba(5,15,28,.88);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(22px);
+
+            -webkit-backdrop-filter:
+                blur(22px);
+
+            box-shadow:
+                0 15px 50px
+                rgba(0,0,0,.35);
+        }
+
+        .nav-button {
+            border: 0;
+
+            border-radius: 14px;
+
+            color: white;
+
+            background:
+                transparent;
+
+            opacity: .55;
+
+            cursor: pointer;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+        .nav-button span {
+            display: block;
+
+            font-size: 18px;
+
+            margin-bottom: 2px;
+        }
+
+        .nav-button:hover,
+        .nav-button.active {
+            opacity: 1;
+
+            background:
+                rgba(255,255,255,.08);
+        }
+
+        /* =================================================
+           LOADING
+        ================================================= */
+
+        #loading {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 9999;
+
+            display: grid;
+
+            place-items: center;
+
+            background:
+                #07111f;
+
+            transition:
+                opacity .5s ease,
+                visibility .5s ease;
+        }
+
+        #loading.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-logo {
+            width: 65px;
+            height: 65px;
+
+            display: grid;
+            place-items: center;
+
+            margin: auto;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9f1c,
+                    #ff5c35
+                );
+
+            font-size: 28px;
+
+            animation:
+                pulse 1.5s infinite;
+        }
+
+        .loader-text {
+            margin-top: 14px;
+
+            font-size: 12px;
+
+            opacity: .6;
+
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+        }
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 700px) {
+
+            .topbar {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .brand {
+                padding: 8px;
+            }
+
+            .brand-icon {
+                width: 31px;
+                height: 31px;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .search-wrapper {
+                max-width: none;
+            }
+
+            #locationCard {
+                left: 10px;
+                bottom: 83px;
+
+                width:
+                    calc(100% - 70px);
+
+                padding: 14px;
+
+                border-radius: 20px;
+            }
+
+            .weather-temperature {
+                font-size: 39px;
+            }
+
+            .layers {
+                top: 65px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .map-controls {
+                right: 10px;
+                bottom: 135px;
+            }
+
+            #gpsButton {
+                right: 10px;
+                bottom: 78px;
+            }
+
+            .bottom-nav {
+                bottom: 8px;
+
+                width:
+                    calc(100% - 16px);
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -27,181 +861,155 @@
 
 <div id="app">
 
-    <!-- ================= MAP ================= -->
+    <!-- =================================================
+         MAP
+    ================================================= -->
 
     <div id="map"></div>
 
 
-    <!-- ================= TOP BAR ================= -->
+    <!-- =================================================
+         LOADING
+    ================================================= -->
 
-    <header class="topbar">
+    <div id="loading">
 
-        <div class="logo">
+        <div class="loader">
 
-            <div class="logo-main">
-                SHOHIN
+            <div class="loader-logo">
+                🌤️
             </div>
 
-            <div class="logo-sub">
-                WEATHER
+            <div class="loader-text">
+                SHOHIN WEATHER
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TOP BAR
+    ================================================= -->
+
+    <div class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🌤️
+            </div>
+
+            <div class="brand-text">
+
+                <div class="brand-title">
+                    SHOHIN WEATHER
+                </div>
+
+                <div class="brand-sub">
+                    GLOBAL WEATHER
+                </div>
+
             </div>
 
         </div>
 
 
-        <div class="search-box">
+        <div class="search-wrapper">
 
-            <span>⌕</span>
+            <span class="search-icon">
+                🔎
+            </span>
 
             <input
                 id="searchInput"
-                type="text"
-                placeholder="Search city..."
+                type="search"
                 autocomplete="off"
+                placeholder="Поиск города или страны..."
             >
+
+            <div id="searchResults"></div>
 
         </div>
 
-
-        <button
-            id="gpsButton"
-            class="icon-button"
-            title="My location"
-        >
-            📍
-        </button>
-
-    </header>
-
-
-    <!-- ================= SEARCH ================= -->
-
-    <div
-        id="searchResults"
-        class="search-results"
-    ></div>
-
-
-    <!-- ================= RIGHT CONTROLS ================= -->
-
-    <div class="map-controls">
-
-        <button
-            id="zoomIn"
-            title="Zoom in"
-        >
-            +
-        </button>
-
-        <button
-            id="zoomOut"
-            title="Zoom out"
-        >
-            −
-        </button>
-
-        <button
-            id="centerMap"
-            title="Center map"
-        >
-            ◎
-        </button>
-
     </div>
 
 
-    <!-- ================= WEATHER LAYERS ================= -->
+    <!-- =================================================
+         LAYERS
+    ================================================= -->
 
-    <div class="layer-panel">
+    <div class="layers">
 
         <button
-            class="layer-button active"
             id="mapLayer"
+            class="layer-button active"
         >
-            🗺️
-            <span>Map</span>
+            🗺️ Map
         </button>
 
-
         <button
-            class="layer-button"
             id="satelliteLayer"
+            class="layer-button"
         >
-            🛰️
-            <span>Satellite</span>
+            🛰️ Satellite
         </button>
 
-
         <button
-            class="layer-button"
             id="temperatureLayer"
+            class="layer-button"
         >
-            🌡️
-            <span>Temp</span>
+            🌡️ Temperature
         </button>
 
-
         <button
-            class="layer-button"
-            id="windLayer"
-        >
-            💨
-            <span>Wind</span>
-        </button>
-
-
-        <button
-            class="layer-button"
             id="rainLayer"
+            class="layer-button"
         >
-            🌧️
-            <span>Rain</span>
+            🌧️ Rain
         </button>
 
+        <button
+            id="windLayer"
+            class="layer-button"
+        >
+            💨 Wind
+        </button>
 
         <button
-            class="layer-button"
             id="cloudLayer"
+            class="layer-button"
         >
-            ☁️
-            <span>Clouds</span>
+            ☁️ Clouds
         </button>
 
     </div>
 
 
-    <!-- ================= LOCATION CARD ================= -->
+    <!-- =================================================
+         WEATHER CARD
+    ================================================= -->
 
-    <section
-        id="locationCard"
-        class="location-card"
-    >
+    <div id="locationCard">
 
-        <div class="card-header">
+        <div class="location-header">
 
             <div>
 
-                <div
-                    id="locationName"
-                    class="location-name"
-                >
-                    Select a location
+                <div id="locationName">
+                    Dushanbe
                 </div>
 
-
-                <div
-                    id="locationCoords"
-                    class="location-coords"
-                >
-                    Tap anywhere on the map
+                <div id="locationCoords">
+                    38.5598°, 68.7870°
                 </div>
 
             </div>
 
-
             <button
                 id="closeCard"
-                class="close-button"
+                aria-label="Close"
             >
                 ×
             </button>
@@ -209,16 +1017,14 @@
         </div>
 
 
-        <!-- WEATHER PREVIEW -->
-
-        <div class="weather-preview">
+        <div class="weather-main">
 
             <div class="weather-temperature">
-                —
+                …
             </div>
 
             <div class="weather-description">
-                Weather data
+                Получаем погоду...
             </div>
 
         </div>
@@ -227,163 +1033,345 @@
         <div class="weather-mini-grid">
 
             <div>
-                <span>💨</span>
-                <strong>—</strong>
-                <small>Wind</small>
+
+                <span>
+                    💨 Wind
+                </span>
+
+                <strong>
+                    —
+                </strong>
+
             </div>
 
 
             <div>
-                <span>💧</span>
-                <strong>—</strong>
-                <small>Humidity</small>
+
+                <span>
+                    💧 Humidity
+                </span>
+
+                <strong>
+                    —
+                </strong>
+
             </div>
 
 
             <div>
-                <span>☁️</span>
-                <strong>—</strong>
-                <small>Clouds</small>
+
+                <span>
+                    ☁️ Clouds
+                </span>
+
+                <strong>
+                    —
+                </strong>
+
             </div>
 
 
             <div>
-                <span>🌧️</span>
-                <strong>—</strong>
-                <small>Rain</small>
+
+                <span>
+                    🌧️ Rain
+                </span>
+
+                <strong>
+                    —
+                </strong>
+
             </div>
 
         </div>
 
-
-        <div class="card-status">
-
-            <span class="status-dot"></span>
-
-            <span>
-                SHOHIN WEATHER V1
-            </span>
-
-        </div>
-
-    </section>
+    </div>
 
 
-    <!-- ================= BOTTOM NAV ================= -->
+    <!-- =================================================
+         MAP CONTROLS
+    ================================================= -->
+
+    <div class="map-controls">
+
+        <button
+            id="zoomIn"
+            class="map-btn"
+            title="Zoom in"
+        >
+            +
+        </button>
+
+        <button
+            id="zoomOut"
+            class="map-btn"
+            title="Zoom out"
+        >
+            −
+        </button>
+
+        <button
+            id="centerMap"
+            class="map-btn"
+            title="World"
+        >
+            🌍
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         GPS
+    ================================================= -->
+
+    <button
+        id="gpsButton"
+        title="Моё местоположение"
+    >
+        📍
+    </button>
+
+
+    <!-- =================================================
+         BOTTOM NAVIGATION
+    ================================================= -->
 
     <nav class="bottom-nav">
 
-
         <button
-            class="nav-item active"
             id="navMap"
+            class="nav-button active"
         >
 
-            <span>🌍</span>
-
-            <small>
-                Map
-            </small>
+            <span>🗺️</span>
+            Карта
 
         </button>
 
 
         <button
-            class="nav-item"
             id="navWeather"
+            class="nav-button"
         >
 
-            <span>☁️</span>
-
-            <small>
-                Weather
-            </small>
+            <span>🌡️</span>
+            Погода
 
         </button>
 
 
         <button
-            class="nav-item"
             id="navWind"
+            class="nav-button"
         >
 
             <span>💨</span>
-
-            <small>
-                Wind
-            </small>
+            Ветер
 
         </button>
 
 
         <button
-            class="nav-item"
             id="navRain"
+            class="nav-button"
         >
 
             <span>🌧️</span>
-
-            <small>
-                Rain
-            </small>
+            Дождь
 
         </button>
 
 
         <button
-            class="nav-item"
             id="navSettings"
+            class="nav-button"
         >
 
             <span>⚙️</span>
-
-            <small>
-                Settings
-            </small>
+            Ещё
 
         </button>
 
     </nav>
 
-
-    <!-- ================= LOADING ================= -->
-
-    <div
-        id="loading"
-        class="loading"
-    >
-
-        <div class="loading-logo">
-            🌍
-        </div>
-
-
-        <div class="loading-title">
-            SHOHIN WEATHER
-        </div>
-
-
-        <div class="loading-subtitle">
-            GLOBAL WEATHER PLATFORM
-        </div>
-
-    </div>
-
 </div>
 
 
-<!-- ================= LEAFLET ================= -->
+<!-- =====================================================
+     LEAFLET
+===================================================== -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
 
 
-<!-- ================= APP ================= -->
+<!-- =====================================================
+     SHOHIN WEATHER
+===================================================== -->
 
 <script
     src="js/app.js"
 ></script>
+
+<script
+    src="js/wind.js"
+></script>
+
+
+<!-- =====================================================
+     WIND BUTTON CONNECTION
+===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const windButton =
+            document.getElementById(
+                "windLayer"
+            );
+
+
+        if (!windButton) {
+            return;
+        }
+
+
+        windButton.addEventListener(
+            "click",
+            function () {
+
+                /*
+                 * Включаем Wind Animation
+                 */
+
+                if (
+                    typeof enableWind ===
+                    "function"
+                ) {
+
+                    enableWind();
+
+                }
+
+
+                /*
+                 * Выключаем другие
+                 * погодные слои
+                 */
+
+                if (
+                    window.SHOHIN
+                ) {
+
+                    SHOHIN.currentMode =
+                        "wind";
+
+                    if (
+                        typeof hideTemperature ===
+                        "function"
+                    ) {
+
+                        hideTemperature();
+
+                    }
+
+                    if (
+                        typeof hideRain ===
+                        "function"
+                    ) {
+
+                        hideRain();
+
+                    }
+
+                }
+
+
+                /*
+                 * Active button
+                 */
+
+                document
+                    .querySelectorAll(
+                        ".layer-button"
+                    )
+                    .forEach(
+                        function (
+                            button
+                        ) {
+
+                            button.classList
+                                .remove(
+                                    "active"
+                                );
+
+                        }
+                    );
+
+
+                windButton.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+
+        /*
+         * Rain / Temperature /
+         * Map переключатели
+         */
+
+        [
+            "mapLayer",
+            "satelliteLayer",
+            "temperatureLayer",
+            "rainLayer"
+        ]
+
+        .forEach(
+            function (id) {
+
+                const button =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if (!button) {
+                    return;
+                }
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        if (
+                            typeof disableWind ===
+                            "function"
+                        ) {
+
+                            disableWind();
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+);
+
+</script>
 
 
 </body>
