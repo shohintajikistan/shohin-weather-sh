@@ -5,21 +5,21 @@
 <meta charset="UTF-8">
 
 <meta
-  name="viewport"
-  content="width=device-width,
-  initial-scale=1.0,
-  maximum-scale=1.0,
-  user-scalable=no"
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 >
 
 <title>SHOHIN WEATHER</title>
 
 <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
 
-<link rel="stylesheet" href="css/style.css">
+<link
+    rel="stylesheet"
+    href="css/style.css"
+/>
 
 </head>
 
@@ -27,205 +27,364 @@
 
 <div id="app">
 
-  <!-- MAP -->
+    <!-- ================= MAP ================= -->
 
-  <div id="map"></div>
+    <div id="map"></div>
 
 
-  <!-- TOP BAR -->
+    <!-- ================= TOP BAR ================= -->
 
-  <header class="topbar">
+    <header class="topbar">
 
-    <div class="logo">
+        <div class="logo">
 
-      <div class="logo-main">
-        SHOHIN
-      </div>
+            <div class="logo-main">
+                SHOHIN
+            </div>
 
-      <div class="logo-sub">
-        WEATHER
-      </div>
+            <div class="logo-sub">
+                WEATHER
+            </div>
+
+        </div>
+
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search city..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button
+            id="gpsButton"
+            class="icon-button"
+            title="My location"
+        >
+            📍
+        </button>
+
+    </header>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div
+        id="searchResults"
+        class="search-results"
+    ></div>
+
+
+    <!-- ================= RIGHT CONTROLS ================= -->
+
+    <div class="map-controls">
+
+        <button
+            id="zoomIn"
+            title="Zoom in"
+        >
+            +
+        </button>
+
+        <button
+            id="zoomOut"
+            title="Zoom out"
+        >
+            −
+        </button>
+
+        <button
+            id="centerMap"
+            title="Center map"
+        >
+            ◎
+        </button>
 
     </div>
 
 
-    <div class="search-box">
+    <!-- ================= WEATHER LAYERS ================= -->
 
-      <span>⌕</span>
+    <div class="layer-panel">
 
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Search city..."
-        autocomplete="off"
-      >
+        <button
+            class="layer-button active"
+            id="mapLayer"
+        >
+            🗺️
+            <span>Map</span>
+        </button>
+
+
+        <button
+            class="layer-button"
+            id="satelliteLayer"
+        >
+            🛰️
+            <span>Satellite</span>
+        </button>
+
+
+        <button
+            class="layer-button"
+            id="temperatureLayer"
+        >
+            🌡️
+            <span>Temp</span>
+        </button>
+
+
+        <button
+            class="layer-button"
+            id="windLayer"
+        >
+            💨
+            <span>Wind</span>
+        </button>
+
+
+        <button
+            class="layer-button"
+            id="rainLayer"
+        >
+            🌧️
+            <span>Rain</span>
+        </button>
+
+
+        <button
+            class="layer-button"
+            id="cloudLayer"
+        >
+            ☁️
+            <span>Clouds</span>
+        </button>
 
     </div>
 
 
-    <button
-      id="gpsButton"
-      class="icon-button"
-      aria-label="GPS"
+    <!-- ================= LOCATION CARD ================= -->
+
+    <section
+        id="locationCard"
+        class="location-card"
     >
-      ◎
-    </button>
 
-  </header>
+        <div class="card-header">
 
+            <div>
 
-  <!-- SEARCH RESULTS -->
-
-  <div
-    id="searchResults"
-    class="search-results"
-  ></div>
-
-
-  <!-- MAP CONTROLS -->
-
-  <div class="map-controls">
-
-    <button id="zoomIn">
-      +
-    </button>
-
-    <button id="zoomOut">
-      −
-    </button>
-
-  </div>
+                <div
+                    id="locationName"
+                    class="location-name"
+                >
+                    Select a location
+                </div>
 
 
-  <!-- LOCATION CARD -->
+                <div
+                    id="locationCoords"
+                    class="location-coords"
+                >
+                    Tap anywhere on the map
+                </div>
 
-  <section
-    id="locationCard"
-    class="location-card"
-  >
+            </div>
 
-    <div class="card-header">
 
-      <div>
+            <button
+                id="closeCard"
+                class="close-button"
+            >
+                ×
+            </button>
 
-        <div
-          id="locationName"
-          class="location-name"
-        >
-          Select a location
         </div>
 
-        <div
-          id="locationCoords"
-          class="location-coords"
-        >
-          Tap anywhere on the map
+
+        <!-- WEATHER PREVIEW -->
+
+        <div class="weather-preview">
+
+            <div class="weather-temperature">
+                —
+            </div>
+
+            <div class="weather-description">
+                Weather data
+            </div>
+
         </div>
 
-      </div>
 
-      <button
-        id="closeCard"
-        class="close-button"
-      >
-        ×
-      </button>
+        <div class="weather-mini-grid">
+
+            <div>
+                <span>💨</span>
+                <strong>—</strong>
+                <small>Wind</small>
+            </div>
+
+
+            <div>
+                <span>💧</span>
+                <strong>—</strong>
+                <small>Humidity</small>
+            </div>
+
+
+            <div>
+                <span>☁️</span>
+                <strong>—</strong>
+                <small>Clouds</small>
+            </div>
+
+
+            <div>
+                <span>🌧️</span>
+                <strong>—</strong>
+                <small>Rain</small>
+            </div>
+
+        </div>
+
+
+        <div class="card-status">
+
+            <span class="status-dot"></span>
+
+            <span>
+                SHOHIN WEATHER V1
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= BOTTOM NAV ================= -->
+
+    <nav class="bottom-nav">
+
+
+        <button
+            class="nav-item active"
+            id="navMap"
+        >
+
+            <span>🌍</span>
+
+            <small>
+                Map
+            </small>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            id="navWeather"
+        >
+
+            <span>☁️</span>
+
+            <small>
+                Weather
+            </small>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            id="navWind"
+        >
+
+            <span>💨</span>
+
+            <small>
+                Wind
+            </small>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            id="navRain"
+        >
+
+            <span>🌧️</span>
+
+            <small>
+                Rain
+            </small>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            id="navSettings"
+        >
+
+            <span>⚙️</span>
+
+            <small>
+                Settings
+            </small>
+
+        </button>
+
+    </nav>
+
+
+    <!-- ================= LOADING ================= -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        <div class="loading-logo">
+            🌍
+        </div>
+
+
+        <div class="loading-title">
+            SHOHIN WEATHER
+        </div>
+
+
+        <div class="loading-subtitle">
+            GLOBAL WEATHER PLATFORM
+        </div>
 
     </div>
-
-
-    <div class="card-status">
-
-      <span class="status-dot"></span>
-
-      <span>
-        SHOHIN WEATHER V1
-      </span>
-
-    </div>
-
-  </section>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <button class="nav-item active">
-
-      <span>🌍</span>
-
-      <small>
-        Map
-      </small>
-
-    </button>
-
-
-    <button class="nav-item">
-
-      <span>☁️</span>
-
-      <small>
-        Weather
-      </small>
-
-    </button>
-
-
-    <button class="nav-item">
-
-      <span>⭐</span>
-
-      <small>
-        Places
-      </small>
-
-    </button>
-
-
-    <button class="nav-item">
-
-      <span>⚙️</span>
-
-      <small>
-        Settings
-      </small>
-
-    </button>
-
-  </nav>
-
-
-  <!-- LOADING -->
-
-  <div
-    id="loading"
-    class="loading"
-  >
-
-    <div class="loading-logo">
-      🌍
-    </div>
-
-    <div class="loading-title">
-      SHOHIN WEATHER
-    </div>
-
-    <div class="loading-subtitle">
-      GLOBAL WEATHER PLATFORM
-    </div>
-
-  </div>
 
 </div>
 
 
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+<!-- ================= LEAFLET ================= -->
 
-<script src="js/app.js"></script>
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+
+<!-- ================= APP ================= -->
+
+<script
+    src="js/app.js"
+></script>
+
 
 </body>
 </html>
