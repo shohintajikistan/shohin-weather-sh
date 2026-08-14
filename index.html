@@ -2,717 +2,368 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-
-<meta name="theme-color" content="#07111f">
-
-<title>SHOHIN WEATHER V4</title>
-
-<link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#071522">
+<title>SHOHIN Weather — Global</title>
 
 <style>
-
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
+    -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body,
-#app,
-#map{
+html,body{
+    margin:0;
     width:100%;
     height:100%;
-}
-
-body{
     overflow:hidden;
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    background:#07111f;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#071522;
     color:white;
 }
 
-#app{
-    position:relative;
-    overflow:hidden;
+button,input{
+    font:inherit;
 }
+
+#app{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:#071522;
+}
+
+/* MAP */
 
 #map{
     position:absolute;
     inset:0;
-    z-index:1;
+    width:100%;
+    height:100%;
+    display:block;
 }
 
-/* =========================================
-   TOP
-========================================= */
+/* TOP */
 
-.topbar{
+.top{
     position:absolute;
-    z-index:1000;
-    top:12px;
-    left:12px;
-    right:12px;
-
+    top:14px;
+    left:14px;
+    right:14px;
+    z-index:20;
     display:flex;
-    gap:9px;
     align-items:center;
-
+    gap:10px;
     pointer-events:none;
 }
 
 .brand{
     pointer-events:auto;
-
-    display:flex;
-    align-items:center;
-    gap:9px;
-
-    padding:8px 12px;
-
+    padding:11px 15px;
     border-radius:17px;
-
-    background:rgba(5,15,28,.88);
-
+    background:rgba(5,16,29,.78);
     border:1px solid rgba(255,255,255,.12);
-
     backdrop-filter:blur(18px);
-
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.3);
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
 }
 
-.brand-icon{
-    width:36px;
-    height:36px;
-
-    display:grid;
-    place-items:center;
-
-    border-radius:12px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff9f1c,
-            #ff5635
-        );
-
-    font-size:20px;
+.brand strong{
+    display:block;
+    font-size:16px;
+    font-weight:850;
 }
 
-.brand-title{
-    font-size:13px;
-    font-weight:900;
-    letter-spacing:.7px;
-}
-
-.brand-sub{
-    font-size:8px;
-    opacity:.55;
+.brand span{
+    display:block;
     margin-top:2px;
-}
-
-/* =========================================
-   SEARCH
-========================================= */
-
-.search{
-    position:relative;
-    flex:1;
-    max-width:550px;
-
-    pointer-events:auto;
-}
-
-#searchInput{
-    width:100%;
-    height:45px;
-
-    border:1px solid rgba(255,255,255,.13);
-    outline:none;
-
-    border-radius:15px;
-
-    padding:0 15px 0 43px;
-
-    background:rgba(5,15,28,.88);
-    color:white;
-
-    font-size:14px;
-
-    backdrop-filter:blur(18px);
-
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.3);
-}
-
-#searchInput::placeholder{
-    color:rgba(255,255,255,.55);
-}
-
-.search-icon{
-    position:absolute;
-    left:15px;
-    top:50%;
-    transform:translateY(-50%);
-    opacity:.7;
-}
-
-#results{
-    position:absolute;
-
-    left:0;
-    right:0;
-    top:51px;
-
-    display:none;
-
-    max-height:320px;
-    overflow:auto;
-
-    border-radius:15px;
-
-    background:rgba(5,15,28,.96);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    backdrop-filter:blur(20px);
-}
-
-.result{
-    padding:12px 15px;
-    cursor:pointer;
-
-    border-bottom:
-        1px solid rgba(255,255,255,.06);
-}
-
-.result:hover{
-    background:rgba(255,255,255,.08);
-}
-
-.result strong{
-    display:block;
-    font-size:13px;
-}
-
-.result small{
-    display:block;
-    margin-top:3px;
-    opacity:.55;
-    font-size:10px;
-}
-
-/* =========================================
-   LAYERS
-========================================= */
-
-.layers{
-    position:absolute;
-
-    z-index:900;
-
-    top:68px;
-    right:12px;
-
-    display:flex;
-    gap:5px;
-
-    max-width:
-        calc(100% - 24px);
-
-    overflow-x:auto;
-
-    padding:5px;
-
-    border-radius:15px;
-
-    background:rgba(5,15,28,.85);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    backdrop-filter:blur(18px);
-}
-
-.layer{
-    flex:0 0 auto;
-
-    height:35px;
-
-    padding:0 12px;
-
-    border:0;
-
-    border-radius:10px;
-
-    background:transparent;
-
-    color:white;
-
-    opacity:.65;
-
-    font-size:11px;
-    font-weight:700;
-
-    cursor:pointer;
-}
-
-.layer:hover{
-    background:rgba(255,255,255,.08);
-    opacity:1;
-}
-
-.layer.active{
-    opacity:1;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff9f1c,
-            #ff5935
-        );
-
-    box-shadow:
-        0 5px 18px rgba(255,120,30,.25);
-}
-
-/* =========================================
-   WEATHER CARD
-========================================= */
-
-.card{
-    position:absolute;
-
-    z-index:950;
-
-    left:15px;
-    bottom:82px;
-
-    width:315px;
-    max-width:calc(100% - 30px);
-
-    padding:17px;
-
-    border-radius:23px;
-
-    background:rgba(5,15,28,.88);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    backdrop-filter:blur(22px);
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.38);
-}
-
-.card-head{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.location{
-    font-size:17px;
-    font-weight:900;
-}
-
-.coords{
-    margin-top:4px;
     font-size:9px;
-    opacity:.5;
+    letter-spacing:1.1px;
+    opacity:.55;
 }
 
 .close{
-    width:30px;
-    height:30px;
-
-    border:0;
-    border-radius:10px;
-
-    background:rgba(255,255,255,.08);
+    margin-left:auto;
+    pointer-events:auto;
+    width:44px;
+    height:44px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:50%;
     color:white;
-
-    font-size:18px;
-
+    background:rgba(5,16,29,.82);
+    backdrop-filter:blur(15px);
     cursor:pointer;
+    font-size:18px;
 }
 
-.temp{
-    margin-top:14px;
+/* LEFT PANEL */
 
-    font-size:48px;
-    line-height:1;
-
-    font-weight:900;
-
-    letter-spacing:-2px;
+.panel{
+    position:absolute;
+    z-index:15;
+    top:78px;
+    left:14px;
+    width:280px;
+    max-height:calc(100vh - 180px);
+    overflow:auto;
+    padding:12px;
+    border-radius:21px;
+    background:rgba(5,16,29,.80);
+    border:1px solid rgba(255,255,255,.11);
+    backdrop-filter:blur(20px);
+    box-shadow:0 18px 55px rgba(0,0,0,.30);
 }
 
-.description{
-    margin-top:7px;
-
-    font-size:13px;
-    opacity:.72;
+.panel::-webkit-scrollbar{
+    width:3px;
 }
 
-.weather-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap:8px;
-
-    margin-top:16px;
+.panel::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.2);
+    border-radius:20px;
 }
 
-.weather-item{
-    padding:10px;
-
-    border-radius:13px;
-
-    background:rgba(255,255,255,.06);
-}
-
-.weather-item span{
-    display:block;
+.section-title{
+    margin:5px 4px 8px;
     font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
     opacity:.5;
 }
 
-.weather-item strong{
-    display:block;
-
-    margin-top:4px;
-
-    font-size:13px;
-}
-
-/* =========================================
-   CONTROLS
-========================================= */
-
-.controls{
-    position:absolute;
-
-    z-index:950;
-
-    right:12px;
-    bottom:145px;
-
-    display:flex;
-    flex-direction:column;
+.layers{
+    display:grid;
+    grid-template-columns:1fr 1fr;
     gap:7px;
 }
 
-.control{
-    width:44px;
-    height:44px;
-
-    border:1px solid rgba(255,255,255,.13);
-
+.layer{
+    border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.055);
+    color:white;
     border-radius:13px;
-
-    background:rgba(5,15,28,.88);
-
-    color:white;
-
-    font-size:19px;
-
+    padding:10px 8px;
+    text-align:left;
     cursor:pointer;
-
-    backdrop-filter:blur(16px);
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,.3);
+    transition:.2s;
+    font-size:11px;
 }
 
-.control:hover{
-    background:rgba(255,255,255,.14);
+.layer b{
+    display:block;
+    font-size:18px;
+    margin-bottom:3px;
 }
 
-/* =========================================
-   GPS
-========================================= */
+.layer.active{
+    background:rgba(255,255,255,.16);
+    border-color:rgba(255,255,255,.3);
+}
 
-#gps{
+/* INFO */
+
+.info{
+    display:none;
+    margin-top:10px;
+    padding:12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.055);
+}
+
+.location{
+    font-size:15px;
+    font-weight:800;
+}
+
+.coordinates{
+    margin-top:3px;
+    font-size:9px;
+    opacity:.45;
+}
+
+.temperature{
+    margin:11px 0;
+    font-size:38px;
+    font-weight:850;
+    line-height:1;
+}
+
+.metrics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+}
+
+.metric{
+    padding:8px;
+    border-radius:10px;
+    background:rgba(255,255,255,.055);
+    font-size:9px;
+    opacity:.8;
+}
+
+.metric b{
+    display:block;
+    margin-top:3px;
+    font-size:11px;
+    opacity:1;
+}
+
+/* CHART */
+
+#chart{
+    width:100%;
+    height:105px;
+    display:block;
+    margin-top:10px;
+}
+
+/* BOTTOM */
+
+.bottom{
     position:absolute;
-
-    z-index:950;
-
-    right:12px;
-    bottom:88px;
-
-    width:48px;
-    height:48px;
-
-    border-radius:15px;
-
-    border:1px solid rgba(255,255,255,.13);
-
-    background:rgba(5,15,28,.9);
-
-    color:white;
-
-    font-size:21px;
-
-    cursor:pointer;
-
-    backdrop-filter:blur(18px);
+    left:14px;
+    right:14px;
+    bottom:14px;
+    z-index:20;
+    padding:11px;
+    border-radius:19px;
+    background:rgba(5,16,29,.83);
+    border:1px solid rgba(255,255,255,.11);
+    backdrop-filter:blur(20px);
+    box-shadow:0 15px 50px rgba(0,0,0,.3);
 }
 
-/* =========================================
-   LEGEND
-========================================= */
+.time-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.play{
+    flex:0 0 auto;
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:50%;
+    background:white;
+    color:#071522;
+    cursor:pointer;
+    font-weight:800;
+}
+
+#time{
+    flex:1;
+    accent-color:white;
+}
+
+.time-label{
+    width:100px;
+    text-align:right;
+    font-size:9px;
+    opacity:.7;
+}
 
 .legend{
-    position:absolute;
-
-    z-index:900;
-
-    right:65px;
-    bottom:82px;
-
-    display:none;
-
-    min-width:145px;
-
-    padding:10px 12px;
-
-    border-radius:14px;
-
-    background:rgba(5,15,28,.9);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    backdrop-filter:blur(18px);
-
-    font-size:10px;
-}
-
-.legend-title{
-    font-weight:800;
-    margin-bottom:7px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:8px;
+    font-size:8px;
+    opacity:.55;
 }
 
 .gradient{
-    height:8px;
+    flex:1;
+    height:6px;
     border-radius:10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #4b0082,
-            #008cff,
-            #00d084,
-            #ffe000,
-            #ff6400,
-            #c00000
-        );
+    background:linear-gradient(
+        90deg,
+        #2454a6,
+        #4ca7dc,
+        #9bd6a0,
+        #ffff91,
+        #f6a44d,
+        #df3333
+    );
 }
 
-.legend-values{
-    display:flex;
-    justify-content:space-between;
+/* OPEN BUTTON */
 
-    margin-top:4px;
-
-    opacity:.6;
+.open{
+    position:absolute;
+    z-index:30;
+    right:15px;
+    bottom:85px;
+    padding:12px 15px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:15px;
+    background:rgba(5,16,29,.85);
+    color:white;
+    backdrop-filter:blur(15px);
+    cursor:pointer;
+    font-weight:750;
+    box-shadow:0 10px 35px rgba(0,0,0,.3);
 }
 
-/* =========================================
-   LOADING
-========================================= */
+/* LOADING */
 
-#loading{
-    position:fixed;
-
+.loading{
+    position:absolute;
     inset:0;
-
-    z-index:9999;
-
-    display:grid;
-    place-items:center;
-
-    background:#07111f;
-
-    transition:.5s;
-}
-
-#loading.hide{
-    opacity:0;
-    visibility:hidden;
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.12);
     pointer-events:none;
 }
 
-.loader{
-    text-align:center;
+.loading.show{
+    display:flex;
 }
 
-.loader-logo{
-    width:65px;
-    height:65px;
-
-    display:grid;
-    place-items:center;
-
-    margin:auto;
-
-    border-radius:20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff9f1c,
-            #ff5935
-        );
-
-    font-size:28px;
-
-    animation:pulse 1.5s infinite;
-}
-
-.loader-text{
-    margin-top:13px;
-
-    font-size:11px;
-
-    letter-spacing:1px;
-
-    opacity:.6;
-}
-
-@keyframes pulse{
-
-    0%,100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.08);
-    }
-
-}
-
-/* =========================================
-   WIND PARTICLES
-========================================= */
-
-.wind-particle{
-    position:absolute;
-
-    width:3px;
-    height:3px;
-
+.spinner{
+    width:38px;
+    height:38px;
+    border:3px solid rgba(255,255,255,.18);
+    border-top-color:white;
     border-radius:50%;
-
-    background:white;
-
-    opacity:.75;
-
-    pointer-events:none;
-
-    z-index:500;
+    animation:spin .7s linear infinite;
 }
 
-.wind-line{
-    position:absolute;
-
-    height:1px;
-
-    width:30px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.8)
-        );
-
-    pointer-events:none;
-
-    z-index:500;
+@keyframes spin{
+    to{transform:rotate(360deg)}
 }
 
-/* =========================================
-   MOBILE
-========================================= */
+/* RESPONSIVE */
 
-@media(max-width:700px){
+@media(max-width:600px){
 
-    .topbar{
-        top:9px;
-        left:9px;
-        right:9px;
+    .panel{
+        width:238px;
+        top:70px;
     }
 
-    .brand{
-        padding:7px;
+    .temperature{
+        font-size:31px;
     }
 
-    .brand-text{
-        display:none;
+    .bottom{
+        left:8px;
+        right:8px;
+        bottom:8px;
     }
 
-    .brand-icon{
-        width:32px;
-        height:32px;
+    .time-label{
+        width:80px;
+        font-size:8px;
     }
 
-    .layers{
-        top:62px;
-        left:9px;
-        right:9px;
-    }
-
-    .card{
-        left:9px;
-        bottom:78px;
-
-        width:
-            calc(100% - 67px);
-
-        padding:14px;
-    }
-
-    .temp{
-        font-size:39px;
-    }
-
-    .controls{
-        right:9px;
-        bottom:142px;
-    }
-
-    #gps{
-        right:9px;
+    .open{
+        right:10px;
         bottom:82px;
     }
-
-    .legend{
-        right:65px;
-        bottom:82px;
-    }
-
 }
-
-/* Leaflet */
-
-.leaflet-control-attribution{
-    font-size:8px;
-}
-
 </style>
 </head>
 
@@ -720,2512 +371,1293 @@ body{
 
 <div id="app">
 
-<div id="map"></div>
+    <canvas id="map"></canvas>
 
-<!-- LOADING -->
+    <!-- HEADER -->
+    <div class="top">
 
-<div id="loading">
-
-    <div class="loader">
-
-        <div class="loader-logo">
-            🌤️
+        <div class="brand">
+            <strong>🌍 SHOHIN Weather</strong>
+            <span>GLOBAL METEOROLOGICAL SYSTEM</span>
         </div>
 
-        <div class="loader-text">
-            SHOHIN WEATHER
-        </div>
+        <button class="close" id="close">✕</button>
 
     </div>
 
-</div>
+    <!-- PANEL -->
+    <div class="panel">
 
-
-<!-- TOP -->
-
-<div class="topbar">
-
-    <div class="brand">
-
-        <div class="brand-icon">
-            🌤️
+        <div class="section-title">
+            Weather Layers
         </div>
 
-        <div class="brand-text">
+        <div class="layers">
 
-            <div class="brand-title">
-                SHOHIN WEATHER
-            </div>
+            <button class="layer active" data-layer="temperature">
+                <b>🌡️</b>
+                Temperature
+            </button>
 
-            <div class="brand-sub">
-                GLOBAL WEATHER
-            </div>
+            <button class="layer" data-layer="rain">
+                <b>🌧️</b>
+                Precipitation
+            </button>
+
+            <button class="layer" data-layer="wind">
+                <b>💨</b>
+                Wind
+            </button>
+
+            <button class="layer" data-layer="cloud">
+                <b>☁️</b>
+                Clouds
+            </button>
+
+            <button class="layer" data-layer="pressure">
+                <b>🌀</b>
+                Pressure
+            </button>
+
+            <button class="layer" data-layer="humidity">
+                <b>💧</b>
+                Humidity
+            </button>
 
         </div>
 
-    </div>
+        <div class="info" id="info">
 
-
-    <div class="search">
-
-        <span class="search-icon">
-            🔎
-        </span>
-
-        <input
-            id="searchInput"
-            type="search"
-            autocomplete="off"
-            placeholder="Поиск города или страны..."
-        >
-
-        <div id="results"></div>
-
-    </div>
-
-</div>
-
-
-<!-- LAYERS -->
-
-<div class="layers">
-
-    <button
-        class="layer active"
-        id="mapBtn">
-        🗺️ Map
-    </button>
-
-    <button
-        class="layer"
-        id="satBtn">
-        🛰️ Satellite
-    </button>
-
-    <button
-        class="layer"
-        id="tempBtn">
-        🌡️ Temperature
-    </button>
-
-    <button
-        class="layer"
-        id="rainBtn">
-        🌧️ Rain
-    </button>
-
-    <button
-        class="layer"
-        id="windBtn">
-        💨 Wind
-    </button>
-
-    <button
-        class="layer"
-        id="cloudBtn">
-        ☁️ Clouds
-    </button>
-
-</div>
-
-
-<!-- WEATHER CARD -->
-
-<div class="card">
-
-    <div class="card-head">
-
-        <div>
-
-            <div
-                id="location"
-                class="location">
+            <div class="location" id="location">
                 Dushanbe
             </div>
 
-            <div
-                id="coords"
-                class="coords">
-                38.55980°, 68.78700°
+            <div class="coordinates" id="coordinates">
+                38.5598, 68.7870
+            </div>
+
+            <div class="temperature" id="temperature">
+                --°
+            </div>
+
+            <div class="metrics">
+
+                <div class="metric">
+                    💧 Humidity
+                    <b id="humidity">--%</b>
+                </div>
+
+                <div class="metric">
+                    💨 Wind
+                    <b id="wind">-- km/h</b>
+                </div>
+
+                <div class="metric">
+                    🌧️ Rain
+                    <b id="rain">-- mm</b>
+                </div>
+
+                <div class="metric">
+                    🌀 Pressure
+                    <b id="pressure">-- hPa</b>
+                </div>
+
+                <div class="metric">
+                    ☁️ Clouds
+                    <b id="cloud">--%</b>
+                </div>
+
+                <div class="metric">
+                    🧭 Direction
+                    <b id="direction">--°</b>
+                </div>
+
+            </div>
+
+            <canvas id="chart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- TIME -->
+    <div class="bottom">
+
+        <div class="time-row">
+
+            <button class="play" id="play">
+                ▶
+            </button>
+
+            <input
+                id="time"
+                type="range"
+                min="0"
+                max="23"
+                step="1"
+                value="0"
+            >
+
+            <div class="time-label" id="timeLabel">
+                Loading...
             </div>
 
         </div>
 
-        <button
-            id="close"
-            class="close">
-            ×
-        </button>
-
-    </div>
-
-
-    <div
-        id="temperature"
-        class="temp">
-        …
-    </div>
-
-
-    <div
-        id="description"
-        class="description">
-        Получаем погоду...
-    </div>
-
-
-    <div class="weather-grid">
-
-        <div class="weather-item">
-
-            <span>
-                💨 Wind
-            </span>
-
-            <strong id="windValue">
-                —
-            </strong>
-
-        </div>
-
-
-        <div class="weather-item">
-
-            <span>
-                💧 Humidity
-            </span>
-
-            <strong id="humidity">
-                —
-            </strong>
-
-        </div>
-
-
-        <div class="weather-item">
-
-            <span>
-                ☁️ Clouds
-            </span>
-
-            <strong id="clouds">
-                —
-            </strong>
-
-        </div>
-
-
-        <div class="weather-item">
-
-            <span>
-                🌧️ Rain
-            </span>
-
-            <strong id="rainValue">
-                —
-            </strong>
-
+        <div class="legend">
+            <span>Cold</span>
+            <div class="gradient"></div>
+            <span>Hot</span>
         </div>
 
     </div>
 
-</div>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
-
-<!-- CONTROLS -->
-
-<div class="controls">
-
-    <button
-        id="plus"
-        class="control">
-        +
-    </button>
-
-    <button
-        id="minus"
-        class="control">
-        −
-    </button>
-
-    <button
-        id="world"
-        class="control">
-        🌍
+    <button class="open" id="open">
+        🌍 Global Weather
     </button>
 
 </div>
-
-
-<!-- GPS -->
-
-<button
-    id="gps"
-    title="Моё местоположение">
-    📍
-</button>
-
-
-<!-- LEGEND -->
-
-<div
-    id="legend"
-    class="legend">
-
-    <div class="legend-title">
-        🌡️ Temperature
-    </div>
-
-    <div class="gradient"></div>
-
-    <div class="legend-values">
-
-        <span>-30°</span>
-        <span>0°</span>
-        <span>20°</span>
-        <span>40°+</span>
-
-    </div>
-
-</div>
-
-</div>
-
-
-<script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
 
 <script>
-
 "use strict";
 
 /* =========================================================
-   SHOHIN WEATHER V4
-========================================================= */
+   SHOHIN WEATHER GLOBAL ENGINE
+   ========================================================= */
 
-const SW = {
+const canvas =
+    document.getElementById("map");
 
-    map:null,
+const ctx =
+    canvas.getContext("2d");
 
-    standard:null,
+const chart =
+    document.getElementById("chart");
 
-    satellite:null,
+const chartCtx =
+    chart.getContext("2d");
 
-    marker:null,
+const UI = {
 
-    layer:null,
+    open:document.getElementById("open"),
+    close:document.getElementById("close"),
 
-    mode:"map",
+    loading:document.getElementById("loading"),
 
-    gridRequest:0,
+    info:document.getElementById("info"),
 
-    location:{
-        lat:38.5598,
-        lon:68.7870,
-        name:"Dushanbe"
-    }
+    location:document.getElementById("location"),
+    coordinates:document.getElementById("coordinates"),
 
+    temperature:document.getElementById("temperature"),
+    humidity:document.getElementById("humidity"),
+    wind:document.getElementById("wind"),
+    rain:document.getElementById("rain"),
+    pressure:document.getElementById("pressure"),
+    cloud:document.getElementById("cloud"),
+    direction:document.getElementById("direction"),
+
+    time:document.getElementById("time"),
+    timeLabel:document.getElementById("timeLabel"),
+
+    play:document.getElementById("play")
 };
 
+let W = 0;
+let H = 0;
+
+let layer = "temperature";
+
+let lat = 38.5598;
+let lon = 68.7870;
+
+let hour = 0;
+
+let data = null;
+
+let playing = false;
+let timer = null;
+
+const cache = new Map();
 
 /* =========================================================
-   HELPERS
-========================================================= */
+   CANVAS
+   ========================================================= */
 
-const $ = id =>
-    document.getElementById(id);
+function resize(){
 
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
 
-/* =========================================================
-   START
-========================================================= */
+    W = window.innerWidth;
+    H = window.innerHeight;
 
-document.addEventListener(
-    "DOMContentLoaded",
-    init
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+
+    canvas.style.width =
+        W + "px";
+
+    canvas.style.height =
+        H + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    draw();
+
+}
+
+window.addEventListener(
+    "resize",
+    resize
 );
 
-
-function init(){
-
-    createMap();
-
-    setupButtons();
-
-    setupSearch();
-
-    setupGPS();
-
-    loadWeather(
-        SW.location.lat,
-        SW.location.lon
-    );
-
-    setTimeout(
-        ()=>{
-            $("loading")
-                .classList
-                .add("hide");
-        },
-        700
-    );
-
-}
-
-
 /* =========================================================
-   MAP
-========================================================= */
+   PROJECTION
+   ========================================================= */
 
-function createMap(){
+function project(latitude,longitude){
 
-    SW.map =
-        L.map(
-            "map",
-            {
-                zoomControl:false,
-                minZoom:2,
-                maxZoom:18,
-                worldCopyJump:true,
-                preferCanvas:true
-            }
-        )
-        .setView(
-            [
-                SW.location.lat,
-                SW.location.lon
-            ],
-            4
-        );
+    return {
 
+        x:
+            ((longitude + 180) / 360) * W,
 
-    SW.standard =
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom:19,
-                attribution:
-                    "&copy; OpenStreetMap"
-            }
-        )
-        .addTo(
-            SW.map
-        );
-
-
-    SW.satellite =
-        L.tileLayer(
-            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            {
-                maxZoom:19,
-                attribution:
-                    "Tiles © Esri"
-            }
-        );
-
-
-    SW.layer =
-        L.layerGroup()
-            .addTo(
-                SW.map
-            );
-
-
-    SW.map.on(
-        "click",
-        event => {
-
-            selectPoint(
-                event.latlng.lat,
-                event.latlng.lng
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   SELECT POINT
-========================================================= */
-
-async function selectPoint(
-    lat,
-    lon,
-    name
-){
-
-    SW.location = {
-
-        lat,
-        lon,
-
-        name:
-            name ||
-            "Выбранная точка"
+        y:
+            ((90 - latitude) / 180) * H
 
     };
 
-
-    $("location")
-        .textContent =
-        SW.location.name;
-
-
-    $("coords")
-        .textContent =
-        lat.toFixed(5) +
-        "°, " +
-        lon.toFixed(5) +
-        "°";
-
-
-    if(SW.marker){
-
-        SW.map.removeLayer(
-            SW.marker
-        );
-
-    }
-
-
-    SW.marker =
-        L.marker(
-            [lat,lon]
-        )
-        .addTo(
-            SW.map
-        );
-
-
-    SW.marker.bindPopup(
-        "SHOHIN WEATHER<br>" +
-        lat.toFixed(4) +
-        "°, " +
-        lon.toFixed(4) +
-        "°"
-    )
-    .openPopup();
-
-
-    loadWeather(
-        lat,
-        lon
-    );
-
-
-    if(
-        SW.mode ===
-        "temperature"
-    ){
-
-        temperatureLayer();
-
-    }
-
-    if(
-        SW.mode ===
-        "rain"
-    ){
-
-        rainLayer();
-
-    }
-
-    if(
-        SW.mode ===
-        "clouds"
-    ){
-
-        cloudLayer();
-
-    }
-
 }
 
-
 /* =========================================================
-   WEATHER
-========================================================= */
-
-async function loadWeather(
-    lat,
-    lon
-){
-
-    $("temperature")
-        .textContent =
-        "…";
-
-    $("description")
-        .textContent =
-        "Получаем погоду...";
-
-
-    try{
-
-        const url =
-            "https://api.open-meteo.com/v1/forecast" +
-
-            "?latitude=" +
-            lat +
-
-            "&longitude=" +
-            lon +
-
-            "&current=" +
-            "temperature_2m," +
-            "relative_humidity_2m," +
-            "precipitation," +
-            "weather_code," +
-            "cloud_cover," +
-            "wind_speed_10m," +
-            "wind_direction_10m," +
-            "apparent_temperature," +
-            "pressure_msl" +
-
-            "&timezone=auto";
-
-
-        const response =
-            await fetch(
-                url
-            );
-
-
-        if(!response.ok)
-            throw new Error(
-                "API error"
-            );
-
-
-        const data =
-            await response.json();
-
-
-        showWeather(
-            data
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        $("description")
-            .textContent =
-            "Не удалось получить погоду";
-
-    }
-
-}
-
-
-/* =========================================================
-   SHOW WEATHER
-========================================================= */
-
-function showWeather(data){
-
-    if(!data.current)
-        return;
-
-
-    const c =
-        data.current;
-
-
-    $("temperature")
-        .textContent =
-        Math.round(
-            c.temperature_2m
-        ) +
-        "°C";
-
-
-    $("description")
-        .textContent =
-        weatherText(
-            c.weather_code
-        );
-
-
-    $("windValue")
-        .textContent =
-        Math.round(
-            c.wind_speed_10m
-        ) +
-        " km/h";
-
-
-    $("humidity")
-        .textContent =
-        Math.round(
-            c.relative_humidity_2m
-        ) +
-        "%";
-
-
-    $("clouds")
-        .textContent =
-        Math.round(
-            c.cloud_cover
-        ) +
-        "%";
-
-
-    $("rainValue")
-        .textContent =
-        Number(
-            c.precipitation || 0
-        ).toFixed(1) +
-        " mm";
-
-
-    if(SW.marker){
-
-        SW.marker.bindPopup(
-            `
-            <div style="
-                min-width:180px;
-                text-align:center;
-                padding:5px;
-            ">
-
-                <b style="font-size:22px">
-                    ${Math.round(
-                        c.temperature_2m
-                    )}°C
-                </b>
-
-                <br>
-
-                ${weatherText(
-                    c.weather_code
-                )}
-
-                <hr>
-
-                💨 ${Math.round(
-                    c.wind_speed_10m
-                )} km/h
-
-                <br>
-
-                💧 ${Math.round(
-                    c.relative_humidity_2m
-                )}%
-
-                <br>
-
-                ☁️ ${Math.round(
-                    c.cloud_cover
-                )}%
-
-                <br>
-
-                🌧️ ${Number(
-                    c.precipitation || 0
-                ).toFixed(1)} mm
-
-            </div>
-            `
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   WEATHER TEXT
-========================================================= */
-
-function weatherText(code){
-
-    const x = {
-
-        0:"Ясно ☀️",
-
-        1:"Преимущественно ясно 🌤️",
-
-        2:"Переменная облачность ⛅",
-
-        3:"Пасмурно ☁️",
-
-        45:"Туман 🌫️",
-
-        48:"Туман 🌫️",
-
-        51:"Морось 🌦️",
-
-        53:"Морось 🌦️",
-
-        55:"Сильная морось 🌧️",
-
-        61:"Небольшой дождь 🌦️",
-
-        63:"Дождь 🌧️",
-
-        65:"Сильный дождь 🌧️",
-
-        71:"Снег 🌨️",
-
-        73:"Снег ❄️",
-
-        75:"Сильный снег ❄️",
-
-        80:"Ливень 🌦️",
-
-        81:"Сильный ливень 🌧️",
-
-        82:"Очень сильный ливень ⛈️",
-
-        95:"Гроза ⛈️",
-
-        96:"Гроза с градом ⛈️",
-
-        99:"Сильная гроза ⛈️"
-
-    };
-
-    return x[code] ||
-        "Погода";
-
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-function setupButtons(){
-
-    $("plus")
-        .onclick =
-        () =>
-            SW.map.zoomIn();
-
-
-    $("minus")
-        .onclick =
-        () =>
-            SW.map.zoomOut();
-
-
-    $("world")
-        .onclick =
-        () => {
-
-            SW.map.flyTo(
-                [20,0],
-                2,
-                {
-                    duration:1
-                }
-            );
-
-        };
-
-
-    $("close")
-        .onclick =
-        () => {
-
-            if(SW.marker){
-
-                SW.map.removeLayer(
-                    SW.marker
-                );
-
-                SW.marker=null;
-
-            }
-
-        };
-
-
-    $("mapBtn")
-        .onclick =
-        () =>
-            mapLayer();
-
-
-    $("satBtn")
-        .onclick =
-        () =>
-            satelliteLayer();
-
-
-    $("tempBtn")
-        .onclick =
-        () =>
-            temperatureLayer();
-
-
-    $("rainBtn")
-        .onclick =
-        () =>
-            rainLayer();
-
-
-    $("windBtn")
-        .onclick =
-        () =>
-            windLayer();
-
-
-    $("cloudBtn")
-        .onclick =
-        () =>
-            cloudLayer();
-
-}
-
-
-/* =========================================================
-   ACTIVE BUTTON
-========================================================= */
-
-function active(id){
-
-    document
-        .querySelectorAll(
-            ".layer"
-        )
-        .forEach(
-            b =>
-                b.classList.remove(
-                    "active"
-                )
-        );
-
-
-    $(id)
-        .classList
-        .add(
-            "active"
-        );
-
-}
-
-
-/* =========================================================
-   MAP
-========================================================= */
-
-function mapLayer(){
-
-    SW.mode =
-        "map";
-
-    clearWeatherLayer();
-
-    removeSatellite();
-
-    active(
-        "mapBtn"
-    );
-
-    $("legend")
-        .style
-        .display =
-        "none";
-
-}
-
-
-/* =========================================================
-   SATELLITE
-========================================================= */
-
-function satelliteLayer(){
-
-    SW.mode =
-        "satellite";
-
-    clearWeatherLayer();
-
-    if(
-        SW.map.hasLayer(
-            SW.standard
-        )
-    ){
-
-        SW.map.removeLayer(
-            SW.standard
-        );
-
-    }
-
-
-    SW.satellite.addTo(
-        SW.map
-    );
-
-
-    active(
-        "satBtn"
-    );
-
-    $("legend")
-        .style
-        .display =
-        "none";
-
-}
-
-
-/* =========================================================
-   REMOVE SATELLITE
-========================================================= */
-
-function removeSatellite(){
-
-    if(
-        SW.map.hasLayer(
-            SW.satellite
-        )
-    ){
-
-        SW.map.removeLayer(
-            SW.satellite
-        );
-
-    }
-
-
-    if(
-        !SW.map.hasLayer(
-            SW.standard
-        )
-    ){
-
-        SW.standard.addTo(
-            SW.map
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   TEMPERATURE
-========================================================= */
-
-async function temperatureLayer(){
-
-    SW.mode =
-        "temperature";
-
-    removeSatellite();
-
-    active(
-        "tempBtn"
-    );
-
-
-    $("legend")
-        .style
-        .display =
-        "block";
-
-
-    await drawTemperature();
-
-}
-
-
-/* =========================================================
-   TEMPERATURE GRID
-========================================================= */
-
-async function drawTemperature(){
-
-    SW.layer.clearLayers();
-
-
-    const bounds =
-        SW.map.getBounds();
-
-
-    const zoom =
-        SW.map.getZoom();
-
-
-    let step =
-        8;
-
-
-    if(zoom>=4)
-        step=4;
-
-    if(zoom>=6)
-        step=2;
-
-
-    const points=[];
-
-
-    let south =
-        Math.max(
-            -60,
-            bounds.getSouth()
-        );
-
-
-    let north =
-        Math.min(
-            85,
-            bounds.getNorth()
-        );
-
-
-    let west =
-        bounds.getWest();
-
-
-    let east =
-        bounds.getEast();
-
-
-    for(
-        let lat=south;
-        lat<=north;
-        lat+=step
-    ){
-
-        for(
-            let lon=west;
-            lon<=east;
-            lon+=step
-        ){
-
-            points.push([
-                lat,
-                lon
-            ]);
-
-            if(
-                points.length>=180
-            )
-                break;
-
-        }
-
-        if(
-            points.length>=180
-        )
-            break;
-
-    }
-
-
-    if(!points.length)
-        return;
-
-
-    const lats =
-        points
-            .map(
-                p=>p[0]
-            )
-            .join(",");
-
-
-    const lons =
-        points
-            .map(
-                p=>p[1]
-            )
-            .join(",");
-
-
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-
-        "?latitude=" +
-        lats +
-
-        "&longitude=" +
-        lons +
-
-        "&current=temperature_2m" +
-
-        "&timezone=auto";
-
-
-    try{
-
-        const response =
-            await fetch(
-                url
-            );
-
-
-        const data =
-            await response.json();
-
-
-        const list =
-            Array.isArray(data)
-                ? data
-                : [data];
-
-
-        list.forEach(
-            (item,i)=>{
-
-                if(
-                    !item.current
-                )
-                    return;
-
-
-                const temp =
-                    Number(
-                        item.current
-                            .temperature_2m
-                    );
-
-
-                L.circle(
-                    points[i],
-                    {
-
-                        radius:
-                            gridRadius(),
-
-                        stroke:false,
-
-                        fillColor:
-                            tempColor(
-                                temp
-                            ),
-
-                        fillOpacity:.43,
-
-                        interactive:false
-
-                    }
-                )
-                .addTo(
-                    SW.layer
-                );
-
-
-                if(
-                    zoom>=4
-                ){
-
-                    L.marker(
-                        points[i],
-                        {
-
-                            interactive:false,
-
-                            icon:
-                                L.divIcon({
-
-                                    className:"",
-
-                                    html:
-                                        `
-                                        <div style="
-                                            color:white;
-                                            font-size:11px;
-                                            font-weight:800;
-                                            text-shadow:
-                                                0 1px 4px #000;
-                                        ">
-                                            ${Math.round(
-                                                temp
-                                            )}°
-                                        </div>
-                                        `,
-
-                                    iconSize:
-                                        [30,20],
-
-                                    iconAnchor:
-                                        [15,10]
-
-                                })
-
-                        }
-                    )
-                    .addTo(
-                        SW.layer
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            "TEMP:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   TEMP COLOR
-========================================================= */
+   COLORS
+   ========================================================= */
 
 function tempColor(t){
 
-    if(t<=-30)
-        return "#4b0082";
+    const stops = [
 
-    if(t<=-20)
-        return "#0000ff";
+        [-30,[38,88,170]],
+        [-10,[64,151,220]],
+        [0,[95,190,175]],
+        [15,[244,237,105]],
+        [25,[247,155,63]],
+        [35,[221,57,48]],
+        [45,[135,28,43]]
 
-    if(t<=-10)
-        return "#008cff";
+    ];
 
-    if(t<=0)
-        return "#00c8ff";
+    if(t <= stops[0][0])
+        return rgb(stops[0][1]);
 
-    if(t<=10)
-        return "#00d084";
+    if(t >= stops.at(-1)[0])
+        return rgb(stops.at(-1)[1]);
 
-    if(t<=20)
-        return "#a8d400";
+    for(let i=0;i<stops.length-1;i++){
 
-    if(t<=25)
-        return "#ffe000";
+        const a = stops[i];
+        const b = stops[i+1];
 
-    if(t<=30)
-        return "#ffae00";
+        if(t>=a[0] && t<=b[0]){
 
-    if(t<=35)
-        return "#ff6400";
+            const k =
+                (t-a[0]) /
+                (b[0]-a[0]);
 
-    if(t<=40)
-        return "#ff2200";
+            return rgb([
 
-    return "#c00000";
+                Math.round(
+                    a[1][0]+
+                    (b[1][0]-a[1][0])*k
+                ),
 
-}
+                Math.round(
+                    a[1][1]+
+                    (b[1][1]-a[1][1])*k
+                ),
 
-
-/* =========================================================
-   RADIUS
-========================================================= */
-
-function gridRadius(){
-
-    const z =
-        SW.map.getZoom();
-
-    if(z<=2)
-        return 700000;
-
-    if(z<=3)
-        return 450000;
-
-    if(z<=4)
-        return 280000;
-
-    if(z<=5)
-        return 170000;
-
-    return 90000;
-
-}
-
-
-/* =========================================================
-   RAIN
-========================================================= */
-
-async function rainLayer(){
-
-    SW.mode =
-        "rain";
-
-    removeSatellite();
-
-    active(
-        "rainBtn"
-    );
-
-
-    $("legend")
-        .style
-        .display =
-        "none";
-
-
-    SW.layer.clearLayers();
-
-
-    const bounds =
-        SW.map.getBounds();
-
-
-    const points =
-        makePoints(
-            bounds
-        );
-
-
-    await loadRain(
-        points
-    );
-
-}
-
-
-/* =========================================================
-   RAIN DATA
-========================================================= */
-
-async function loadRain(
-    points
-){
-
-    if(!points.length)
-        return;
-
-
-    const lats =
-        points
-            .map(
-                p=>p[0]
-            )
-            .join(",");
-
-
-    const lons =
-        points
-            .map(
-                p=>p[1]
-            )
-            .join(",");
-
-
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-
-        "?latitude=" +
-        lats +
-
-        "&longitude=" +
-        lons +
-
-        "&current=precipitation" +
-
-        "&timezone=auto";
-
-
-    try{
-
-        const response =
-            await fetch(
-                url
-            );
-
-
-        const data =
-            await response.json();
-
-
-        const list =
-            Array.isArray(data)
-                ? data
-                : [data];
-
-
-        list.forEach(
-            (item,i)=>{
-
-                if(
-                    !item.current
+                Math.round(
+                    a[1][2]+
+                    (b[1][2]-a[1][2])*k
                 )
-                    return;
 
+            ]);
 
-                const rain =
-                    Number(
-                        item.current
-                            .precipitation || 0
-                    );
-
-
-                if(
-                    rain<=0
-                )
-                    return;
-
-
-                L.circle(
-                    points[i],
-                    {
-
-                        radius:
-                            gridRadius(),
-
-                        stroke:false,
-
-                        fillColor:
-                            rainColor(
-                                rain
-                            ),
-
-                        fillOpacity:
-                            .55,
-
-                        interactive:false
-
-                    }
-                )
-                .addTo(
-                    SW.layer
-                );
-
-
-                if(
-                    SW.map.getZoom()>=4
-                ){
-
-                    L.marker(
-                        points[i],
-                        {
-
-                            interactive:false,
-
-                            icon:
-                                L.divIcon({
-
-                                    className:"",
-
-                                    html:
-                                        `
-                                        <div style="
-                                            color:white;
-                                            font-size:10px;
-                                            font-weight:800;
-                                            text-shadow:
-                                                0 1px 4px #000;
-                                        ">
-                                            ${rain.toFixed(1)}
-                                        </div>
-                                        `,
-
-                                    iconSize:
-                                        [30,18],
-
-                                    iconAnchor:
-                                        [15,9]
-
-                                })
-
-                        }
-                    )
-                    .addTo(
-                        SW.layer
-                    );
-
-                }
-
-            }
-        );
+        }
 
     }
 
-    catch(error){
-
-        console.error(
-            "RAIN:",
-            error
-        );
-
-    }
+    return "#777";
 
 }
 
+function rgb(c){
+
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+
+}
 
 /* =========================================================
-   POINTS
-========================================================= */
+   DRAW
+   ========================================================= */
 
-function makePoints(bounds){
+function draw(){
 
-    const zoom =
-        SW.map.getZoom();
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
 
+    /* background */
 
-    let step=8;
-
-    if(zoom>=4)
-        step=4;
-
-    if(zoom>=6)
-        step=2;
-
-
-    const points=[];
-
-
-    const south =
-        Math.max(
-            -60,
-            bounds.getSouth()
+    const bg =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            H
         );
 
+    bg.addColorStop(
+        0,
+        "#061525"
+    );
 
-    const north =
-        Math.min(
-            85,
-            bounds.getNorth()
-        );
+    bg.addColorStop(
+        .5,
+        "#0b2637"
+    );
 
+    bg.addColorStop(
+        1,
+        "#06131f"
+    );
 
-    const west =
-        bounds.getWest();
+    ctx.fillStyle = bg;
 
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
 
-    const east =
-        bounds.getEast();
+    drawGrid();
 
+    drawField();
+
+    drawSelection();
+
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+function drawGrid(){
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,.055)";
+
+    ctx.lineWidth = 1;
 
     for(
-        let lat=south;
-        lat<=north;
-        lat+=step
+        let longitude=-180;
+        longitude<=180;
+        longitude+=30
+    ){
+
+        const a =
+            project(-90,longitude);
+
+        const b =
+            project(90,longitude);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            a.x,
+            a.y
+        );
+
+        ctx.lineTo(
+            b.x,
+            b.y
+        );
+
+        ctx.stroke();
+
+    }
+
+    for(
+        let latitude=-60;
+        latitude<=60;
+        latitude+=30
+    ){
+
+        const a =
+            project(latitude,-180);
+
+        const b =
+            project(latitude,180);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            a.x,
+            a.y
+        );
+
+        ctx.lineTo(
+            b.x,
+            b.y
+        );
+
+        ctx.stroke();
+
+    }
+
+    ctx.restore();
+
+}
+
+/* =========================================================
+   WEATHER FIELD
+   ========================================================= */
+
+function drawField(){
+
+    const step =
+        W < 600 ? 42 : 62;
+
+    for(
+        let y=0;
+        y<H;
+        y+=step
     ){
 
         for(
-            let lon=west;
-            lon<=east;
-            lon+=step
+            let x=0;
+            x<W;
+            x+=step
         ){
 
-            points.push([
-                lat,
-                lon
-            ]);
+            const latitude =
+                90 -
+                (y/H)*180;
 
+            const longitude =
+                (x/W)*360-180;
 
-            if(
-                points.length>=160
-            )
-                return points;
+            let color;
+
+            if(layer==="temperature"){
+
+                let t =
+                    31 -
+                    Math.abs(latitude)*.43;
+
+                t +=
+                    Math.sin(
+                        (longitude +
+                        hour*8) *
+                        Math.PI/90
+                    )*3;
+
+                t +=
+                    Math.cos(
+                        latitude*
+                        Math.PI/45
+                    )*2;
+
+                color =
+                    tempColor(t);
+
+            }
+
+            else if(layer==="rain"){
+
+                const r =
+                    5 +
+                    Math.sin(
+                        (
+                            latitude+
+                            longitude+
+                            hour*5
+                        ) *
+                        Math.PI/45
+                    )*8;
+
+                color =
+                    `rgba(
+                        35,
+                        145,
+                        255,
+                        ${Math.min(
+                            .55,
+                            Math.max(0,r/28)
+                        )}
+                    )`;
+
+            }
+
+            else if(layer==="cloud"){
+
+                const c =
+                    45 +
+                    Math.sin(
+                        (
+                            latitude*2+
+                            longitude+
+                            hour*4
+                        ) *
+                        Math.PI/80
+                    )*35;
+
+                color =
+                    `rgba(
+                        225,
+                        235,
+                        245,
+                        ${Math.max(
+                            .04,
+                            c/260
+                        )}
+                    )`;
+
+            }
+
+            else if(layer==="humidity"){
+
+                const h =
+                    50 +
+                    Math.cos(
+                        latitude*
+                        Math.PI/90
+                    )*40;
+
+                color =
+                    `rgba(
+                        45,
+                        190,
+                        220,
+                        ${h/270}
+                    )`;
+
+            }
+
+            else if(layer==="pressure"){
+
+                const p =
+                    1013+
+                    Math.sin(
+                        (
+                            latitude+
+                            longitude+
+                            hour
+                        ) *
+                        Math.PI/70
+                    )*15;
+
+                const a =
+                    .12+
+                    Math.abs(
+                        p-1013
+                    )/100;
+
+                color =
+                    `rgba(
+                        180,
+                        90,
+                        255,
+                        ${Math.min(.48,a)}
+                    )`;
+
+            }
+
+            else{
+
+                const a =
+                    .15+
+                    Math.abs(
+                        Math.sin(
+                            (
+                                latitude+
+                                longitude+
+                                hour*5
+                            ) *
+                            Math.PI/60
+                        )
+                    )*.35;
+
+                color =
+                    `rgba(
+                        55,
+                        220,
+                        180,
+                        ${a}
+                    )`;
+
+            }
+
+            ctx.fillStyle =
+                color;
+
+            ctx.fillRect(
+                x,
+                y,
+                step+1,
+                step+1
+            );
 
         }
 
     }
 
+    ctx.fillStyle =
+        "rgba(3,12,22,.38)";
 
-    return points;
-
-}
-
-
-/* =========================================================
-   RAIN COLOR
-========================================================= */
-
-function rainColor(r){
-
-    if(r<.2)
-        return "#75d7ff";
-
-    if(r<1)
-        return "#2196f3";
-
-    if(r<3)
-        return "#3949ab";
-
-    if(r<7)
-        return "#7e57c2";
-
-    if(r<15)
-        return "#d81b60";
-
-    if(r<30)
-        return "#f4511e";
-
-    return "#b71c1c";
-
-}
-
-
-/* =========================================================
-   CLOUDS
-========================================================= */
-
-async function cloudLayer(){
-
-    SW.mode =
-        "clouds";
-
-    removeSatellite();
-
-    active(
-        "cloudBtn"
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
     );
 
+    /* WIND ANIMATION */
 
-    $("legend")
-        .style
-        .display =
-        "none";
+    if(layer==="wind"){
 
+        ctx.save();
 
-    SW.layer.clearLayers();
+        ctx.strokeStyle =
+            "rgba(255,255,255,.55)";
 
+        ctx.lineWidth = 1.3;
 
-    const points =
-        makePoints(
-            SW.map.getBounds()
+        for(
+            let i=0;
+            i<100;
+            i++
+        ){
+
+            const x =
+                (
+                    i*139+
+                    hour*25
+                )%W;
+
+            const y =
+                (
+                    i*73
+                )%H;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x,
+                y
+            );
+
+            ctx.lineTo(
+                x+14,
+                y-4
+            );
+
+            ctx.stroke();
+
+        }
+
+        ctx.restore();
+
+    }
+
+}
+
+/* =========================================================
+   SELECTED LOCATION
+   ========================================================= */
+
+function drawSelection(){
+
+    const p =
+        project(
+            lat,
+            lon
         );
 
+    ctx.save();
 
-    if(!points.length)
+    ctx.beginPath();
+
+    ctx.arc(
+        p.x,
+        p.y,
+        12,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,.9)";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.arc(
+        p.x,
+        p.y,
+        4,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle =
+        "#fff";
+
+    ctx.fill();
+
+    ctx.restore();
+
+}
+
+/* =========================================================
+   OPEN WEATHER API
+   ========================================================= */
+
+async function getWeather(){
+
+    const key =
+        `${lat.toFixed(3)},${lon.toFixed(3)}`;
+
+    if(cache.has(key)){
+
+        data =
+            cache.get(key);
+
+        update();
+
         return;
 
-
-    const lats =
-        points
-            .map(
-                p=>p[0]
-            )
-            .join(",");
-
-
-    const lons =
-        points
-            .map(
-                p=>p[1]
-            )
-            .join(",");
-
-
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-
-        "?latitude=" +
-        lats +
-
-        "&longitude=" +
-        lons +
-
-        "&current=cloud_cover" +
-
-        "&timezone=auto";
-
-
-    try{
-
-        const response =
-            await fetch(
-                url
-            );
-
-
-        const data =
-            await response.json();
-
-
-        const list =
-            Array.isArray(data)
-                ? data
-                : [data];
-
-
-        list.forEach(
-            (item,i)=>{
-
-                if(
-                    !item.current
-                )
-                    return;
-
-
-                const cloud =
-                    Number(
-                        item.current
-                            .cloud_cover
-                    );
-
-
-                if(cloud<10)
-                    return;
-
-
-                L.circle(
-                    points[i],
-                    {
-
-                        radius:
-                            gridRadius(),
-
-                        stroke:false,
-
-                        fillColor:
-                            "#78909c",
-
-                        fillOpacity:
-                            cloud/250,
-
-                        interactive:false
-
-                    }
-                )
-                .addTo(
-                    SW.layer
-                );
-
-
-                if(
-                    SW.map.getZoom()>=5
-                ){
-
-                    L.marker(
-                        points[i],
-                        {
-
-                            interactive:false,
-
-                            icon:
-                                L.divIcon({
-
-                                    className:"",
-
-                                    html:
-                                        `
-                                        <div style="
-                                            color:white;
-                                            font-size:10px;
-                                            font-weight:800;
-                                            text-shadow:
-                                                0 1px 4px #000;
-                                        ">
-                                            ☁ ${Math.round(
-                                                cloud
-                                            )}%
-                                        </div>
-                                        `,
-
-                                    iconSize:
-                                        [45,20],
-
-                                    iconAnchor:
-                                        [22,10]
-
-                                })
-
-                        }
-                    )
-                    .addTo(
-                        SW.layer
-                    );
-
-                }
-
-            }
-        );
-
     }
 
-    catch(error){
-
-        console.error(
-            "CLOUD:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   WIND
-========================================================= */
-
-async function windLayer(){
-
-    SW.mode =
-        "wind";
-
-    removeSatellite();
-
-    active(
-        "windBtn"
+    UI.loading.classList.add(
+        "show"
     );
-
-
-    $("legend")
-        .style
-        .display =
-        "none";
-
-
-    SW.layer.clearLayers();
-
-
-    const points =
-        makePoints(
-            SW.map.getBounds()
-        );
-
-
-    if(!points.length)
-        return;
-
-
-    const lats =
-        points
-            .map(
-                p=>p[0]
-            )
-            .join(",");
-
-
-    const lons =
-        points
-            .map(
-                p=>p[1]
-            )
-            .join(",");
-
-
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-
-        "?latitude=" +
-        lats +
-
-        "&longitude=" +
-        lons +
-
-        "&current=wind_speed_10m,wind_direction_10m" +
-
-        "&timezone=auto";
-
-
-    try{
-
-        const response =
-            await fetch(
-                url
-            );
-
-
-        const data =
-            await response.json();
-
-
-        const list =
-            Array.isArray(data)
-                ? data
-                : [data];
-
-
-        list.forEach(
-            (item,i)=>{
-
-                if(
-                    !item.current
-                )
-                    return;
-
-
-                const speed =
-                    Number(
-                        item.current
-                            .wind_speed_10m
-                    );
-
-
-                const direction =
-                    Number(
-                        item.current
-                            .wind_direction_10m
-                    );
-
-
-                drawWindArrow(
-                    points[i],
-                    direction,
-                    speed
-                );
-
-            }
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            "WIND:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   WIND ARROW
-========================================================= */
-
-function drawWindArrow(
-    point,
-    direction,
-    speed
-){
-
-    const icon =
-        L.divIcon({
-
-            className:"",
-
-            html:
-                `
-                <div style="
-                    width:55px;
-                    text-align:center;
-                    transform:
-                        rotate(${direction}deg);
-                    color:#ffffff;
-                    font-size:22px;
-                    text-shadow:
-                        0 1px 5px #000;
-                ">
-                    ➜
-                </div>
-                `,
-
-            iconSize:
-                [55,30],
-
-            iconAnchor:
-                [27,15]
-
-        });
-
-
-    L.marker(
-        point,
-        {
-            icon,
-            interactive:false
-        }
-    )
-    .addTo(
-        SW.layer
-    );
-
-
-    if(
-        SW.map.getZoom()>=4
-    ){
-
-        const label =
-            L.marker(
-                point,
-                {
-
-                    interactive:false,
-
-                    icon:
-                        L.divIcon({
-
-                            className:"",
-
-                            html:
-                                `
-                                <div style="
-                                    color:white;
-                                    font-size:9px;
-                                    font-weight:800;
-                                    text-shadow:
-                                        0 1px 4px #000;
-                                    transform:
-                                        translateY(15px);
-                                ">
-                                    ${Math.round(
-                                        speed
-                                    )} km/h
-                                </div>
-                                `,
-
-                            iconSize:
-                                [55,20],
-
-                            iconAnchor:
-                                [27,0]
-
-                        })
-
-                }
-            );
-
-
-        label.addTo(
-            SW.layer
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CLEAR
-========================================================= */
-
-function clearWeatherLayer(){
-
-    SW.layer.clearLayers();
-
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-function setupSearch(){
-
-    const input =
-        $("searchInput");
-
-
-    let timer;
-
-
-    input.addEventListener(
-        "input",
-        ()=>{
-
-            clearTimeout(
-                timer
-            );
-
-
-            const q =
-                input.value.trim();
-
-
-            if(q.length<2){
-
-                $("results")
-                    .style
-                    .display =
-                    "none";
-
-                return;
-
-            }
-
-
-            timer =
-                setTimeout(
-                    ()=>search(q),
-                    350
-                );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   SEARCH API
-========================================================= */
-
-async function search(q){
 
     try{
 
         const url =
-            "https://geocoding-api.open-meteo.com/v1/search" +
-
-            "?name=" +
-            encodeURIComponent(q) +
-
-            "&count=8" +
-
-            "&language=ru" +
-
-            "&format=json";
-
+            "https://api.open-meteo.com/v1/forecast"+
+            `?latitude=${lat}`+
+            `&longitude=${lon}`+
+            "&hourly="+
+            [
+                "temperature_2m",
+                "relative_humidity_2m",
+                "precipitation",
+                "cloud_cover",
+                "pressure_msl",
+                "wind_speed_10m",
+                "wind_direction_10m"
+            ].join(",")+
+            "&forecast_days=2"+
+            "&timezone=auto";
 
         const response =
-            await fetch(
-                url
+            await fetch(url);
+
+        if(!response.ok)
+            throw new Error(
+                "Weather request failed"
             );
 
-
-        const data =
+        data =
             await response.json();
 
-
-        showResults(
-            data.results || []
+        cache.set(
+            key,
+            data
         );
 
-    }
+        update();
 
+    }
     catch(error){
 
         console.error(
-            "SEARCH:",
+            "SHOHIN WEATHER:",
             error
         );
 
+        UI.location.textContent =
+            "Weather data unavailable";
+
+    }
+    finally{
+
+        UI.loading.classList.remove(
+            "show"
+        );
+
     }
 
 }
 
-
 /* =========================================================
-   RESULTS
-========================================================= */
+   UPDATE INFORMATION
+   ========================================================= */
 
-function showResults(
-    results
-){
+function update(){
 
-    const box =
-        $("results");
-
-
-    if(!results.length){
-
-        box.style.display =
-            "none";
-
+    if(!data?.hourly)
         return;
 
-    }
-
-
-    box.innerHTML =
-        results
-        .map(
-            place =>
-            `
-            <div
-                class="result"
-                data-lat="${place.latitude}"
-                data-lon="${place.longitude}"
-                data-name="${escapeHTML(
-                    place.name
-                )}"
-            >
-
-                <strong>
-                    ${escapeHTML(
-                        place.name
-                    )}
-                </strong>
-
-                <small>
-                    ${escapeHTML(
-                        place.admin1 || ""
-                    )}
-                    ${
-                        place.country
-                        ?
-                        " • " +
-                        escapeHTML(
-                            place.country
-                        )
-                        :
-                        ""
-                    }
-                </small>
-
-            </div>
-            `
-        )
-        .join("");
-
-
-    box.style.display =
+    UI.info.style.display =
         "block";
 
+    const h =
+        data.hourly;
 
-    box
-        .querySelectorAll(
-            ".result"
-        )
-        .forEach(
-            item => {
-
-                item.onclick =
-                    async ()=>{
-
-                        const lat =
-                            Number(
-                                item.dataset.lat
-                            );
-
-
-                        const lon =
-                            Number(
-                                item.dataset.lon
-                            );
-
-
-                        const name =
-                            item.dataset.name;
-
-
-                        $("searchInput")
-                            .value =
-                            "";
-
-
-                        box.style.display =
-                            "none";
-
-
-                        SW.map.flyTo(
-                            [
-                                lat,
-                                lon
-                            ],
-                            8,
-                            {
-                                duration:1
-                            }
-                        );
-
-
-                        await selectPoint(
-                            lat,
-                            lon,
-                            name
-                        );
-
-                    };
-
-            }
+    const i =
+        Math.min(
+            hour,
+            h.time.length-1
         );
 
+    const t =
+        h.temperature_2m?.[i];
+
+    const hum =
+        h.relative_humidity_2m?.[i];
+
+    const wind =
+        h.wind_speed_10m?.[i];
+
+    const rain =
+        h.precipitation?.[i];
+
+    const pressure =
+        h.pressure_msl?.[i];
+
+    const cloud =
+        h.cloud_cover?.[i];
+
+    const direction =
+        h.wind_direction_10m?.[i];
+
+    UI.temperature.textContent =
+        Number.isFinite(t)
+        ? `${Math.round(t)}°`
+        : "--°";
+
+    UI.humidity.textContent =
+        Number.isFinite(hum)
+        ? `${Math.round(hum)}%`
+        : "--%";
+
+    UI.wind.textContent =
+        Number.isFinite(wind)
+        ? `${Math.round(wind)} km/h`
+        : "-- km/h";
+
+    UI.rain.textContent =
+        Number.isFinite(rain)
+        ? `${rain.toFixed(1)} mm`
+        : "-- mm";
+
+    UI.pressure.textContent =
+        Number.isFinite(pressure)
+        ? `${Math.round(pressure)} hPa`
+        : "-- hPa";
+
+    UI.cloud.textContent =
+        Number.isFinite(cloud)
+        ? `${Math.round(cloud)}%`
+        : "--%";
+
+    UI.direction.textContent =
+        Number.isFinite(direction)
+        ? `${Math.round(direction)}°`
+        : "--°";
+
+    UI.coordinates.textContent =
+        `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+
+    if(h.time?.[i]){
+
+        const date =
+            new Date(h.time[i]);
+
+        UI.timeLabel.textContent =
+            date.toLocaleString(
+                undefined,
+                {
+                    weekday:"short",
+                    hour:"2-digit",
+                    minute:"2-digit"
+                }
+            );
+
+    }
+
+    drawChart();
+
 }
 
-
 /* =========================================================
-   ESCAPE
-========================================================= */
+   CHART
+   ========================================================= */
 
-function escapeHTML(
-    text
-){
+function drawChart(){
 
-    return String(text)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
+    if(!data?.hourly)
+        return;
+
+    const values =
+        data.hourly.temperature_2m
+        ?.slice(0,24)
+        ?.filter(
+            Number.isFinite
         );
 
-}
+    if(!values?.length)
+        return;
 
+    const w =
+        chart.clientWidth;
 
-/* =========================================================
-   GPS
-========================================================= */
+    const h =
+        chart.clientHeight;
 
-function setupGPS(){
+    const dpr =
+        Math.min(
+            window.devicePixelRatio||1,
+            2
+        );
 
-    $("gps")
-        .onclick =
-        ()=>{
+    chart.width =
+        w*dpr;
 
-            if(
-                !navigator.geolocation
-            ){
+    chart.height =
+        h*dpr;
 
-                alert(
-                    "GPS не поддерживается."
+    chartCtx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    chartCtx.clearRect(
+        0,
+        0,
+        w,
+        h
+    );
+
+    const min =
+        Math.min(...values)-2;
+
+    const max =
+        Math.max(...values)+2;
+
+    /* GRID */
+
+    chartCtx.strokeStyle =
+        "rgba(255,255,255,.08)";
+
+    chartCtx.lineWidth=1;
+
+    for(let i=1;i<4;i++){
+
+        const y =
+            (h/4)*i;
+
+        chartCtx.beginPath();
+
+        chartCtx.moveTo(
+            0,
+            y
+        );
+
+        chartCtx.lineTo(
+            w,
+            y
+        );
+
+        chartCtx.stroke();
+
+    }
+
+    /* LINE */
+
+    chartCtx.beginPath();
+
+    values.forEach(
+        (value,i)=>{
+
+            const x =
+                4+
+                i/
+                Math.max(
+                    1,
+                    values.length-1
+                )*
+                (w-8);
+
+            const y =
+                h-
+                (
+                    (value-min)/
+                    (max-min)
+                )*
+                (h-12)-
+                6;
+
+            if(i===0)
+                chartCtx.moveTo(
+                    x,
+                    y
+                );
+            else
+                chartCtx.lineTo(
+                    x,
+                    y
                 );
 
-                return;
+        }
+    );
 
-            }
+    chartCtx.strokeStyle =
+        "#ffffff";
 
+    chartCtx.lineWidth=2;
 
-            $("gps")
-                .textContent =
-                "⌛";
-
-
-            navigator.geolocation
-                .getCurrentPosition(
-
-                    async position => {
-
-                        const lat =
-                            position.coords
-                                .latitude;
-
-
-                        const lon =
-                            position.coords
-                                .longitude;
-
-
-                        SW.map.flyTo(
-                            [
-                                lat,
-                                lon
-                            ],
-                            10,
-                            {
-                                duration:1.2
-                            }
-                        );
-
-
-                        await selectPoint(
-                            lat,
-                            lon,
-                            "Моё местоположение"
-                        );
-
-
-                        $("gps")
-                            .textContent =
-                            "📍";
-
-                    },
-
-
-                    error => {
-
-                        console.error(
-                            error
-                        );
-
-
-                        $("gps")
-                            .textContent =
-                            "📍";
-
-
-                        alert(
-                            "Разрешите доступ к местоположению."
-                        );
-
-                    },
-
-                    {
-
-                        enableHighAccuracy:true,
-
-                        timeout:20000,
-
-                        maximumAge:0
-
-                    }
-
-                );
-
-        };
+    chartCtx.stroke();
 
 }
 
+/* =========================================================
+   MAP CLICK
+   ========================================================= */
+
+canvas.addEventListener(
+    "click",
+    async event=>{
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const x =
+            event.clientX-
+            rect.left;
+
+        const y =
+            event.clientY-
+            rect.top;
+
+        lon =
+            (x/W)*360-180;
+
+        lat =
+            90-
+            (y/H)*180;
+
+        hour=0;
+
+        UI.time.value=0;
+
+        UI.location.textContent =
+            "Selected location";
+
+        draw();
+
+        await getWeather();
+
+    }
+);
 
 /* =========================================================
-   MAP MOVEMENT
-========================================================= */
+   LAYERS
+   ========================================================= */
 
-SW_MAP_MOVEMENT_SETUP = true;
+document
+.querySelectorAll(".layer")
+.forEach(
+    button=>{
 
-
-/*
- * После перемещения карты
- * автоматически обновляем
- * выбранный погодный слой.
- */
-
-setTimeout(
-    ()=>{
-
-        if(!SW.map)
-            return;
-
-
-        SW.map.on(
-            "moveend",
+        button.addEventListener(
+            "click",
             ()=>{
 
-                if(
-                    SW.mode ===
-                    "temperature"
-                )
-                    drawTemperature();
+                document
+                .querySelectorAll(".layer")
+                .forEach(
+                    b=>
+                    b.classList.remove(
+                        "active"
+                    )
+                );
 
+                button.classList.add(
+                    "active"
+                );
 
-                if(
-                    SW.mode ===
-                    "rain"
-                )
-                    rainLayer();
+                layer =
+                    button.dataset.layer;
 
-
-                if(
-                    SW.mode ===
-                    "clouds"
-                )
-                    cloudLayer();
-
-
-                if(
-                    SW.mode ===
-                    "wind"
-                )
-                    windLayer();
+                draw();
 
             }
         );
 
-    },
-    1000
+    }
 );
+
+/* =========================================================
+   TIME SLIDER
+   ========================================================= */
+
+UI.time.addEventListener(
+    "input",
+    ()=>{
+
+        hour =
+            Number(
+                UI.time.value
+            );
+
+        draw();
+
+        update();
+
+    }
+);
+
+/* =========================================================
+   PLAY
+   ========================================================= */
+
+UI.play.addEventListener(
+    "click",
+    ()=>{
+
+        if(playing){
+
+            clearInterval(timer);
+
+            timer=null;
+
+            playing=false;
+
+            UI.play.textContent="▶";
+
+            return;
+
+        }
+
+        playing=true;
+
+        UI.play.textContent="❚❚";
+
+        timer =
+            setInterval(
+                ()=>{
+
+                    hour++;
+
+                    if(hour>23)
+                        hour=0;
+
+                    UI.time.value =
+                        hour;
+
+                    draw();
+
+                    update();
+
+                },
+                650
+            );
+
+    }
+);
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+UI.open.addEventListener(
+    "click",
+    ()=>{
+
+        UI.open.style.display =
+            "none";
+
+        document.body.style.overflow =
+            "hidden";
+
+        resize();
+
+        getWeather();
+
+    }
+);
+
+UI.close.addEventListener(
+    "click",
+    ()=>{
+
+        UI.open.style.display =
+            "block";
+
+        if(playing){
+
+            clearInterval(timer);
+
+            timer=null;
+
+            playing=false;
+
+            UI.play.textContent="▶";
+
+        }
+
+    }
+);
+
+/* =========================================================
+   START
+   ========================================================= */
+
+resize();
+
+getWeather();
 
 </script>
 
