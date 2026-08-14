@@ -1,24 +1,16 @@
-/* =========================================================
-   SHOHIN WEATHER V1
-   js/app.js
-   GLOBAL MAP + GPS + SEARCH
-========================================================= */
-
 "use strict";
 
-
 /* =========================================================
-   APP STATE
+   SHOHIN WEATHER V2
+   REAL WEATHER + GLOBAL MAP + GPS + SEARCH
 ========================================================= */
 
 const SHOHIN = {
 
     map: null,
-
     marker: null,
 
     standardLayer: null,
-
     satelliteLayer: null,
 
     selectedLocation: null,
@@ -34,18 +26,16 @@ const SHOHIN = {
 
 
 /* =========================================================
-   DOM HELPER
+   SHORT DOM FUNCTION
 ========================================================= */
 
 function $(id) {
-
     return document.getElementById(id);
-
 }
 
 
 /* =========================================================
-   INITIALIZE
+   START APP
 ========================================================= */
 
 document.addEventListener(
@@ -62,7 +52,9 @@ document.addEventListener(
 
         setupCloseButton();
 
-        setupSatelliteToggle();
+        setupLayers();
+
+        setupBottomNavigation();
 
         hideLoading();
 
@@ -80,13 +72,9 @@ function initMap() {
         "map",
         {
             zoomControl: false,
-
             minZoom: 2,
-
             maxZoom: 19,
-
             worldCopyJump: true,
-
             preferCanvas: true
         }
     ).setView(
@@ -95,9 +83,7 @@ function initMap() {
     );
 
 
-    /* -----------------------------------------
-       STANDARD MAP
-    ----------------------------------------- */
+    /* STANDARD MAP */
 
     SHOHIN.standardLayer = L.tileLayer(
 
@@ -110,17 +96,12 @@ function initMap() {
                 '&copy; OpenStreetMap contributors'
         }
 
-    );
-
-
-    SHOHIN.standardLayer.addTo(
+    ).addTo(
         SHOHIN.map
     );
 
 
-    /* -----------------------------------------
-       SATELLITE MAP
-    ----------------------------------------- */
+    /* SATELLITE */
 
     SHOHIN.satelliteLayer = L.tileLayer(
 
@@ -130,15 +111,13 @@ function initMap() {
             maxZoom: 19,
 
             attribution:
-                "Tiles &copy; Esri"
+                "Tiles © Esri"
         }
 
     );
 
 
-    /* -----------------------------------------
-       MAP CLICK
-    ----------------------------------------- */
+    /* CLICK ON MAP */
 
     SHOHIN.map.on(
         "click",
@@ -159,6 +138,15 @@ function initMap() {
         }
     );
 
+
+    /* DEFAULT LOCATION */
+
+    selectLocation(
+        SHOHIN.defaultLocation[0],
+        SHOHIN.defaultLocation[1],
+        "Dushanbe"
+    );
+
 }
 
 
@@ -166,7 +154,7 @@ function initMap() {
    SELECT LOCATION
 ========================================================= */
 
-function selectLocation(
+async function selectLocation(
     lat,
     lon,
     name
@@ -175,9 +163,7 @@ function selectLocation(
     SHOHIN.selectedLocation = {
 
         lat: lat,
-
         lon: lon,
-
         name: name
 
     };
@@ -186,13 +172,11 @@ function selectLocation(
     updateLocationUI(
         lat,
         lon,
-        name
+        name || "Selected location"
     );
 
 
-    /* -----------------------------------------
-       REMOVE OLD MARKER
-    ----------------------------------------- */
+    /* REMOVE OLD MARKER */
 
     if (
         SHOHIN.marker
@@ -205,9 +189,7 @@ function selectLocation(
     }
 
 
-    /* -----------------------------------------
-       CREATE NEW MARKER
-    ----------------------------------------- */
+    /* CREATE MARKER */
 
     SHOHIN.marker = L.marker(
         [
@@ -219,9 +201,7 @@ function selectLocation(
     );
 
 
-    /* -----------------------------------------
-       POPUP
-    ----------------------------------------- */
+    /* POPUP */
 
     SHOHIN.marker.bindPopup(
 
@@ -242,8 +222,10 @@ function selectLocation(
                 color:#888;
                 font-size:11px;
             ">
-                ${lat.toFixed(5)}°,
-                ${lon.toFixed(5)}°
+
+                ${lat.toFixed(4)}°,
+                ${lon.toFixed(4)}°
+
             </span>
 
         </div>
@@ -255,9 +237,7 @@ function selectLocation(
     SHOHIN.marker.openPopup();
 
 
-    /* -----------------------------------------
-       MOVE MAP
-    ----------------------------------------- */
+    /* MOVE MAP */
 
     SHOHIN.map.flyTo(
         [
@@ -270,10 +250,696 @@ function selectLocation(
         ),
         {
             animate: true,
-
             duration: 0.8
         }
     );
+
+
+    /* LOAD REAL WEATHER */
+
+    await loadWeather(
+        lat,
+        lon,
+        name
+    );
+
+}
+
+
+/* =========================================================
+   REAL WEATHER
+========================================================= */
+
+async function loadWeather(
+    lat,
+    lon,
+    name
+) {
+
+    setWeatherLoading();
+
+
+    try {
+
+        const url =
+
+            "https://api.open-meteo.com/v1/forecast" +
+
+            "?latitude=" +
+            encodeURIComponent(lat) +
+
+            "&longitude=" +
+            encodeURIComponent(lon) +
+
+            "&current=" +
+
+            "temperature_2m," +
+
+            "relative_humidity_2m," +
+
+            "apparent_temperature," +
+
+            "is_day," +
+
+            "precipitation," +
+
+            "rain," +
+
+            "showers," +
+
+            "snowfall," +
+
+            "weather_code," +
+
+            "cloud_cover," +
+
+            "pressure_msl," +
+
+            "surface_pressure," +
+
+            "wind_speed_10m," +
+
+            "wind_direction_10m," +
+
+            "wind_gusts_10m" +
+
+            "&hourly=" +
+
+            "temperature_2m," +
+
+            "relative_humidity_2m," +
+
+            "precipitation_probability," +
+
+            "precipitation," +
+
+            "weather_code," +
+
+            "cloud_cover," +
+
+            "wind_speed_10m," +
+
+            "wind_direction_10m" +
+
+            "&daily=" +
+
+            "weather_code," +
+
+            "temperature_2m_max," +
+
+            "temperature_2m_min," +
+
+            "sunrise," +
+
+            "sunset," +
+
+            "uv_index_max" +
+
+            "&timezone=auto";
+
+
+        const response =
+            await fetch(
+                url
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                "Weather API error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "SHOHIN WEATHER DATA:",
+            data
+        );
+
+
+        displayWeather(
+            data
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "WEATHER ERROR:",
+            error
+        );
+
+
+        showWeatherError();
+
+    }
+
+}
+
+
+/* =========================================================
+   DISPLAY WEATHER
+========================================================= */
+
+function displayWeather(
+    data
+) {
+
+    const current =
+        data.current;
+
+
+    if (!current) {
+
+        showWeatherError();
+
+        return;
+
+    }
+
+
+    const temperature =
+        current.temperature_2m;
+
+
+    const humidity =
+        current.relative_humidity_2m;
+
+
+    const wind =
+        current.wind_speed_10m;
+
+
+    const windDirection =
+        current.wind_direction_10m;
+
+
+    const clouds =
+        current.cloud_cover;
+
+
+    const rain =
+        current.precipitation;
+
+
+    const pressure =
+        current.pressure_msl;
+
+
+    const apparent =
+        current.apparent_temperature;
+
+
+    const weatherCode =
+        current.weather_code;
+
+
+    const uv =
+        data.daily &&
+        data.daily.uv_index_max
+            ? data.daily.uv_index_max[0]
+            : null;
+
+
+    /* TEMPERATURE */
+
+    const tempElement =
+        document.querySelector(
+            ".weather-temperature"
+        );
+
+
+    if (tempElement) {
+
+        tempElement.textContent =
+            formatNumber(
+                temperature
+            ) +
+            "°C";
+
+    }
+
+
+    /* DESCRIPTION */
+
+    const descriptionElement =
+        document.querySelector(
+            ".weather-description"
+        );
+
+
+    if (descriptionElement) {
+
+        descriptionElement.textContent =
+            weatherDescription(
+                weatherCode
+            );
+
+    }
+
+
+    /* MINI CARDS */
+
+    const miniCards =
+        document.querySelectorAll(
+            ".weather-mini-grid > div"
+        );
+
+
+    if (miniCards.length >= 4) {
+
+        /* WIND */
+
+        miniCards[0]
+            .querySelector("strong")
+            .textContent =
+            formatNumber(
+                wind
+            ) +
+            " km/h";
+
+
+        miniCards[0]
+            .querySelector("span")
+            .textContent =
+            "💨";
+
+
+        /* HUMIDITY */
+
+        miniCards[1]
+            .querySelector("strong")
+            .textContent =
+            formatNumber(
+                humidity
+            ) +
+            "%";
+
+
+        /* CLOUDS */
+
+        miniCards[2]
+            .querySelector("strong")
+            .textContent =
+            formatNumber(
+                clouds
+            ) +
+            "%";
+
+
+        /* RAIN */
+
+        miniCards[3]
+            .querySelector("strong")
+            .textContent =
+            formatNumber(
+                rain
+            ) +
+            " mm";
+
+    }
+
+
+    /* EXTRA WEATHER INFORMATION */
+
+    updateWeatherExtra(
+
+        pressure,
+
+        apparent,
+
+        windDirection,
+
+        uv
+
+    );
+
+
+    /* UPDATE POPUP */
+
+    if (
+        SHOHIN.marker
+    ) {
+
+        SHOHIN.marker.bindPopup(
+
+            `
+            <div style="
+                min-width:180px;
+                text-align:center;
+                padding:6px;
+            ">
+
+                <strong style="
+                    font-size:15px;
+                ">
+                    ${formatNumber(temperature)}°C
+                </strong>
+
+                <br>
+
+                <span>
+                    ${weatherDescription(weatherCode)}
+                </span>
+
+                <hr style="
+                    border:0;
+                    border-top:1px solid #ddd;
+                    margin:8px 0;
+                ">
+
+                <small>
+                    💨 ${formatNumber(wind)} km/h
+                </small>
+
+                <br>
+
+                <small>
+                    💧 ${formatNumber(humidity)}%
+                </small>
+
+                <br>
+
+                <small>
+                    ☁️ ${formatNumber(clouds)}%
+                </small>
+
+            </div>
+            `
+
+        );
+
+    }
+
+
+    console.log(
+        "Temperature:",
+        temperature
+    );
+
+    console.log(
+        "Wind:",
+        wind,
+        windDirection
+    );
+
+    console.log(
+        "Humidity:",
+        humidity
+    );
+
+    console.log(
+        "Clouds:",
+        clouds
+    );
+
+    console.log(
+        "Rain:",
+        rain
+    );
+
+    console.log(
+        "Pressure:",
+        pressure
+    );
+
+}
+
+
+/* =========================================================
+   EXTRA WEATHER DATA
+========================================================= */
+
+function updateWeatherExtra(
+
+    pressure,
+
+    apparent,
+
+    windDirection,
+
+    uv
+
+) {
+
+    const card =
+        $("locationCard");
+
+
+    if (!card) {
+
+        return;
+
+    }
+
+
+    let extra =
+        document.querySelector(
+            ".weather-extra"
+        );
+
+
+    if (!extra) {
+
+        extra =
+            document.createElement(
+                "div"
+            );
+
+        extra.className =
+            "weather-extra";
+
+
+        card.appendChild(
+            extra
+        );
+
+    }
+
+
+    extra.innerHTML =
+
+        `
+        <div>
+            <span>🌡️ Feels</span>
+            <strong>
+                ${formatNumber(apparent)}°C
+            </strong>
+        </div>
+
+        <div>
+            <span>🔽 Pressure</span>
+            <strong>
+                ${formatNumber(pressure)} hPa
+            </strong>
+        </div>
+
+        <div>
+            <span>🧭 Wind</span>
+            <strong>
+                ${formatNumber(windDirection)}°
+            </strong>
+        </div>
+
+        <div>
+            <span>☀️ UV</span>
+            <strong>
+                ${
+                    uv !== null
+                    ? formatNumber(uv)
+                    : "—"
+                }
+            </strong>
+        </div>
+        `;
+
+}
+
+
+/* =========================================================
+   LOADING WEATHER
+========================================================= */
+
+function setWeatherLoading() {
+
+    const temp =
+        document.querySelector(
+            ".weather-temperature"
+        );
+
+
+    const desc =
+        document.querySelector(
+            ".weather-description"
+        );
+
+
+    if (temp) {
+
+        temp.textContent =
+            "…";
+
+    }
+
+
+    if (desc) {
+
+        desc.textContent =
+            "Получаем погоду...";
+
+    }
+
+
+    const cards =
+        document.querySelectorAll(
+            ".weather-mini-grid strong"
+        );
+
+
+    cards.forEach(
+        function (card) {
+
+            card.textContent =
+                "…";
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   WEATHER ERROR
+========================================================= */
+
+function showWeatherError() {
+
+    const desc =
+        document.querySelector(
+            ".weather-description"
+        );
+
+
+    if (desc) {
+
+        desc.textContent =
+            "Не удалось получить погоду";
+
+    }
+
+}
+
+
+/* =========================================================
+   WEATHER DESCRIPTION
+========================================================= */
+
+function weatherDescription(
+    code
+) {
+
+    const weather = {
+
+        0: "Ясно ☀️",
+
+        1: "Преимущественно ясно 🌤️",
+
+        2: "Переменная облачность ⛅",
+
+        3: "Пасмурно ☁️",
+
+        45: "Туман 🌫️",
+
+        48: "Изморозь 🌫️",
+
+        51: "Лёгкая морось 🌦️",
+
+        53: "Морось 🌦️",
+
+        55: "Сильная морось 🌧️",
+
+        56: "Ледяная морось 🌧️",
+
+        57: "Сильная ледяная морось 🌧️",
+
+        61: "Небольшой дождь 🌦️",
+
+        63: "Дождь 🌧️",
+
+        65: "Сильный дождь 🌧️",
+
+        66: "Ледяной дождь 🌧️",
+
+        67: "Сильный ледяной дождь 🌧️",
+
+        71: "Небольшой снег 🌨️",
+
+        73: "Снег ❄️",
+
+        75: "Сильный снег ❄️",
+
+        77: "Снежные зёрна ❄️",
+
+        80: "Ливень 🌦️",
+
+        81: "Сильный ливень 🌧️",
+
+        82: "Очень сильный ливень ⛈️",
+
+        85: "Снегопад 🌨️",
+
+        86: "Сильный снегопад ❄️",
+
+        95: "Гроза ⛈️",
+
+        96: "Гроза с градом ⛈️",
+
+        99: "Сильная гроза с градом ⛈️"
+
+    };
+
+
+    return (
+        weather[code] ||
+        "Погода"
+    );
+
+}
+
+
+/* =========================================================
+   NUMBER FORMAT
+========================================================= */
+
+function formatNumber(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        Number.isNaN(
+            Number(value)
+        )
+    ) {
+
+        return "—";
+
+    }
+
+
+    return Number(
+        value
+    ).toFixed(0);
 
 }
 
@@ -288,32 +954,31 @@ function updateLocationUI(
     name
 ) {
 
-    const locationName =
-        $("locationName");
+    if (
+        $("locationName")
+    ) {
 
-    const locationCoords =
-        $("locationCoords");
-
-
-    if (!locationName ||
-        !locationCoords) {
-
-        return;
+        $("locationName")
+            .textContent =
+            name ||
+            "Selected location";
 
     }
 
 
-    locationName.textContent =
-        name ||
-        "Selected location";
+    if (
+        $("locationCoords")
+    ) {
 
+        $("locationCoords")
+            .textContent =
 
-    locationCoords.textContent =
+            lat.toFixed(5) +
+            "°, " +
+            lon.toFixed(5) +
+            "°";
 
-        lat.toFixed(5) +
-        "°, " +
-        lon.toFixed(5) +
-        "°";
+    }
 
 }
 
@@ -330,10 +995,6 @@ function setupGPS() {
 
     if (!button) {
 
-        console.error(
-            "GPS button not found"
-        );
-
         return;
 
     }
@@ -347,17 +1008,13 @@ function setupGPS() {
 }
 
 
-/* =========================================================
-   GET USER LOCATION
-========================================================= */
-
 function locateUser() {
 
     if (
         !navigator.geolocation
     ) {
 
-        showMessage(
+        alert(
             "Ваш браузер не поддерживает GPS."
         );
 
@@ -378,14 +1035,9 @@ function locateUser() {
         true;
 
 
-    showMessage(
-        "📍 Определяем местоположение..."
-    );
-
-
     navigator.geolocation.getCurrentPosition(
 
-        function (position) {
+        async function (position) {
 
             const lat =
                 position.coords.latitude;
@@ -395,15 +1047,11 @@ function locateUser() {
 
 
             console.log(
-                "SHOHIN GPS:",
+                "GPS:",
                 lat,
                 lon
             );
 
-
-            /* -----------------------------------------
-               MOVE MAP
-            ----------------------------------------- */
 
             SHOHIN.map.flyTo(
 
@@ -423,11 +1071,7 @@ function locateUser() {
             );
 
 
-            /* -----------------------------------------
-               SELECT LOCATION
-            ----------------------------------------- */
-
-            selectLocation(
+            await selectLocation(
 
                 lat,
 
@@ -439,21 +1083,12 @@ function locateUser() {
 
 
             button.textContent =
-                "◎";
+                "📍";
 
 
             button.disabled =
                 false;
 
-
-            showMessage(
-                "📍 Местоположение найдено"
-            );
-
-
-            /* -----------------------------------------
-               TRY REVERSE GEOCODING
-            ----------------------------------------- */
 
             reverseGeocode(
                 lat,
@@ -472,22 +1107,54 @@ function locateUser() {
 
 
             button.textContent =
-                "◎";
+                "📍";
 
 
             button.disabled =
                 false;
 
 
-            handleLocationError(
-                error
-            );
+            if (
+                error.code === 1
+            ) {
+
+                alert(
+                    "Разрешите браузеру доступ к местоположению."
+                );
+
+            }
+
+            else if (
+                error.code === 2
+            ) {
+
+                alert(
+                    "Местоположение недоступно. Включите GPS."
+                );
+
+            }
+
+            else if (
+                error.code === 3
+            ) {
+
+                alert(
+                    "GPS не ответил вовремя. Попробуйте ещё раз."
+                );
+
+            }
+
+            else {
+
+                alert(
+                    "Не удалось определить местоположение."
+                );
+
+            }
 
         },
 
-
         {
-
             enableHighAccuracy:
                 true,
 
@@ -499,63 +1166,6 @@ function locateUser() {
 
         }
 
-    );
-
-}
-
-
-/* =========================================================
-   GPS ERROR HANDLER
-========================================================= */
-
-function handleLocationError(
-    error
-) {
-
-    if (
-        error.code ===
-        error.PERMISSION_DENIED
-    ) {
-
-        showMessage(
-            "⚠️ Разрешите доступ к местоположению."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        error.code ===
-        error.POSITION_UNAVAILABLE
-    ) {
-
-        showMessage(
-            "⚠️ Местоположение недоступно. Включите GPS."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        error.code ===
-        error.TIMEOUT
-    ) {
-
-        showMessage(
-            "⚠️ GPS не ответил вовремя. Попробуйте ещё раз."
-        );
-
-        return;
-
-    }
-
-
-    showMessage(
-        "⚠️ Не удалось определить местоположение."
     );
 
 }
@@ -597,9 +1207,7 @@ async function reverseGeocode(
             );
 
 
-        if (
-            !response.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
                 "Reverse geocoding failed"
@@ -637,51 +1245,14 @@ async function reverseGeocode(
 
 
         updateLocationUI(
-
             lat,
-
             lon,
-
             name
-
         );
 
+    }
 
-        if (
-            SHOHIN.marker
-        ) {
-
-            SHOHIN.marker.bindPopup(
-
-                `
-                <div style="
-                    min-width:170px;
-                    text-align:center;
-                ">
-
-                    <strong>
-                        ${escapeHTML(name)}
-                    </strong>
-
-                    <br>
-
-                    <span style="
-                        color:#999;
-                        font-size:10px;
-                    ">
-                        ${lat.toFixed(5)}°,
-                        ${lon.toFixed(5)}°
-                    </span>
-
-                </div>
-                `
-
-            );
-
-        }
-
-
-    } catch (error) {
+    catch (error) {
 
         console.warn(
             "Reverse geocoding:",
@@ -744,7 +1315,7 @@ function setupSearch() {
                         );
 
                     },
-                    400
+                    350
                 );
 
         }
@@ -766,28 +1337,6 @@ function setupSearch() {
 
             }
 
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                const query =
-                    input.value.trim();
-
-
-                if (
-                    query.length >= 2
-                ) {
-
-                    searchCity(
-                        query
-                    );
-
-                }
-
-            }
-
         }
     );
 
@@ -795,7 +1344,7 @@ function setupSearch() {
 
 
 /* =========================================================
-   CITY SEARCH API
+   SEARCH CITY
 ========================================================= */
 
 async function searchCity(
@@ -824,12 +1373,10 @@ async function searchCity(
             );
 
 
-        if (
-            !response.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
-                "Search failed"
+                "Search error"
             );
 
         }
@@ -843,8 +1390,9 @@ async function searchCity(
             data.results || []
         );
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "SEARCH ERROR:",
@@ -880,9 +1428,6 @@ function renderSearchResults(
     if (
         !results.length
     ) {
-
-        container.innerHTML =
-            "";
 
         container.style.display =
             "none";
@@ -923,17 +1468,11 @@ function renderSearchResults(
                     <div
                         class="search-result"
 
-                        data-lat="
-                            ${place.latitude}
-                        "
+                        data-lat="${place.latitude}"
 
-                        data-lon="
-                            ${place.longitude}
-                        "
+                        data-lon="${place.longitude}"
 
-                        data-name="
-                            ${name}
-                        "
+                        data-name="${name}"
                     >
 
                         <strong>
@@ -941,13 +1480,14 @@ function renderSearchResults(
                         </strong>
 
                         <small>
+
                             ${admin}
 
                             ${
                                 admin &&
                                 country
-                                ? " • "
-                                : ""
+                                    ? " • "
+                                    : ""
                             }
 
                             ${country}
@@ -966,58 +1506,56 @@ function renderSearchResults(
         "block";
 
 
-    const items =
-        container.querySelectorAll(
+    container
+        .querySelectorAll(
             ".search-result"
+        )
+        .forEach(
+            function (item) {
+
+                item.addEventListener(
+                    "click",
+                    async function () {
+
+                        const lat =
+                            Number(
+                                item.dataset.lat
+                            );
+
+
+                        const lon =
+                            Number(
+                                item.dataset.lon
+                            );
+
+
+                        const name =
+                            item.dataset.name;
+
+
+                        $("searchInput")
+                            .value =
+                            "";
+
+
+                        hideSearchResults();
+
+
+                        await selectLocation(
+
+                            lat,
+
+                            lon,
+
+                            name
+
+                        );
+
+                    }
+                );
+
+            }
         );
-
-
-    items.forEach(
-        function (item) {
-
-            item.addEventListener(
-                "click",
-                function () {
-
-                    const lat =
-                        Number(
-                            item.dataset.lat
-                        );
-
-
-                    const lon =
-                        Number(
-                            item.dataset.lon
-                        );
-
-
-                    const name =
-                        item.dataset.name;
-
-
-                    selectLocation(
-
-                        lat,
-
-                        lon,
-
-                        name
-
-                    );
-
-
-                    $("searchInput")
-                        .value =
-                        "";
-
-
-                    hideSearchResults();
-
-                }
-            );
-
-        }
-    );
 
 }
 
@@ -1032,15 +1570,12 @@ function hideSearchResults() {
         $("searchResults");
 
 
-    if (!container) {
+    if (container) {
 
-        return;
+        container.style.display =
+            "none";
 
     }
-
-
-    container.style.display =
-        "none";
 
 }
 
@@ -1051,21 +1586,118 @@ function hideSearchResults() {
 
 function setupMapControls() {
 
-    const zoomIn =
-        $("zoomIn");
+    if (
+        $("zoomIn")
+    ) {
+
+        $("zoomIn")
+            .addEventListener(
+                "click",
+                function () {
+
+                    SHOHIN.map.zoomIn();
+
+                }
+            );
+
+    }
 
 
-    const zoomOut =
-        $("zoomOut");
+    if (
+        $("zoomOut")
+    ) {
+
+        $("zoomOut")
+            .addEventListener(
+                "click",
+                function () {
+
+                    SHOHIN.map.zoomOut();
+
+                }
+            );
+
+    }
 
 
-    if (zoomIn) {
+    if (
+        $("centerMap")
+    ) {
 
-        zoomIn.addEventListener(
+        $("centerMap")
+            .addEventListener(
+                "click",
+                function () {
+
+                    SHOHIN.map.flyTo(
+
+                        SHOHIN.defaultLocation,
+
+                        5,
+
+                        {
+                            duration: 1
+                        }
+
+                    );
+
+                }
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   MAP LAYERS
+========================================================= */
+
+function setupLayers() {
+
+    const mapButton =
+        $("mapLayer");
+
+
+    const satelliteButton =
+        $("satelliteLayer");
+
+
+    if (mapButton) {
+
+        mapButton.addEventListener(
             "click",
             function () {
 
-                SHOHIN.map.zoomIn();
+                if (
+                    SHOHIN.map.hasLayer(
+                        SHOHIN.satelliteLayer
+                    )
+                ) {
+
+                    SHOHIN.map.removeLayer(
+                        SHOHIN.satelliteLayer
+                    );
+
+                }
+
+
+                if (
+                    !SHOHIN.map.hasLayer(
+                        SHOHIN.standardLayer
+                    )
+                ) {
+
+                    SHOHIN.standardLayer.addTo(
+                        SHOHIN.map
+                    );
+
+                }
+
+
+                setActiveLayerButton(
+                    mapButton
+                );
 
             }
         );
@@ -1073,13 +1705,289 @@ function setupMapControls() {
     }
 
 
-    if (zoomOut) {
+    if (satelliteButton) {
 
-        zoomOut.addEventListener(
+        satelliteButton.addEventListener(
             "click",
             function () {
 
-                SHOHIN.map.zoomOut();
+                if (
+                    SHOHIN.map.hasLayer(
+                        SHOHIN.standardLayer
+                    )
+                ) {
+
+                    SHOHIN.map.removeLayer(
+                        SHOHIN.standardLayer
+                    );
+
+                }
+
+
+                if (
+                    !SHOHIN.map.hasLayer(
+                        SHOHIN.satelliteLayer
+                    )
+                ) {
+
+                    SHOHIN.satelliteLayer.addTo(
+                        SHOHIN.map
+                    );
+
+                }
+
+
+                setActiveLayerButton(
+                    satelliteButton
+                );
+
+            }
+        );
+
+    }
+
+
+    /* WEATHER LAYER BUTTONS */
+
+    setupWeatherLayerButton(
+        "temperatureLayer",
+        "🌡️ Temperature"
+    );
+
+
+    setupWeatherLayerButton(
+        "windLayer",
+        "💨 Wind"
+    );
+
+
+    setupWeatherLayerButton(
+        "rainLayer",
+        "🌧️ Rain"
+    );
+
+
+    setupWeatherLayerButton(
+        "cloudLayer",
+        "☁️ Clouds"
+    );
+
+}
+
+
+/* =========================================================
+   WEATHER LAYER BUTTON
+========================================================= */
+
+function setupWeatherLayerButton(
+    id,
+    title
+) {
+
+    const button =
+        $(id);
+
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            setActiveLayerButton(
+                button
+            );
+
+
+            showWeatherLayerMessage(
+                title
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ACTIVE LAYER
+========================================================= */
+
+function setActiveLayerButton(
+    button
+) {
+
+    document
+        .querySelectorAll(
+            ".layer-button"
+        )
+        .forEach(
+            function (item) {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   WEATHER LAYER MESSAGE
+========================================================= */
+
+function showWeatherLayerMessage(
+    title
+) {
+
+    console.log(
+        "Selected layer:",
+        title
+    );
+
+
+    /*
+       IMPORTANT:
+       These buttons are prepared for
+       V3 Weather Grid.
+
+       We do NOT display fake
+       weather maps.
+    */
+
+    alert(
+        title +
+        "\n\nГлобальный погодный слой будет подключён в V3."
+    );
+
+}
+
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+function setupBottomNavigation() {
+
+    const map =
+        $("navMap");
+
+
+    const weather =
+        $("navWeather");
+
+
+    const wind =
+        $("navWind");
+
+
+    const rain =
+        $("navRain");
+
+
+    if (map) {
+
+        map.addEventListener(
+            "click",
+            function () {
+
+                activateNav(
+                    map
+                );
+
+            }
+        );
+
+    }
+
+
+    if (weather) {
+
+        weather.addEventListener(
+            "click",
+            function () {
+
+                activateNav(
+                    weather
+                );
+
+                focusWeather();
+
+            }
+        );
+
+    }
+
+
+    if (wind) {
+
+        wind.addEventListener(
+            "click",
+            function () {
+
+                activateNav(
+                    wind
+                );
+
+                showWeatherLayerMessage(
+                    "💨 Wind"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (rain) {
+
+        rain.addEventListener(
+            "click",
+            function () {
+
+                activateNav(
+                    rain
+                );
+
+                showWeatherLayerMessage(
+                    "🌧️ Rain"
+                );
+
+            }
+        );
+
+    }
+
+
+    const settings =
+        $("navSettings");
+
+
+    if (settings) {
+
+        settings.addEventListener(
+            "click",
+            function () {
+
+                activateNav(
+                    settings
+                );
+
+                alert(
+                    "SHOHIN WEATHER V2\n\nНастройки будут добавлены позже."
+                );
 
             }
         );
@@ -1090,7 +1998,66 @@ function setupMapControls() {
 
 
 /* =========================================================
-   CLOSE CARD
+   NAV ACTIVE
+========================================================= */
+
+function activateNav(
+    button
+) {
+
+    document
+        .querySelectorAll(
+            ".nav-item"
+        )
+        .forEach(
+            function (item) {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   FOCUS WEATHER
+========================================================= */
+
+function focusWeather() {
+
+    if (
+        SHOHIN.selectedLocation
+    ) {
+
+        const location =
+            SHOHIN.selectedLocation;
+
+
+        loadWeather(
+
+            location.lat,
+
+            location.lon,
+
+            location.name
+
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE LOCATION
 ========================================================= */
 
 function setupCloseButton() {
@@ -1152,51 +2119,7 @@ function setupCloseButton() {
 
 
 /* =========================================================
-   SATELLITE TOGGLE
-========================================================= */
-
-function setupSatelliteToggle() {
-
-    /*
-       V1 foundation.
-       Satellite layer is ready.
-
-       Later we will connect it
-       to a proper weather-layer
-       control.
-    */
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-function showMessage(
-    message
-) {
-
-    console.log(
-        "SHOHIN:",
-        message
-    );
-
-
-    /*
-       Temporary visible message.
-       Uses alert so it works everywhere.
-    */
-
-    alert(
-        message
-    );
-
-}
-
-
-/* =========================================================
-   LOADING
+   LOADING SCREEN
 ========================================================= */
 
 function hideLoading() {
@@ -1208,9 +2131,7 @@ function hideLoading() {
                 $("loading");
 
 
-            if (
-                loading
-            ) {
+            if (loading) {
 
                 loading.classList.add(
                     "hide"
@@ -1219,14 +2140,14 @@ function hideLoading() {
             }
 
         },
-        900
+        800
     );
 
 }
 
 
 /* =========================================================
-   ESCAPE HTML
+   HTML SECURITY
 ========================================================= */
 
 function escapeHTML(
@@ -1266,9 +2187,9 @@ function escapeHTML(
 
 
 /* =========================================================
-   DEBUG
+   START MESSAGE
 ========================================================= */
 
 console.log(
-    "🌍 SHOHIN WEATHER V1 loaded"
+    "🌍 SHOHIN WEATHER V2 — REAL WEATHER ENGINE LOADED"
 );
