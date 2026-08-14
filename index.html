@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,
+  initial-scale=1.0,
+  maximum-scale=1.0,
+  user-scalable=no"
+>
+
+<title>SHOHIN WEATHER</title>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- MAP -->
+
+  <div id="map"></div>
+
+
+  <!-- TOP BAR -->
+
+  <header class="topbar">
+
+    <div class="logo">
+
+      <div class="logo-main">
+        SHOHIN
+      </div>
+
+      <div class="logo-sub">
+        WEATHER
+      </div>
+
+    </div>
+
+
+    <div class="search-box">
+
+      <span>⌕</span>
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search city..."
+        autocomplete="off"
+      >
+
+    </div>
+
+
+    <button
+      id="gpsButton"
+      class="icon-button"
+      aria-label="GPS"
+    >
+      ◎
+    </button>
+
+  </header>
+
+
+  <!-- SEARCH RESULTS -->
+
+  <div
+    id="searchResults"
+    class="search-results"
+  ></div>
+
+
+  <!-- MAP CONTROLS -->
+
+  <div class="map-controls">
+
+    <button id="zoomIn">
+      +
+    </button>
+
+    <button id="zoomOut">
+      −
+    </button>
+
+  </div>
+
+
+  <!-- LOCATION CARD -->
+
+  <section
+    id="locationCard"
+    class="location-card"
+  >
+
+    <div class="card-header">
+
+      <div>
+
+        <div
+          id="locationName"
+          class="location-name"
+        >
+          Select a location
+        </div>
+
+        <div
+          id="locationCoords"
+          class="location-coords"
+        >
+          Tap anywhere on the map
+        </div>
+
+      </div>
+
+      <button
+        id="closeCard"
+        class="close-button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="card-status">
+
+      <span class="status-dot"></span>
+
+      <span>
+        SHOHIN WEATHER V1
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <button class="nav-item active">
+
+      <span>🌍</span>
+
+      <small>
+        Map
+      </small>
+
+    </button>
+
+
+    <button class="nav-item">
+
+      <span>☁️</span>
+
+      <small>
+        Weather
+      </small>
+
+    </button>
+
+
+    <button class="nav-item">
+
+      <span>⭐</span>
+
+      <small>
+        Places
+      </small>
+
+    </button>
+
+
+    <button class="nav-item">
+
+      <span>⚙️</span>
+
+      <small>
+        Settings
+      </small>
+
+    </button>
+
+  </nav>
+
+
+  <!-- LOADING -->
+
+  <div
+    id="loading"
+    class="loading"
+  >
+
+    <div class="loading-logo">
+      🌍
+    </div>
+
+    <div class="loading-title">
+      SHOHIN WEATHER
+    </div>
+
+    <div class="loading-subtitle">
+      GLOBAL WEATHER PLATFORM
+    </div>
+
+  </div>
+
+</div>
+
+
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
