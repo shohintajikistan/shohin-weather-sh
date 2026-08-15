@@ -3,10 +3,9 @@ export class ECMWF {
     constructor() {
 
         this.url =
-            "https://api.open-meteo.com/v1/ecmwf";
+            "https://api.open-meteo.com/v1/forecast";
 
     }
-
 
     async getWeather(
         latitude,
@@ -16,14 +15,15 @@ export class ECMWF {
         const params =
             new URLSearchParams({
 
-                latitude,
-                longitude,
+                latitude: latitude,
+
+                longitude: longitude,
+
+                current:
+                    "temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover",
 
                 hourly:
                     "temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,pressure_msl",
-
-                daily:
-                    "temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset",
 
                 forecast_days: "7",
 
@@ -32,25 +32,46 @@ export class ECMWF {
             });
 
 
+        const url =
+            this.url +
+            "?" +
+            params.toString();
+
+
+        console.log(
+            "SHOHIN API:",
+            url
+        );
+
+
         const response =
-            await fetch(
-                this.url +
-                "?" +
-                params.toString()
-            );
+            await fetch(url);
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Weather API: HTTP " +
+                "API HTTP " +
                 response.status
             );
 
         }
 
 
-        return response.json();
+        const data =
+            await response.json();
+
+
+        if (!data) {
+
+            throw new Error(
+                "API вернул пустой ответ"
+            );
+
+        }
+
+
+        return data;
 
     }
 
