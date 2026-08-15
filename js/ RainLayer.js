@@ -2,7 +2,7 @@
 ====================================================
  SHOHIN WEATHER V5.4
  RainLayer.js
- REAL PRECIPITATION LAYER
+ SAFE RAIN MODULE
 ====================================================
 */
 
@@ -21,12 +21,6 @@ export class RainLayer {
     }
 
 
-    /*
-    ================================================
-    SHOW
-    ================================================
-    */
-
     show() {
 
         if (
@@ -35,7 +29,7 @@ export class RainLayer {
         ) {
 
             throw new Error(
-                "RainLayer: карта не готова"
+                "RainLayer: map is not ready"
             );
 
         }
@@ -44,69 +38,64 @@ export class RainLayer {
         this.hide();
 
 
-        this.layer =
-            L.layerGroup();
+        const map =
+            this.mapEngine.map;
 
 
         const hourly =
-            this.weatherData?.hourly;
+            this.weatherData &&
+            this.weatherData.hourly;
+
+
+        if (!hourly) {
+
+            throw new Error(
+                "RainLayer: hourly data not found"
+            );
+
+        }
+
+
+        const precipitation =
+            hourly.precipitation;
 
 
         if (
-            !hourly
+            !precipitation ||
+            typeof precipitation.length !==
+            "number"
         ) {
 
             throw new Error(
-                "RainLayer: hourly data отсутствует"
+                "RainLayer: precipitation data not found"
             );
 
         }
 
 
         const rain =
-            hourly.precipitation;
-
-
-        if (
-            !Array.isArray(rain)
-        ) {
-
-            throw new Error(
-                "RainLayer: precipitation отсутствует"
-            );
-
-        }
-
-
-        const center =
-            this.mapEngine.map
-                .getCenter();
-
-
-        const baseRain =
             Number(
-                rain[0]
+                precipitation[0]
             );
 
 
         const safeRain =
-            Number.isFinite(
-                baseRain
-            )
-            ? baseRain
-            : 0;
+            Number.isFinite(rain)
+                ? rain
+                : 0;
 
 
-        /*
-        ============================================
-        CREATE SIMPLE RAIN FIELD
-        ============================================
-        */
+        const center =
+            map.getCenter();
 
 
-        const size = 11;
+        this.layer =
+            L.layerGroup();
 
-        const step = 0.12;
+
+        const size = 9;
+
+        const step = 0.15;
 
         const half =
             Math.floor(
@@ -137,13 +126,6 @@ export class RainLayer {
                     x * step;
 
 
-                /*
-                ------------------------------------
-                SMALL NATURAL VARIATION
-                ------------------------------------
-                */
-
-
                 const distance =
                     Math.sqrt(
                         x * x +
@@ -151,49 +133,41 @@ export class RainLayer {
                     );
 
 
-                const amount =
+                const factor =
                     Math.max(
-
                         0,
-
-                        safeRain *
-                        (
-                            1 -
-                            distance /
-                            (half * 1.5)
-                        )
-
+                        1 -
+                        distance /
+                        (half * 1.5)
                     );
 
 
-                /*
-                ------------------------------------
-                COLOR
-                ------------------------------------
-                */
+                const amount =
+                    safeRain * factor;
 
 
-                let color;
+                let color =
+                    "#38bdf8";
 
 
                 if (
-                    amount < 0.1
+                    amount >= 8
                 ) {
 
                     color =
-                        "#38bdf8";
+                        "#ef4444";
 
                 }
                 else if (
-                    amount < 1
+                    amount >= 3
                 ) {
 
                     color =
-                        "#22c55e";
+                        "#f97316";
 
                 }
                 else if (
-                    amount < 3
+                    amount >= 1
                 ) {
 
                     color =
@@ -201,83 +175,53 @@ export class RainLayer {
 
                 }
                 else if (
-                    amount < 8
+                    amount >= 0.1
                 ) {
 
                     color =
-                        "#f97316";
+                        "#22c55e";
 
                 }
-                else {
-
-                    color =
-                        "#ef4444";
-
-                }
-
-
-                /*
-                ------------------------------------
-                CELL
-                ------------------------------------
-                */
 
 
                 const bounds = [
 
                     [
-
-                        lat -
-                        step / 2,
-
-                        lon -
-                        step / 2
-
+                        lat - step / 2,
+                        lon - step / 2
                     ],
 
                     [
-
-                        lat +
-                        step / 2,
-
-                        lon +
-                        step / 2
-
+                        lat + step / 2,
+                        lon + step / 2
                     ]
 
                 ];
 
 
-                const rectangle =
-                    L.rectangle(
+                L.rectangle(
 
-                        bounds,
+                    bounds,
 
-                        {
+                    {
 
-                            stroke:
-                                false,
+                        stroke: false,
 
-                            fill:
-                                true,
+                        fill: true,
 
-                            fillColor:
-                                color,
+                        fillColor:
+                            color,
 
-                            fillOpacity:
-                                amount > 0
-                                ? 0.40
-                                : 0.12,
+                        fillOpacity:
+                            amount > 0
+                                ? 0.42
+                                : 0.08,
 
-                            interactive:
-                                false
+                        interactive: false
 
-                        }
+                    }
 
-                    );
-
-
-                rectangle.addTo(
+                ).addTo(
                     this.layer
                 );
 
@@ -286,38 +230,24 @@ export class RainLayer {
         }
 
 
-        /*
-        ============================================
-        ADD TO MAP
-        ============================================
-        */
-
-
-        this.layer.addTo(
-            this.mapEngine.map
-        );
+        this.layer.addTo(map);
 
 
         this.visible =
             true;
 
 
-        return this.layer;
+        return true;
 
     }
 
-
-    /*
-    ================================================
-    HIDE
-    ================================================
-    */
 
     hide() {
 
         if (
             this.layer &&
-            this.mapEngine?.map
+            this.mapEngine &&
+            this.mapEngine.map
         ) {
 
             this.mapEngine.map
@@ -328,21 +258,12 @@ export class RainLayer {
         }
 
 
-        this.layer =
-            null;
+        this.layer = null;
 
-
-        this.visible =
-            false;
+        this.visible = false;
 
     }
 
-
-    /*
-    ================================================
-    TOGGLE
-    ================================================
-    */
 
     toggle() {
 
@@ -361,12 +282,6 @@ export class RainLayer {
 
     }
 
-
-    /*
-    ================================================
-    IS VISIBLE
-    ================================================
-    */
 
     isVisible() {
 
