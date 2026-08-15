@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>SHOHIN Weather V5.3</title>
+<title>SHOHIN Weather V5.4</title>
 
 <link
     rel="stylesheet"
@@ -18,10 +18,6 @@
 />
 
 <style>
-
-/* =================================================
-   BASE
-================================================= */
 
 * {
     box-sizing: border-box;
@@ -113,8 +109,6 @@ body {
 
     font-weight: 800;
 
-    letter-spacing: .2px;
-
 }
 
 .logo span {
@@ -133,7 +127,7 @@ body {
 
 
 /* =================================================
-   WEATHER CARD
+   WEATHER PANEL
 ================================================= */
 
 #weatherPanel {
@@ -254,7 +248,7 @@ body {
 
 
 /* =================================================
-   LAYER PANEL
+   LAYERS
 ================================================= */
 
 #layers {
@@ -266,7 +260,7 @@ body {
     top: 84px;
     right: 14px;
 
-    width: 155px;
+    width: 165px;
 
     padding: 9px;
 
@@ -336,7 +330,7 @@ body {
 
 
 /* =================================================
-   GRID INFO
+   INFO
 ================================================= */
 
 #gridInfo {
@@ -365,11 +359,6 @@ body {
     font-size: 11px;
 
 }
-
-
-/* =================================================
-   SYSTEM STATUS
-================================================= */
 
 #systemStatus {
 
@@ -539,7 +528,7 @@ body {
         top: 72px;
         right: 7px;
 
-        width: 140px;
+        width: 145px;
 
     }
 
@@ -579,9 +568,7 @@ body {
     <div id="map"></div>
 
 
-    <!-- =========================================
-         TOP BAR
-    ========================================== -->
+    <!-- TOP -->
 
     <div id="topbar">
 
@@ -601,19 +588,15 @@ body {
     </div>
 
 
-    <!-- =========================================
-         WEATHER
-    ========================================== -->
+    <!-- WEATHER -->
 
     <div id="weatherPanel">
-
 
         <div id="location">
 
             Dushanbe
 
         </div>
-
 
         <div id="coordinates">
 
@@ -622,13 +605,11 @@ body {
 
         </div>
 
-
         <div id="temperature">
 
             --°C
 
         </div>
-
 
         <div id="weatherStatus">
 
@@ -643,18 +624,14 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
-
                     💧 Влажность
-
                 </div>
 
                 <div
                     id="humidity"
                     class="metric-value"
                 >
-
                     --
-
                 </div>
 
             </div>
@@ -663,18 +640,14 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
-
                     🌧 Осадки
-
                 </div>
 
                 <div
                     id="rain"
                     class="metric-value"
                 >
-
                     --
-
                 </div>
 
             </div>
@@ -683,18 +656,14 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
-
                     💨 Ветер
-
                 </div>
 
                 <div
                     id="wind"
                     class="metric-value"
                 >
-
                     --
-
                 </div>
 
             </div>
@@ -703,18 +672,14 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
-
                     ☁ Облака
-
                 </div>
 
                 <div
                     id="clouds"
                     class="metric-value"
                 >
-
                     --
-
                 </div>
 
             </div>
@@ -723,18 +688,14 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
-
                     🌀 Давление
-
                 </div>
 
                 <div
                     id="pressure"
                     class="metric-value"
                 >
-
                     --
-
                 </div>
 
             </div>
@@ -745,12 +706,9 @@ body {
     </div>
 
 
-    <!-- =========================================
-         LAYERS
-    ========================================== -->
+    <!-- LAYERS -->
 
     <div id="layers">
-
 
         <div class="layerTitle">
 
@@ -763,19 +721,15 @@ body {
             id="temperatureLayer"
             class="layerButton active"
         >
-
             🌡 Temperature
-
         </button>
 
 
         <button
             id="gridLayer"
-            class="layerButton"
+            class="layerButton active"
         >
-
             🔥 Temperature Grid
-
         </button>
 
 
@@ -783,9 +737,7 @@ body {
             id="rainLayer"
             class="layerButton"
         >
-
             🌧 Rain
-
         </button>
 
 
@@ -793,9 +745,7 @@ body {
             id="windLayer"
             class="layerButton"
         >
-
             💨 Wind
-
         </button>
 
 
@@ -803,9 +753,7 @@ body {
             id="cloudLayer"
             class="layerButton"
         >
-
             ☁ Clouds
-
         </button>
 
 
@@ -813,22 +761,15 @@ body {
             id="pressureLayer"
             class="layerButton"
         >
-
             🌀 Pressure
-
         </button>
-
 
     </div>
 
 
-    <!-- =========================================
-         INFO
-    ========================================== -->
-
     <div id="systemStatus">
 
-        SHOHIN V5.3 • Starting...
+        SHOHIN V5.4 • Starting...
 
     </div>
 
@@ -840,17 +781,13 @@ body {
     </div>
 
 
-    <!-- =========================================
-         LOADING
-    ========================================== -->
-
     <div id="loading">
 
         <div class="loader"></div>
 
         <div>
 
-            🌍 SHOHIN Weather V5.3
+            🌍 SHOHIN Weather V5.4
 
         </div>
 
@@ -886,8 +823,8 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 /*
 ====================================================
- SHOHIN WEATHER V5.3
- LIGHTWEIGHT WEATHER RENDERER
+ SHOHIN WEATHER V5.4
+ TEMPERATURE + RAIN
 ====================================================
 */
 
@@ -900,26 +837,20 @@ const $ =
 const loading =
     $("loading");
 
-
 const loadingText =
     $("loadingText");
-
 
 const errorBox =
     $("error");
 
-
 const online =
     $("online");
-
 
 const systemStatus =
     $("systemStatus");
 
-
 const gridInfo =
     $("gridInfo");
-
 
 const status =
     $("weatherStatus");
@@ -938,6 +869,8 @@ let MapEngine;
 
 let WeatherGrid;
 
+let RainLayer;
+
 
 /*
 ====================================================
@@ -951,6 +884,8 @@ let weatherEngine = null;
 let mapEngine = null;
 
 let weatherGrid = null;
+
+let rainLayer = null;
 
 let weatherData = null;
 
@@ -1111,12 +1046,46 @@ async function loadModules() {
 
     }
 
+
+    loadingText.textContent =
+        "Загрузка RainLayer...";
+
+
+    const rainModule =
+        await timeout(
+
+            import(
+                "./js/RainLayer.js"
+            ),
+
+            10000,
+
+            "RainLayer.js не загрузился"
+
+        );
+
+
+    RainLayer =
+        rainModule.RainLayer;
+
+
+    if (
+        typeof RainLayer !==
+        "function"
+    ) {
+
+        throw new Error(
+            "RainLayer не найден"
+        );
+
+    }
+
 }
 
 
 /*
 ====================================================
- WEATHER ENGINE
+ WEATHER
 ====================================================
 */
 
@@ -1244,16 +1213,12 @@ async function startMap() {
 
 /*
 ====================================================
- CREATE WEATHER GRID
+ GRID
 ====================================================
 */
 
 
 function createGrid() {
-
-
-    loadingText.textContent =
-        "Создание температурной сетки...";
 
 
     const latitude =
@@ -1272,30 +1237,22 @@ function createGrid() {
         );
 
 
-    const safeLat =
-        Number.isFinite(
-            latitude
-        )
-        ? latitude
-        : 38.5598;
-
-
-    const safeLon =
-        Number.isFinite(
-            longitude
-        )
-        ? longitude
-        : 68.7870;
-
-
     weatherGrid =
         new WeatherGrid({
 
             latitude:
-                safeLat,
+                Number.isFinite(
+                    latitude
+                )
+                ? latitude
+                : 38.5598,
 
             longitude:
-                safeLon,
+                Number.isFinite(
+                    longitude
+                )
+                ? longitude
+                : 68.7870,
 
             size:
                 17,
@@ -1310,20 +1267,7 @@ function createGrid() {
         weatherGrid.build();
 
 
-    if (
-        !Array.isArray(
-            grid
-        )
-    ) {
-
-        throw new Error(
-            "WeatherGrid.build() не вернул массив"
-        );
-
-    }
-
-
-    const currentTemperature =
+    const temperature =
         Number(
             weatherData
                 ?.hourly
@@ -1332,11 +1276,11 @@ function createGrid() {
         );
 
 
-    const baseTemperature =
+    const base =
         Number.isFinite(
-            currentTemperature
+            temperature
         )
-        ? currentTemperature
+        ? temperature
         : 20;
 
 
@@ -1350,7 +1294,7 @@ function createGrid() {
 
                         Math.pow(
                             point.latitude -
-                            safeLat,
+                            latitude,
                             2
                         )
 
@@ -1358,25 +1302,16 @@ function createGrid() {
 
                         Math.pow(
                             point.longitude -
-                            safeLon,
+                            longitude,
                             2
                         )
 
                     );
 
 
-                /*
-                ==================================
-                NATURAL TEMPERATURE GRADIENT
-                ==================================
-                */
-
                 return (
-
-                    baseTemperature -
-
+                    base -
                     distance * 2.5
-
                 );
 
             }
@@ -1412,101 +1347,59 @@ function createGrid() {
 
 /*
 ====================================================
- COLOR
+ TEMPERATURE COLOR
 ====================================================
 */
 
 
 function temperatureColor(
-    temperature
+    value
 ) {
 
 
-    /*
-    ================================================
-    VERY COLD
-    ================================================
-    */
-
     if (
-        temperature <= -20
-    ) {
-
-        return "#172554";
-
-    }
+        value <= -20
+    ) return "#172554";
 
 
     if (
-        temperature <= -10
-    ) {
-
-        return "#1d4ed8";
-
-    }
+        value <= -10
+    ) return "#1d4ed8";
 
 
     if (
-        temperature <= 0
-    ) {
-
-        return "#38bdf8";
-
-    }
+        value <= 0
+    ) return "#38bdf8";
 
 
     if (
-        temperature <= 10
-    ) {
-
-        return "#22d3ee";
-
-    }
+        value <= 10
+    ) return "#22d3ee";
 
 
     if (
-        temperature <= 20
-    ) {
-
-        return "#4ade80";
-
-    }
+        value <= 20
+    ) return "#4ade80";
 
 
     if (
-        temperature <= 25
-    ) {
-
-        return "#facc15";
-
-    }
+        value <= 25
+    ) return "#facc15";
 
 
     if (
-        temperature <= 30
-    ) {
-
-        return "#fb923c";
-
-    }
+        value <= 30
+    ) return "#fb923c";
 
 
     if (
-        temperature <= 35
-    ) {
-
-        return "#f97316";
-
-    }
+        value <= 35
+    ) return "#f97316";
 
 
     if (
-        temperature <= 40
-    ) {
-
-        return "#ef4444";
-
-    }
+        value <= 40
+    ) return "#ef4444";
 
 
     return "#b91c1c";
@@ -1516,7 +1409,7 @@ function temperatureColor(
 
 /*
 ====================================================
- RENDER TEMPERATURE GRID
+ TEMPERATURE RENDERER
 ====================================================
 */
 
@@ -1525,7 +1418,7 @@ function renderTemperatureGrid() {
 
 
     if (
-        !mapEngine ||
+        !mapEngine?.map ||
         !weatherGrid
     ) {
 
@@ -1534,33 +1427,7 @@ function renderTemperatureGrid() {
     }
 
 
-    /*
-    ================================================
-    REMOVE OLD LAYER
-    ================================================
-    */
-
-
-    if (
-        temperatureLayer
-    ) {
-
-        mapEngine
-            .map
-            ?.removeLayer(
-                temperatureLayer
-            );
-
-        temperatureLayer = null;
-
-    }
-
-
-    /*
-    ================================================
-    CREATE LEAFLET LAYER
-    ================================================
-    */
+    hideTemperatureGrid();
 
 
     temperatureLayer =
@@ -1571,19 +1438,12 @@ function renderTemperatureGrid() {
         weatherGrid.getGrid();
 
 
-    const size =
-        weatherGrid.getSize();
-
-
     const step =
         weatherGrid.getStep();
 
 
-    /*
-    ================================================
-    CELL RENDER
-    ================================================
-    */
+    const halfStep =
+        step / 2;
 
 
     grid.forEach(
@@ -1605,17 +1465,6 @@ function renderTemperatureGrid() {
                 return;
 
             }
-
-
-            /*
-            ----------------------------------------
-            CELL BOUNDS
-            ----------------------------------------
-            */
-
-
-            const halfStep =
-                step / 2;
 
 
             const bounds = [
@@ -1643,67 +1492,37 @@ function renderTemperatureGrid() {
             ];
 
 
-            /*
-            ----------------------------------------
-            COLOR
-            ----------------------------------------
-            */
+            L.rectangle(
 
+                bounds,
 
-            const color =
-                temperatureColor(
-                    value
-                );
+                {
 
+                    stroke:
+                        false,
 
-            /*
-            ----------------------------------------
-            RECTANGLE
-            ----------------------------------------
-            */
+                    fill:
+                        true,
 
+                    fillColor:
+                        temperatureColor(
+                            value
+                        ),
 
-            const rectangle =
-                L.rectangle(
+                    fillOpacity:
+                        0.38,
 
-                    bounds,
+                    interactive:
+                        false
 
-                    {
+                }
 
-                        stroke:
-                            false,
-
-                        fill:
-                            true,
-
-                        fillColor:
-                            color,
-
-                        fillOpacity:
-                            0.38,
-
-                        interactive:
-                            false
-
-                    }
-
-                );
-
-
-            rectangle.addTo(
+            ).addTo(
                 temperatureLayer
             );
 
-
         }
     );
-
-
-    /*
-    ================================================
-    ADD TO MAP
-    ================================================
-    */
 
 
     temperatureLayer.addTo(
@@ -1711,44 +1530,72 @@ function renderTemperatureGrid() {
     );
 
 
-    gridVisible = true;
-
-
-    $("gridLayer")
-        .classList
-        .add(
-            "active"
-        );
-
+    gridVisible =
+        true;
 
 }
 
 
 /*
 ====================================================
- HIDE GRID
+ HIDE TEMPERATURE
 ====================================================
 */
 
 
-function hideGrid() {
+function hideTemperatureGrid() {
 
 
     if (
-        temperatureLayer
+        temperatureLayer &&
+        mapEngine?.map
     ) {
 
-        mapEngine
-            .map
-            ?.removeLayer(
+        mapEngine.map
+            .removeLayer(
                 temperatureLayer
             );
 
     }
 
 
-    gridVisible = false;
+    temperatureLayer =
+        null;
 
+
+    gridVisible =
+        false;
+
+}
+
+
+/*
+====================================================
+ CREATE RAIN
+====================================================
+*/
+
+
+function createRainLayer() {
+
+
+    if (
+        !rainLayer
+    ) {
+
+        rainLayer =
+            new RainLayer(
+
+                mapEngine,
+
+                weatherData
+
+            );
+
+    }
+
+
+    return rainLayer;
 
 }
 
@@ -1772,20 +1619,13 @@ function updateWeather() {
     ) {
 
         throw new Error(
-            "В API отсутствует hourly"
+            "Hourly data отсутствует"
         );
 
     }
 
 
     const i = 0;
-
-
-    /*
-    ================================================
-    TEMPERATURE
-    ================================================
-    */
 
 
     const temperature =
@@ -1814,13 +1654,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    HUMIDITY
-    ================================================
-    */
-
-
     const humidity =
         Number(
             hourly
@@ -1847,13 +1680,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    RAIN
-    ================================================
-    */
-
-
     const rain =
         Number(
             hourly
@@ -1878,13 +1704,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    WIND
-    ================================================
-    */
-
-
     const wind =
         Number(
             hourly
@@ -1907,13 +1726,6 @@ function updateWeather() {
             " km/h";
 
     }
-
-
-    /*
-    ================================================
-    CLOUDS
-    ================================================
-    */
 
 
     const clouds =
@@ -1942,13 +1754,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    PRESSURE
-    ================================================
-    */
-
-
     const pressure =
         Number(
             hourly
@@ -1974,16 +1779,12 @@ function updateWeather() {
 
     }
 
-
-    status.textContent =
-        "🌡 Реальная температура + Grid";
-
 }
 
 
 /*
 ====================================================
- LAYER BUTTONS
+ TEMPERATURE BUTTON
 ====================================================
 */
 
@@ -1995,12 +1796,15 @@ $("temperatureLayer")
 
 
         if (
-            !gridVisible
+            rainLayer?.isVisible?.()
         ) {
 
-            renderTemperatureGrid();
+            rainLayer.hide();
 
         }
+
+
+        renderTemperatureGrid();
 
 
         setActive(
@@ -2011,9 +1815,15 @@ $("temperatureLayer")
         status.textContent =
             "🌡 Temperature";
 
-
     }
 );
+
+
+/*
+====================================================
+ GRID BUTTON
+====================================================
+*/
 
 
 $("gridLayer")
@@ -2026,7 +1836,7 @@ $("gridLayer")
             gridVisible
         ) {
 
-            hideGrid();
+            hideTemperatureGrid();
 
         }
         else {
@@ -2042,15 +1852,22 @@ $("gridLayer")
 
 
         status.textContent =
+
             gridVisible
 
-            ? "🌡 Temperature Grid"
+            ? "🔥 Temperature Grid"
 
-            : "🌡 Grid hidden";
-
+            : "🔥 Grid hidden";
 
     }
 );
+
+
+/*
+====================================================
+ RAIN BUTTON
+====================================================
+*/
 
 
 $("rainLayer")
@@ -2059,16 +1876,63 @@ $("rainLayer")
     () => {
 
 
-        setActive(
-            "rainLayer"
-        );
+        try {
 
 
-        status.textContent =
-            "🌧 Rain — следующий модуль";
+            hideTemperatureGrid();
+
+
+            const rain =
+                createRainLayer();
+
+
+            rain.show();
+
+
+            setActive(
+                "rainLayer"
+            );
+
+
+            status.textContent =
+                "🌧 Rain Layer";
+
+
+            systemStatus.textContent =
+                "SHOHIN V5.4 • RAIN ✓";
+
+
+        }
+        catch (
+            error
+        ) {
+
+
+            console.error(
+                "RainLayer error:",
+                error
+            );
+
+
+            status.textContent =
+                "🌧 Rain error";
+
+
+            showError(
+                error
+            );
+
+        }
 
     }
 );
+
+
+/*
+====================================================
+ WIND
+====================================================
+*/
 
 
 $("windLayer")
@@ -2083,10 +1947,17 @@ $("windLayer")
 
 
         status.textContent =
-            "💨 Wind — следующий модуль";
+            "💨 Wind — V5.5";
 
     }
 );
+
+
+/*
+====================================================
+ CLOUDS
+====================================================
+*/
 
 
 $("cloudLayer")
@@ -2101,10 +1972,17 @@ $("cloudLayer")
 
 
         status.textContent =
-            "☁ Clouds — следующий модуль";
+            "☁ Clouds — V5.6";
 
     }
 );
+
+
+/*
+====================================================
+ PRESSURE
+====================================================
+*/
 
 
 $("pressureLayer")
@@ -2119,7 +1997,7 @@ $("pressureLayer")
 
 
         status.textContent =
-            "🌀 Pressure — следующий модуль";
+            "🌀 Pressure — V5.7";
 
     }
 );
@@ -2127,7 +2005,7 @@ $("pressureLayer")
 
 /*
 ====================================================
- ACTIVE BUTTON
+ ACTIVE
 ====================================================
 */
 
@@ -2165,227 +2043,6 @@ function setActive(
 
 /*
 ====================================================
- MAIN
-====================================================
-*/
-
-
-async function start() {
-
-
-    try {
-
-
-        /*
-        ============================================
-        MODULES
-        ============================================
-        */
-
-
-        await loadModules();
-
-
-        /*
-        ============================================
-        API
-        ============================================
-        */
-
-
-        await startWeather();
-
-
-        /*
-        ============================================
-        MAP
-        ============================================
-        */
-
-
-        await startMap();
-
-
-        /*
-        ============================================
-        GRID
-        ============================================
-        */
-
-
-        createGrid();
-
-
-        /*
-        ============================================
-        UI
-        ============================================
-        */
-
-
-        updateWeather();
-
-
-        /*
-        ============================================
-        TEMPERATURE RENDERER
-        ============================================
-        */
-
-
-        renderTemperatureGrid();
-
-
-        /*
-        ============================================
-        COORDINATES
-        ============================================
-        */
-
-
-        const latitude =
-            Number(
-                weatherEngine
-                    ?.location
-                    ?.latitude
-            );
-
-
-        const longitude =
-            Number(
-                weatherEngine
-                    ?.location
-                    ?.longitude
-            );
-
-
-        if (
-            Number.isFinite(
-                latitude
-            )
-            &&
-            Number.isFinite(
-                longitude
-            )
-        ) {
-
-            $("coordinates")
-                .textContent =
-
-                latitude.toFixed(4) +
-
-                "° N, " +
-
-                longitude.toFixed(4) +
-
-                "° E";
-
-        }
-
-
-        /*
-        ============================================
-        READY
-        ============================================
-        */
-
-
-        online.textContent =
-            "● SHOHIN ONLINE";
-
-
-        online.style.color =
-            "#4ade80";
-
-
-        systemStatus.textContent =
-            "SHOHIN V5.3 • API ✓ • MAP ✓ • GRID ✓";
-
-
-        loading.classList.add(
-            "hidden"
-        );
-
-
-        console.log(
-            "===================================="
-        );
-
-
-        console.log(
-            "SHOHIN WEATHER V5.3 READY"
-        );
-
-
-        console.log(
-            "WeatherEngine:",
-            weatherEngine
-        );
-
-
-        console.log(
-            "WeatherData:",
-            weatherData
-        );
-
-
-        console.log(
-            "WeatherGrid:",
-            weatherGrid
-        );
-
-
-        console.log(
-            "Temperature Layer:",
-            temperatureLayer
-        );
-
-
-        console.log(
-            "===================================="
-        );
-
-
-    }
-    catch (
-        error
-    ) {
-
-
-        console.error(
-            "SHOHIN V5.3 ERROR:",
-            error
-        );
-
-
-        online.textContent =
-            "● ERROR";
-
-
-        online.style.color =
-            "#fb7185";
-
-
-        systemStatus.textContent =
-            "SHOHIN V5.3 • ERROR";
-
-
-        loading.classList.add(
-            "hidden"
-        );
-
-
-        showError(
-            error
-        );
-
-    }
-
-}
-
-
-/*
-====================================================
  ERROR
 ====================================================
 */
@@ -2409,7 +2066,7 @@ function showError(
 
     errorBox.textContent =
 
-        "❌ SHOHIN WEATHER V5.3\n\n" +
+        "❌ SHOHIN WEATHER V5.4\n\n" +
 
         message;
 
@@ -2428,8 +2085,134 @@ function showError(
 */
 
 
-start();
+async function start() {
 
+
+    try {
+
+
+        loadingText.textContent =
+            "Загрузка модулей...";
+
+
+        await loadModules();
+
+
+        await startWeather();
+
+
+        await startMap();
+
+
+        createGrid();
+
+
+        createRainLayer();
+
+
+        updateWeather();
+
+
+        renderTemperatureGrid();
+
+
+        const latitude =
+            Number(
+                weatherEngine
+                    ?.location
+                    ?.latitude
+            );
+
+
+        const longitude =
+            Number(
+                weatherEngine
+                    ?.location
+                    ?.longitude
+            );
+
+
+        if (
+            Number.isFinite(latitude)
+            &&
+            Number.isFinite(longitude)
+        ) {
+
+            $("coordinates")
+                .textContent =
+
+                latitude.toFixed(4) +
+
+                "° N, " +
+
+                longitude.toFixed(4) +
+
+                "° E";
+
+        }
+
+
+        online.textContent =
+            "● SHOHIN ONLINE";
+
+
+        online.style.color =
+            "#4ade80";
+
+
+        systemStatus.textContent =
+            "SHOHIN V5.4 • API ✓ • MAP ✓ • GRID ✓ • RAIN ✓";
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+
+        console.log(
+            "SHOHIN WEATHER V5.4 READY"
+        );
+
+
+    }
+    catch (
+        error
+    ) {
+
+
+        console.error(
+            "SHOHIN V5.4 ERROR:",
+            error
+        );
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+
+        online.textContent =
+            "● ERROR";
+
+
+        online.style.color =
+            "#fb7185";
+
+
+        systemStatus.textContent =
+            "SHOHIN V5.4 • ERROR";
+
+
+        showError(
+            error
+        );
+
+    }
+
+}
+
+
+start();
 
 </script>
 
