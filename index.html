@@ -10,7 +10,7 @@
     content="width=device-width,initial-scale=1.0"
 >
 
-<title>SHOHIN Weather V6.0</title>
+<title>SHOHIN WEATHER V6.3</title>
 
 <link
     rel="stylesheet"
@@ -59,22 +59,22 @@ body{
 
 
 /* =================================================
- TOP BAR
+ TOP
 ================================================= */
 
 #topbar{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    top:12px;
-    left:12px;
-    right:12px;
+    top:10px;
+    left:10px;
+    right:10px;
 
-    height:55px;
+    height:54px;
 
-    padding:0 16px;
+    padding:0 15px;
 
     display:flex;
 
@@ -82,9 +82,9 @@ body{
 
     justify-content:space-between;
 
-    border-radius:17px;
-
     color:white;
+
+    border-radius:17px;
 
     background:
         rgba(5,15,28,.90);
@@ -99,7 +99,7 @@ body{
 
 .logo{
 
-    font-size:20px;
+    font-size:19px;
 
     font-weight:800;
 }
@@ -116,25 +116,25 @@ body{
 
 
 /* =================================================
- WEATHER PANEL
+ WEATHER INFO
 ================================================= */
 
 #weatherPanel{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    top:80px;
-    left:12px;
+    top:75px;
+    left:10px;
 
-    width:305px;
+    width:290px;
 
-    padding:16px;
-
-    border-radius:20px;
+    padding:15px;
 
     color:white;
+
+    border-radius:18px;
 
     background:
         rgba(5,15,28,.90);
@@ -144,30 +144,30 @@ body{
         rgba(255,255,255,.12);
 
     backdrop-filter:
-        blur(17px);
+        blur(15px);
 }
 
 #location{
 
-    font-size:19px;
+    font-size:18px;
 
     font-weight:bold;
 }
 
 #coordinates{
 
-    margin-top:4px;
-
-    font-size:11px;
+    margin-top:3px;
 
     color:#8fa8bd;
+
+    font-size:10px;
 }
 
 #temperature{
 
-    margin-top:13px;
+    margin-top:10px;
 
-    font-size:54px;
+    font-size:48px;
 
     font-weight:300;
 }
@@ -176,31 +176,26 @@ body{
 
     color:#9eb3c6;
 
-    font-size:12px;
+    font-size:11px;
 }
-
-
-/* =================================================
- METRICS
-================================================= */
 
 #metrics{
 
-    margin-top:15px;
+    margin-top:12px;
 
     display:grid;
 
     grid-template-columns:
         1fr 1fr;
 
-    gap:7px;
+    gap:6px;
 }
 
 .metric{
 
-    padding:9px;
+    padding:8px;
 
-    border-radius:10px;
+    border-radius:9px;
 
     background:
         rgba(255,255,255,.06);
@@ -208,47 +203,47 @@ body{
 
 .metric-title{
 
-    font-size:10px;
-
     color:#8fa8bd;
+
+    font-size:9px;
 }
 
 .metric-value{
 
-    margin-top:4px;
+    margin-top:3px;
 
-    font-size:13px;
+    font-size:12px;
 
     font-weight:bold;
 }
 
 
 /* =================================================
- LAYERS
+ LAYERS PANEL
 ================================================= */
 
 #layers{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    top:80px;
-    right:12px;
+    top:75px;
+    right:10px;
 
-    width:195px;
+    width:210px;
 
     max-height:
-        calc(100vh - 120px);
+        calc(100vh - 105px);
 
-    overflow:auto;
+    overflow-y:auto;
 
     padding:9px;
 
     border-radius:16px;
 
     background:
-        rgba(5,15,28,.92);
+        rgba(5,15,28,.93);
 
     border:
         1px solid
@@ -260,12 +255,13 @@ body{
 
 .layerTitle{
 
-    padding:
-        5px 7px 7px;
+    padding:5px 7px 8px;
 
     color:#8fa8bd;
 
     font-size:10px;
+
+    font-weight:bold;
 }
 
 .layerButton{
@@ -287,9 +283,9 @@ body{
 
     text-align:left;
 
-    cursor:pointer;
+    font-size:11px;
 
-    font-size:12px;
+    cursor:pointer;
 }
 
 .layerButton:hover{
@@ -301,30 +297,78 @@ body{
 .layerButton.active{
 
     background:
-        rgba(56,189,248,.30);
+        rgba(56,189,248,.28);
 }
 
 
 /* =================================================
- RADAR CONTROL
+ GLOBAL CONTROLS
+================================================= */
+
+#globalControls{
+
+    display:none;
+
+    margin-top:6px;
+
+    padding:7px;
+
+    border-radius:10px;
+
+    background:
+        rgba(56,189,248,.08);
+}
+
+#globalControls.visible{
+
+    display:block;
+}
+
+.globalButton{
+
+    width:100%;
+
+    margin:2px 0;
+
+    padding:7px;
+
+    border:0;
+
+    border-radius:7px;
+
+    color:white;
+
+    background:
+        rgba(255,255,255,.07);
+
+    font-size:10px;
+
+    cursor:pointer;
+}
+
+.globalButton:hover{
+
+    background:
+        rgba(56,189,248,.20);
+}
+
+
+/* =================================================
+ RADAR CONTROLS
 ================================================= */
 
 #radarControls{
 
     display:none;
 
-    margin-top:7px;
+    margin-top:6px;
 
-    padding:8px;
+    padding:7px;
 
     border-radius:10px;
 
     background:
-        rgba(56,189,248,.08);
-
-    border:
-        1px solid
-        rgba(56,189,248,.14);
+        rgba(14,165,233,.08);
 }
 
 #radarControls.visible{
@@ -336,39 +380,33 @@ body{
 
     width:100%;
 
-    margin:3px 0;
+    margin:2px 0;
 
     padding:7px;
 
     border:0;
 
-    border-radius:8px;
+    border-radius:7px;
 
     color:white;
 
     background:
-        rgba(255,255,255,.08);
+        rgba(255,255,255,.07);
+
+    font-size:10px;
 
     cursor:pointer;
-
-    font-size:11px;
-}
-
-.radarButton:hover{
-
-    background:
-        rgba(56,189,248,.22);
 }
 
 #radarTime{
 
     padding:5px;
 
-    text-align:center;
-
     color:#8fa8bd;
 
-    font-size:10px;
+    text-align:center;
+
+    font-size:9px;
 }
 
 
@@ -380,24 +418,24 @@ body{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    left:12px;
-    right:12px;
+    left:10px;
+    right:10px;
 
-    bottom:55px;
+    bottom:48px;
 
-    min-height:80px;
-
-    padding:10px;
+    min-height:70px;
 
     display:flex;
 
-    gap:7px;
+    gap:6px;
 
     overflow-x:auto;
 
-    border-radius:15px;
+    padding:8px;
+
+    border-radius:14px;
 
     background:
         rgba(5,15,28,.88);
@@ -407,20 +445,20 @@ body{
         rgba(255,255,255,.10);
 
     backdrop-filter:
-        blur(15px);
+        blur(14px);
 }
 
 .forecastDay{
 
-    min-width:85px;
+    min-width:80px;
 
-    padding:8px;
+    padding:7px;
 
-    border-radius:10px;
+    color:white;
 
     text-align:center;
 
-    color:white;
+    border-radius:9px;
 
     background:
         rgba(255,255,255,.06);
@@ -428,21 +466,21 @@ body{
 
 .forecastDate{
 
-    font-size:10px;
-
     color:#8fa8bd;
+
+    font-size:9px;
 }
 
 .forecastIcon{
 
-    margin:5px 0;
+    margin:4px;
 
-    font-size:19px;
+    font-size:18px;
 }
 
 .forecastTemp{
 
-    font-size:11px;
+    font-size:10px;
 
     font-weight:bold;
 }
@@ -456,43 +494,39 @@ body{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    left:12px;
-    bottom:12px;
+    left:10px;
+    bottom:10px;
 
-    padding:9px 12px;
-
-    border-radius:11px;
+    padding:8px 10px;
 
     color:#a8bdcf;
 
-    font-size:10px;
+    font-size:9px;
+
+    border-radius:9px;
 
     background:
         rgba(5,15,28,.90);
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
 }
 
 #gridInfo{
 
     position:absolute;
 
-    z-index:3000;
+    z-index:5000;
 
-    right:12px;
-    bottom:12px;
+    right:10px;
+    bottom:10px;
 
-    padding:9px 12px;
-
-    border-radius:11px;
+    padding:8px 10px;
 
     color:#a8bdcf;
 
-    font-size:10px;
+    font-size:9px;
+
+    border-radius:9px;
 
     background:
         rgba(5,15,28,.90);
@@ -507,7 +541,7 @@ body{
 
     position:absolute;
 
-    z-index:9000;
+    z-index:10000;
 
     inset:0;
 
@@ -534,7 +568,7 @@ body{
     width:42px;
     height:42px;
 
-    margin-bottom:14px;
+    margin-bottom:13px;
 
     border-radius:50%;
 
@@ -567,28 +601,28 @@ body{
 
     position:absolute;
 
-    z-index:10000;
+    z-index:11000;
 
-    left:12px;
-    right:12px;
-    bottom:12px;
+    left:10px;
+    right:10px;
+    bottom:10px;
 
-    max-height:50%;
+    max-height:60%;
 
     overflow:auto;
 
-    padding:14px;
-
-    border-radius:12px;
-
-    background:
-        rgba(127,29,29,.97);
+    padding:13px;
 
     color:white;
 
     white-space:pre-wrap;
 
-    font-size:12px;
+    font-size:11px;
+
+    border-radius:11px;
+
+    background:
+        rgba(127,29,29,.97);
 }
 
 #error.show{
@@ -605,40 +639,34 @@ body{
 
     #topbar{
 
-        top:6px;
-        left:6px;
-        right:6px;
+        top:5px;
+        left:5px;
+        right:5px;
     }
 
     #weatherPanel{
 
-        top:68px;
-        left:6px;
+        top:65px;
+        left:5px;
 
-        width:260px;
+        width:245px;
 
-        padding:13px;
+        padding:12px;
     }
 
     #layers{
 
-        top:68px;
-        right:6px;
+        top:65px;
+        right:5px;
 
         width:155px;
 
-        max-height:
-            58vh;
+        max-height:55vh;
     }
 
     #temperature{
 
-        font-size:46px;
-    }
-
-    #forecast{
-
-        bottom:50px;
+        font-size:42px;
     }
 
 }
@@ -710,7 +738,6 @@ Dushanbe
 
 
 <div id="metrics">
-
 
 <div class="metric">
 
@@ -823,7 +850,6 @@ class="metric-value"
 
 </div>
 
-
 </div>
 
 </div>
@@ -837,27 +863,97 @@ class="metric-value"
 
 <div class="layerTitle">
 
-SHOHIN WEATHER V6.0
+SHOHIN WEATHER V6.3
 
 </div>
 
+
+<!-- GLOBAL -->
+
+<button
+id="globalLayer"
+class="layerButton"
+>
+
+🌍 GLOBAL WEATHER
+
+</button>
+
+
+<div id="globalControls">
+
+
+<button
+class="globalButton"
+data-global="temperature"
+>
+
+🌡 Global Temperature
+
+</button>
+
+
+<button
+class="globalButton"
+data-global="precipitation"
+>
+
+🌧 Global Precipitation
+
+</button>
+
+
+<button
+class="globalButton"
+data-global="cloud"
+>
+
+☁ Global Clouds
+
+</button>
+
+
+<button
+class="globalButton"
+data-global="wind"
+>
+
+💨 Global Wind
+
+</button>
+
+
+<button
+class="globalButton"
+data-global="pressure"
+>
+
+🌀 Global Pressure
+
+</button>
+
+
+<button
+class="globalButton"
+data-global="uv"
+>
+
+☀️ Global UV
+
+</button>
+
+
+</div>
+
+
+<!-- NORMAL -->
 
 <button
 id="temperatureLayer"
 class="layerButton active"
 >
 
-🌡 Temperature
-
-</button>
-
-
-<button
-id="gridLayer"
-class="layerButton active"
->
-
-🔥 Temperature Grid
+🌡 Temperature Grid
 
 </button>
 
@@ -921,6 +1017,8 @@ class="layerButton"
 
 </button>
 
+
+<!-- RADAR -->
 
 <button
 id="radarLayer"
@@ -1031,14 +1129,14 @@ Loading...
 
 <div id="systemStatus">
 
-SHOHIN V6.0 • Starting...
+SHOHIN V6.3 • STARTING
 
 </div>
 
 
 <div id="gridInfo">
 
-GRID: starting...
+GLOBAL: OFF
 
 </div>
 
@@ -1053,7 +1151,7 @@ GRID: starting...
 
 <div>
 
-🌍 SHOHIN Weather V6.0
+🌍 SHOHIN WEATHER V6.3
 
 </div>
 
@@ -1062,7 +1160,7 @@ id="loadingText"
 style="
 margin-top:7px;
 color:#8fa8bd;
-font-size:12px;
+font-size:11px;
 "
 >
 
@@ -1088,9 +1186,8 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 /*
 ====================================================
- SHOHIN WEATHER V6.0
- MAIN CONTROLLER
- REAL RADAR CONNECTED
+ SHOHIN WEATHER V6.3
+ MAIN
 ====================================================
 */
 
@@ -1138,6 +1235,8 @@ let RealRadarLayer;
 let ForecastLayer;
 let AnimationEngine;
 
+let GlobalWeatherLayer;
+
 
 let weatherEngine;
 let mapEngine;
@@ -1155,119 +1254,102 @@ let realRadarLayer;
 let forecastLayer;
 let animationEngine;
 
+let globalWeatherLayer;
+
+
 let weatherData;
 
 let temperatureLayer = null;
 
-let gridVisible = true;
+let globalVisible = false;
 
-let radarControlsVisible = false;
-
-
-/* =================================================
- SAFE IMPORT
-================================================= */
-
-async function safeImport(
-    path,
-    name
-){
-
-    loadingText.textContent =
-        "Загрузка " + name + "...";
-
-    return await import(path);
-
-}
+let radarPlaying = false;
 
 
 /* =================================================
- LOAD MODULES
+ IMPORT
 ================================================= */
 
 async function loadModules(){
 
+loadingText.textContent =
+    "Загрузка модулей...";
+
+
 let module;
 
 
-/* WeatherEngine */
+/* WEATHER */
 
 module =
-await safeImport(
-    "./js/WeatherEngine.js",
-    "WeatherEngine"
+await import(
+    "./js/WeatherEngine.js"
 );
 
 WeatherEngine =
 module.WeatherEngine;
 
 
-/* MapEngine */
+/* MAP */
 
 module =
-await safeImport(
-    "./js/MapEngine.js",
-    "MapEngine"
+await import(
+    "./js/MapEngine.js"
 );
 
 MapEngine =
 module.MapEngine;
 
 
-/* WeatherGrid */
+/* GRID */
 
 module =
-await safeImport(
-    "./js/WeatherGrid.js",
-    "WeatherGrid"
+await import(
+    "./js/WeatherGrid.js"
 );
 
 WeatherGrid =
 module.WeatherGrid;
 
 
-/* Rain */
+/* RAIN */
 
 module =
-await safeImport(
-    "./js/RainLayer.js",
-    "RainLayer"
+await import(
+    "./js/RainLayer.js"
 );
 
 RainLayer =
 module.RainLayer;
 
 
-/* Wind */
+/* WIND */
 
 module =
-await safeImport(
-    "./js/WindLayer.js",
-    "WindLayer"
+await import(
+    "./js/WindLayer.js"
 );
 
 WindLayer =
 module.WindLayer;
 
 
-/* Cloud */
+/* CLOUD */
 
 module =
-await safeImport(
-    "./js/CloudLayer.js",
-    "CloudLayer"
+await import(
+    "./js/CloudLayer.js"
 );
 
 CloudLayer =
 module.CloudLayer;
 
 
-/* Pressure */
+/* PRESSURE */
 
 module =
-await safeImport(
-    "./js/PressureLayer.js",
-    "PressureLayer"
+await import(
+    "./js/PressureLayer.js"
 );
 
 PressureLayer =
@@ -1277,63 +1359,69 @@ module.PressureLayer;
 /* UV */
 
 module =
-await safeImport(
-    "./js/UVLayer.js",
-    "UVLayer"
+await import(
+    "./js/UVLayer.js"
 );
 
 UVLayer =
 module.UVLayer;
 
 
-/* Storm */
+/* STORM */
 
 module =
-await safeImport(
-    "./js/StormLayer.js",
-    "StormLayer"
+await import(
+    "./js/StormLayer.js"
 );
 
 StormLayer =
 module.StormLayer;
 
 
-/* =================================================
- REAL RADAR
-================================================= */
+/* REAL RADAR */
 
 module =
-await safeImport(
-    "./js/RealRadarLayer.js",
-    "Real Radar"
+await import(
+    "./js/RealRadarLayer.js"
 );
 
 RealRadarLayer =
 module.RealRadarLayer;
 
 
-/* Forecast */
+/* FORECAST */
 
 module =
-await safeImport(
-    "./js/ForecastLayer.js",
-    "ForecastLayer"
+await import(
+    "./js/ForecastLayer.js"
 );
 
 ForecastLayer =
 module.ForecastLayer;
 
 
-/* Animation */
+/* ANIMATION */
 
 module =
-await safeImport(
-    "./js/AnimationEngine.js",
-    "AnimationEngine"
+await import(
+    "./js/AnimationEngine.js"
 );
 
 AnimationEngine =
 module.AnimationEngine;
+
+
+/* =================================================
+ GLOBAL WEATHER
+================================================= */
+
+module =
+await import(
+    "./js/global/GlobalWeatherLayer.js"
+);
+
+GlobalWeatherLayer =
+module.GlobalWeatherLayer;
 
 }
 
@@ -1345,32 +1433,32 @@ module.AnimationEngine;
 async function startWeather(){
 
 loadingText.textContent =
-    "Подключение к Weather API...";
+    "Подключение Weather API...";
 
 
 weatherEngine =
-    new WeatherEngine({
+new WeatherEngine({
 
-        latitude:
-            38.5598,
+    latitude:
+        38.5598,
 
-        longitude:
-            68.7870,
+    longitude:
+        68.7870,
 
-        forecastDays:
-            7
+    forecastDays:
+        7
 
-    });
+});
 
 
 weatherData =
-    await weatherEngine.load();
+await weatherEngine.load();
 
 
 if(!weatherData){
 
     throw new Error(
-        "WeatherEngine вернул пустые данные"
+        "WeatherEngine: пустой ответ"
     );
 
 }
@@ -1389,21 +1477,21 @@ loadingText.textContent =
 
 
 mapEngine =
-    new MapEngine({
+new MapEngine({
 
-        container:
-            "map",
+    container:
+        "map",
 
-        latitude:
-            38.5598,
+    latitude:
+        38.5598,
 
-        longitude:
-            68.7870,
+    longitude:
+        68.7870,
 
-        zoom:
-            7
+    zoom:
+        6
 
-    });
+});
 
 
 await mapEngine.init();
@@ -1418,64 +1506,61 @@ await mapEngine.init();
 function createGrid(){
 
 weatherGrid =
-    new WeatherGrid({
+new WeatherGrid({
 
-        latitude:
-            38.5598,
+    latitude:
+        38.5598,
 
-        longitude:
-            68.7870,
+    longitude:
+        68.7870,
 
-        size:
-            17,
+    size:
+        17,
 
-        step:
-            0.15
+    step:
+        0.15
 
-    });
+});
 
 
 const grid =
-    weatherGrid.build();
+weatherGrid.build();
 
 
 const temperature =
-    Number(
-        weatherData
-        ?.hourly
-        ?.temperature_2m
-        ?.[0]
-    );
+Number(
+    weatherData
+    ?.hourly
+    ?.temperature_2m
+    ?.[0]
+);
 
 
 const base =
-    Number.isFinite(
-        temperature
-    )
-    ?
+Number.isFinite(
     temperature
-    :
-    20;
+)
+?
+temperature
+:
+20;
 
 
 weatherGrid.applyValues(
 
-    grid.map(
-        () =>
-            base
-    )
+grid.map(
+() =>
+base
+)
 
 );
 
 
 gridInfo.textContent =
-    "GRID " +
-    weatherGrid.getSize() +
-    " × " +
-    weatherGrid.getSize() +
-    " • " +
-    grid.length +
-    " points";
+"GRID " +
+weatherGrid.getSize() +
+" × " +
+weatherGrid.getSize();
 
 }
 
@@ -1485,37 +1570,37 @@ gridInfo.textContent =
 ================================================= */
 
 function temperatureColor(
-    value
+value
 ){
 
 if(value <= -20)
-    return "#172554";
+return "#172554";
 
 if(value <= -10)
-    return "#1d4ed8";
+return "#1d4ed8";
 
 if(value <= 0)
-    return "#38bdf8";
+return "#38bdf8";
 
 if(value <= 10)
-    return "#22d3ee";
+return "#22d3ee";
 
 if(value <= 20)
-    return "#4ade80";
+return "#4ade80";
 
 if(value <= 25)
-    return "#facc15";
+return "#facc15";
 
 if(value <= 30)
-    return "#fb923c";
+return "#fb923c";
 
 if(value <= 35)
-    return "#f97316";
+return "#f97316";
 
 if(value <= 40)
-    return "#ef4444";
+return "#ef4444";
 
-return "#b91c1c";
+return "#991b1b";
 
 }
 
@@ -1524,226 +1609,213 @@ return "#b91c1c";
  TEMPERATURE GRID
 ================================================= */
 
-function renderTemperatureGrid(){
-
-if(
-    !mapEngine?.map ||
-    !weatherGrid
-)
-return;
-
+function showTemperatureGrid(){
 
 hideTemperatureGrid();
 
 
 temperatureLayer =
-    L.layerGroup();
+L.layerGroup();
 
 
 const grid =
-    weatherGrid.getGrid();
+weatherGrid.getGrid();
 
 
 const step =
-    weatherGrid.getStep();
+weatherGrid.getStep();
 
 
 grid.forEach(
 point => {
 
 const value =
-    Number(
-        point.value
-    );
+Number(
+point.value
+);
+
+
+if(!Number.isFinite(value))
+return;
 
 
 const bounds = [
 
-    [
-        point.latitude -
-        step / 2,
+[
+point.latitude -
+step / 2,
 
-        point.longitude -
-        step / 2
-    ],
+point.longitude -
+step / 2
+],
 
-    [
-        point.latitude +
-        step / 2,
+[
+point.latitude +
+step / 2,
 
-        point.longitude +
-        step / 2
-    ]
+point.longitude +
+step / 2
+]
 
 ];
 
 
 L.rectangle(
+bounds,
+{
 
-    bounds,
+stroke:
+false,
 
-    {
+fill:
+true,
 
-        stroke:
-            false,
+fillColor:
+temperatureColor(
+value
+),
 
-        fill:
-            true,
+fillOpacity:
+0.38,
 
-        fillColor:
-            temperatureColor(
-                value
-            ),
+interactive:
+false
 
-        fillOpacity:
-            0.38,
-
-        interactive:
-            false
-
-    }
-
+}
 ).addTo(
-    temperatureLayer
+temperatureLayer
 );
 
 });
 
 
 temperatureLayer.addTo(
-    mapEngine.map
+mapEngine.map
 );
-
-
-gridVisible = true;
 
 }
 
-
-/* =================================================
- HIDE TEMPERATURE
-================================================= */
 
 function hideTemperatureGrid(){
 
 if(
-    temperatureLayer &&
-    mapEngine?.map
+temperatureLayer
 ){
 
-    mapEngine.map
-        .removeLayer(
-            temperatureLayer
-        );
+mapEngine.map
+.removeLayer(
+temperatureLayer
+);
+
+temperatureLayer =
+null;
 
 }
-
-temperatureLayer = null;
-
-gridVisible = false;
 
 }
 
 
 /* =================================================
- WEATHER UI
+ WEATHER INFO
 ================================================= */
 
 function updateWeather(){
 
-const hourly =
-    weatherData?.hourly;
+const h =
+weatherData?.hourly;
 
 
-if(!hourly)
+if(!h)
 return;
 
 
-const temperature =
-    Number(
-        hourly.temperature_2m?.[0]
-    );
+const t =
+Number(
+h.temperature_2m?.[0]
+);
 
-const humidity =
-    Number(
-        hourly.relative_humidity_2m?.[0]
-    );
+const hum =
+Number(
+h.relative_humidity_2m?.[0]
+);
 
 const rain =
-    Number(
-        hourly.precipitation?.[0]
-    );
+Number(
+h.precipitation?.[0]
+);
 
 const wind =
-    Number(
-        hourly.wind_speed_10m?.[0]
-    );
+Number(
+h.wind_speed_10m?.[0]
+);
 
-const clouds =
-    Number(
-        hourly.cloud_cover?.[0]
-    );
+const cloud =
+Number(
+h.cloud_cover?.[0]
+);
 
 const pressure =
-    Number(
-        hourly.pressure_msl?.[0]
-    );
+Number(
+h.pressure_msl?.[0]
+);
 
 const uv =
-    Number(
-        hourly.uv_index?.[0]
-    );
+Number(
+h.uv_index?.[0]
+);
 
 const cape =
-    Number(
-        hourly.cape?.[0]
-    );
+Number(
+h.cape?.[0]
+);
 
 
-if(Number.isFinite(temperature))
+if(Number.isFinite(t))
 $("temperature")
 .textContent =
-Math.round(
-    temperature
-) + "°C";
+Math.round(t)
++
+"°C";
 
 
-if(Number.isFinite(humidity))
+if(Number.isFinite(hum))
 $("humidity")
 .textContent =
-Math.round(
-    humidity
-) + "%";
+Math.round(hum)
++
+"%";
 
 
 if(Number.isFinite(rain))
 $("rain")
 .textContent =
 rain.toFixed(1)
-+ " mm";
++
+" mm";
 
 
 if(Number.isFinite(wind))
 $("wind")
 .textContent =
 wind.toFixed(1)
-+ " km/h";
++
+" km/h";
 
 
-if(Number.isFinite(clouds))
+if(Number.isFinite(cloud))
 $("clouds")
 .textContent =
-Math.round(
-    clouds
-) + "%";
+Math.round(cloud)
++
+"%";
 
 
 if(Number.isFinite(pressure))
 $("pressure")
 .textContent =
-Math.round(
-    pressure
-) + " hPa";
+Math.round(pressure)
++
+" hPa";
 
 
 if(Number.isFinite(uv))
@@ -1755,64 +1827,269 @@ uv.toFixed(1);
 if(Number.isFinite(cape))
 $("cape")
 .textContent =
-Math.round(
-    cape
-) + " J/kg";
+Math.round(cape)
++
+" J/kg";
 
 }
 
 
 /* =================================================
- BUTTON
+ ACTIVE BUTTON
 ================================================= */
 
-function setActive(id){
+function activeButton(
+id
+){
 
 document
 .querySelectorAll(
-    ".layerButton"
+".layerButton"
 )
 .forEach(
 button =>
 button.classList.remove(
-    "active"
+"active"
 )
 );
 
 
-$(id)
-.classList.add(
-    "active"
+if($(id))
+$(id).classList.add(
+"active"
 );
 
 }
 
 
 /* =================================================
- HIDE WEATHER LAYERS
+ HIDE OLD LAYERS
 ================================================= */
 
-function hideWeatherLayers(){
+function hideOldLayers(){
 
 if(rainLayer)
-    rainLayer.hide();
+rainLayer.hide();
 
 if(windLayer)
-    windLayer.hide();
+windLayer.hide();
 
 if(cloudLayer)
-    cloudLayer.hide();
+cloudLayer.hide();
 
 if(pressureLayer)
-    pressureLayer.hide();
+pressureLayer.hide();
 
 if(uvLayer)
-    uvLayer.hide();
+uvLayer.hide();
 
 if(stormLayer)
-    stormLayer.hide();
+stormLayer.hide();
 
 }
+
+
+/* =================================================
+ GLOBAL MAIN BUTTON
+================================================= */
+
+$("globalLayer")
+.onclick =
+async ()=>{
+
+try{
+
+if(
+globalVisible
+){
+
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+$("globalControls")
+.classList.remove(
+"visible"
+);
+
+gridInfo.textContent =
+"GLOBAL: OFF";
+
+systemStatus.textContent =
+"SHOHIN V6.3 • GLOBAL OFF";
+
+return;
+
+}
+
+
+hideTemperatureGrid();
+
+hideOldLayers();
+
+
+if(realRadarLayer)
+realRadarLayer.hide();
+
+
+if(!globalWeatherLayer){
+
+globalWeatherLayer =
+new GlobalWeatherLayer(
+mapEngine,
+{
+
+variable:
+"temperature",
+
+opacity:
+0.45,
+
+gridSize:
+9,
+
+step:
+5
+
+}
+);
+
+}
+
+
+status.textContent =
+"🌍 Loading Global Weather...";
+
+
+systemStatus.textContent =
+"SHOHIN V6.3 • GLOBAL LOADING";
+
+
+await globalWeatherLayer.show();
+
+
+globalVisible =
+true;
+
+
+$("globalControls")
+.classList.add(
+"visible"
+);
+
+
+activeButton(
+"globalLayer"
+);
+
+
+gridInfo.textContent =
+"GLOBAL: REAL DATA";
+
+systemStatus.textContent =
+"SHOHIN V6.3 • GLOBAL ✓";
+
+status.textContent =
+"🌍 Global Temperature";
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+
+/* =================================================
+ GLOBAL VARIABLE BUTTONS
+================================================= */
+
+document
+.querySelectorAll(
+"[data-global]"
+)
+.forEach(
+button => {
+
+button.onclick =
+async ()=>{
+
+try{
+
+const variable =
+button.dataset.global;
+
+
+if(!globalWeatherLayer){
+
+globalWeatherLayer =
+new GlobalWeatherLayer(
+mapEngine,
+{
+
+variable:
+variable,
+
+opacity:
+0.45,
+
+gridSize:
+9,
+
+step:
+5
+
+}
+);
+
+}
+else{
+
+globalWeatherLayer
+.setVariable(
+variable
+);
+
+}
+
+
+status.textContent =
+"🌍 Loading " +
+variable +
+"...";
+
+
+await globalWeatherLayer.show();
+
+
+globalVisible =
+true;
+
+
+systemStatus.textContent =
+"SHOHIN V6.3 • GLOBAL " +
+variable.toUpperCase();
+
+
+gridInfo.textContent =
+"GLOBAL: " +
+variable.toUpperCase();
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+}
+);
 
 
 /* =================================================
@@ -1823,46 +2100,30 @@ $("temperatureLayer")
 .onclick =
 ()=>{
 
-hideWeatherLayers();
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
+realRadarLayer.hide();
 
-renderTemperatureGrid();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
 
-$("radarControls")
+globalVisible =
+false;
+
+$("globalControls")
 .classList.remove(
-    "visible"
+"visible"
 );
 
-setActive(
-    "temperatureLayer"
+showTemperatureGrid();
+
+activeButton(
+"temperatureLayer"
 );
 
 status.textContent =
-    "🌡 Temperature";
-
-};
-
-
-/* =================================================
- GRID
-================================================= */
-
-$("gridLayer")
-.onclick =
-()=>{
-
-if(gridVisible){
-
-    hideTemperatureGrid();
-
-}
-else{
-
-    renderTemperatureGrid();
-
-}
+"🌡 Temperature Grid";
 
 };
 
@@ -1879,39 +2140,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!rainLayer){
 
-    rainLayer =
-        new RainLayer(
-            mapEngine,
-            weatherData
-        );
+rainLayer =
+new RainLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 rainLayer.show();
 
-setActive(
-    "rainLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"rainLayer"
 );
 
 status.textContent =
-    "🌧 Rain Layer";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • RAIN ✓";
+"🌧 Rain";
 
 }
 catch(error){
@@ -1935,39 +2192,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!windLayer){
 
-    windLayer =
-        new WindLayer(
-            mapEngine,
-            weatherData
-        );
+windLayer =
+new WindLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 windLayer.show();
 
-setActive(
-    "windLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"windLayer"
 );
 
 status.textContent =
-    "💨 Wind Layer";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • WIND ✓";
+"💨 Wind";
 
 }
 catch(error){
@@ -1991,39 +2244,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!cloudLayer){
 
-    cloudLayer =
-        new CloudLayer(
-            mapEngine,
-            weatherData
-        );
+cloudLayer =
+new CloudLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 cloudLayer.show();
 
-setActive(
-    "cloudLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"cloudLayer"
 );
 
 status.textContent =
-    "☁ Cloud Layer";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • CLOUD ✓";
+"☁ Clouds";
 
 }
 catch(error){
@@ -2047,39 +2296,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!pressureLayer){
 
-    pressureLayer =
-        new PressureLayer(
-            mapEngine,
-            weatherData
-        );
+pressureLayer =
+new PressureLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 pressureLayer.show();
 
-setActive(
-    "pressureLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"pressureLayer"
 );
 
 status.textContent =
-    "🌀 Pressure Layer";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • PRESSURE ✓";
+"🌀 Pressure";
 
 }
 catch(error){
@@ -2103,39 +2348,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!uvLayer){
 
-    uvLayer =
-        new UVLayer(
-            mapEngine,
-            weatherData
-        );
+uvLayer =
+new UVLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 uvLayer.show();
 
-setActive(
-    "uvLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"uvLayer"
 );
 
 status.textContent =
-    "☀️ UV Layer";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • UV ✓";
+"☀️ UV";
 
 }
 catch(error){
@@ -2159,39 +2400,35 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+hideOldLayers();
 
 if(realRadarLayer)
-    realRadarLayer.hide();
-
+realRadarLayer.hide();
 
 if(!stormLayer){
 
-    stormLayer =
-        new StormLayer(
-            mapEngine,
-            weatherData
-        );
+stormLayer =
+new StormLayer(
+mapEngine,
+weatherData
+);
 
 }
 
-
 stormLayer.show();
 
-setActive(
-    "stormLayer"
-);
-
-$("radarControls")
-.classList.remove(
-    "visible"
+activeButton(
+"stormLayer"
 );
 
 status.textContent =
-    "⚡ Storm / CAPE";
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • STORM ✓";
+"⚡ Storm / CAPE";
 
 }
 catch(error){
@@ -2215,58 +2452,63 @@ try{
 
 hideTemperatureGrid();
 
-hideWeatherLayers();
+if(globalWeatherLayer)
+globalWeatherLayer.hide();
+
+globalVisible =
+false;
+
+$("globalControls")
+.classList.remove(
+"visible"
+);
+
+hideOldLayers();
 
 
 if(!realRadarLayer){
 
-    realRadarLayer =
-        new RealRadarLayer(
-            mapEngine,
-            {
-                opacity:
-                    0.70,
+realRadarLayer =
+new RealRadarLayer(
+mapEngine,
+{
 
-                maxZoom:
-                    7
-            }
-        );
+opacity:
+0.70,
+
+maxZoom:
+18
+
+}
+);
 
 }
 
 
 if(
-    realRadarLayer.isVisible()
+realRadarLayer.isVisible()
 ){
 
-    realRadarLayer.hide();
+realRadarLayer.hide();
 
-    $("radarControls")
-        .classList.remove(
-            "visible"
-        );
+$("radarControls")
+.classList.remove(
+"visible"
+);
 
-    setActive(
-        "radarLayer"
-    );
+systemStatus.textContent =
+"SHOHIN V6.3 • RADAR OFF";
 
-    status.textContent =
-        "📡 Radar OFF";
+status.textContent =
+"📡 Radar OFF";
 
-    systemStatus.textContent =
-        "SHOHIN V6.0 • RADAR OFF";
-
-    return;
+return;
 
 }
 
 
 status.textContent =
-    "📡 Загрузка реального радара...";
-
-
-systemStatus.textContent =
-    "SHOHIN V6.0 • RADAR LOADING";
+"📡 Loading REAL Radar...";
 
 
 await realRadarLayer.show();
@@ -2274,23 +2516,20 @@ await realRadarLayer.show();
 
 $("radarControls")
 .classList.add(
-    "visible"
+"visible"
 );
 
-
-updateRadarTime();
-
-
-setActive(
-    "radarLayer"
+activeButton(
+"radarLayer"
 );
-
-
-status.textContent =
-    "📡 REAL RADAR";
 
 systemStatus.textContent =
-    "SHOHIN V6.0 • REAL RADAR ✓";
+"SHOHIN V6.3 • REAL RADAR ✓";
+
+status.textContent =
+"📡 REAL RADAR";
+
+updateRadarTime();
 
 }
 catch(error){
@@ -2313,194 +2552,122 @@ return;
 
 
 const date =
-    realRadarLayer
-        .getCurrentTime();
+realRadarLayer
+.getCurrentTime();
 
 
 if(!date){
 
-    $("radarTime")
-        .textContent =
-        "Radar: --";
+$("radarTime")
+.textContent =
+"Radar: --";
 
-    return;
+return;
 
 }
 
 
 $("radarTime")
 .textContent =
-
 "Radar: " +
-
 date.toLocaleTimeString(
-    "ru-RU",
-    {
-        hour:
-            "2-digit",
+"ru-RU",
+{
 
-        minute:
-            "2-digit"
-    }
+hour:
+"2-digit",
+
+minute:
+"2-digit"
+
+}
 );
 
 }
 
 
 /* =================================================
- RADAR LATEST
+ RADAR CONTROLS
 ================================================= */
 
 $("radarLatest")
 .onclick =
 ()=>{
 
-try{
-
 if(!realRadarLayer)
 return;
-
 
 realRadarLayer.latest();
 
 updateRadarTime();
 
-status.textContent =
-    "📡 Latest radar";
-
-}
-catch(error){
-
-showError(error);
-
-}
-
 };
 
-
-/* =================================================
- RADAR PREVIOUS
-================================================= */
 
 $("radarPrevious")
 .onclick =
 ()=>{
 
-try{
-
 if(!realRadarLayer)
 return;
-
 
 realRadarLayer.previous();
 
 updateRadarTime();
 
-status.textContent =
-    "📡 Previous radar";
-
-}
-catch(error){
-
-showError(error);
-
-}
-
 };
 
-
-/* =================================================
- RADAR NEXT
-================================================= */
 
 $("radarNext")
 .onclick =
 ()=>{
 
-try{
-
 if(!realRadarLayer)
 return;
-
 
 realRadarLayer.next();
 
 updateRadarTime();
 
-status.textContent =
-    "📡 Next radar";
-
-}
-catch(error){
-
-showError(error);
-
-}
-
 };
-
-
-/* =================================================
- RADAR ANIMATION
-================================================= */
-
-let radarPlaying = false;
 
 
 $("radarPlay")
 .onclick =
 ()=>{
 
-try{
-
 if(!realRadarLayer)
 return;
 
 
-if(
-    radarPlaying
-){
+if(radarPlaying){
 
-    realRadarLayer
-        .stopAnimation();
+realRadarLayer
+.stopAnimation();
 
-    radarPlaying = false;
+radarPlaying =
+false;
 
-    $("radarPlay")
-        .textContent =
-        "▶ Animate Radar";
+$("radarPlay")
+.textContent =
+"▶ Animate Radar";
 
-    status.textContent =
-        "📡 Radar paused";
-
-    return;
+return;
 
 }
 
 
 realRadarLayer
-    .startAnimation(
-        700
-    );
+.startAnimation(
+700
+);
 
-
-radarPlaying = true;
+radarPlaying =
+true;
 
 $("radarPlay")
 .textContent =
-    "⏸ Stop Radar";
-
-
-status.textContent =
-    "📡 Radar animation";
-
-
-}
-catch(error){
-
-showError(error);
-
-}
+"⏸ Stop Radar";
 
 };
 
@@ -2510,29 +2677,29 @@ showError(error);
 ================================================= */
 
 function weatherIcon(
-    code
+code
 ){
 
 if(code === 0)
-    return "☀️";
+return "☀️";
 
 if(code <= 3)
-    return "⛅";
+return "⛅";
 
 if(code <= 48)
-    return "🌫️";
+return "🌫️";
 
 if(code <= 67)
-    return "🌧️";
+return "🌧️";
 
 if(code <= 77)
-    return "❄️";
+return "❄️";
 
 if(code <= 82)
-    return "🌦️";
+return "🌦️";
 
 if(code >= 95)
-    return "⛈️";
+return "⛈️";
 
 return "🌤️";
 
@@ -2546,75 +2713,70 @@ return;
 
 
 const days =
-    forecastLayer
-        .getDays(7);
+forecastLayer.getDays(7);
 
 
-const container =
-    $("forecast");
-
-
-container.innerHTML = "";
+$("forecast").innerHTML =
+"";
 
 
 days.forEach(
 day => {
 
 const element =
-    document.createElement(
-        "div"
-    );
-
+document.createElement(
+"div"
+);
 
 element.className =
-    "forecastDay";
+"forecastDay";
 
 
 const date =
-    new Date(
-        day.date
-    );
-
-
-const dateText =
-    date.toLocaleDateString(
-        "ru-RU",
-        {
-            weekday:
-                "short",
-
-            day:
-                "2-digit",
-
-            month:
-                "2-digit"
-        }
-    );
+new Date(
+day.date
+);
 
 
 element.innerHTML = `
 
 <div class="forecastDate">
-${dateText}
+
+${date.toLocaleDateString(
+"ru-RU",
+{
+weekday:"short",
+day:"2-digit",
+month:"2-digit"
+}
+)}
+
 </div>
 
 <div class="forecastIcon">
+
 ${weatherIcon(
-    day.weatherCode
+day.weatherCode
 )}
+
 </div>
 
 <div class="forecastTemp">
-${Math.round(day.min)}°
+
+${Math.round(day.min)}
+°
 /
-${Math.round(day.max)}°
+${Math.round(day.max)}
+°
+
 </div>
 
 `;
 
 
-container.appendChild(
-    element
+$("forecast")
+.appendChild(
+element
 );
 
 });
@@ -2632,63 +2794,42 @@ $("animationLayer")
 
 try{
 
-hideTemperatureGrid();
+if(animationEngine?.isRunning()){
 
-hideWeatherLayers();
+animationEngine.stop();
 
-if(realRadarLayer)
-    realRadarLayer.hide();
+status.textContent =
+"🎞️ Animation stopped";
 
-
-if(!animationEngine){
-
-    animationEngine =
-        new AnimationEngine();
+return;
 
 }
 
 
-if(
-    animationEngine.isRunning()
-){
+if(!animationEngine){
 
-    animationEngine.stop();
-
-    status.textContent =
-        "🎞️ Animation stopped";
-
-    systemStatus.textContent =
-        "SHOHIN V6.0 • ANIMATION OFF";
-
-    return;
+animationEngine =
+new AnimationEngine();
 
 }
 
 
 animationEngine.start(
+progress => {
 
-    progress => {
+systemStatus.textContent =
+"SHOHIN V6.3 • ANIMATION " +
+Math.round(
+progress * 100
+) +
+"%";
 
-        systemStatus.textContent =
-            "SHOHIN V6.0 • ANIMATION " +
-            Math.round(
-                progress * 100
-            ) +
-            "%";
-
-    },
-
-    1200
-
-);
-
-
-setActive(
-    "animationLayer"
+},
+1200
 );
 
 status.textContent =
-    "🎞️ Animation running";
+"🎞️ Animation running";
 
 }
 catch(error){
@@ -2705,7 +2846,7 @@ showError(error);
 ================================================= */
 
 function showError(
-    error
+error
 ){
 
 console.error(error);
@@ -2713,17 +2854,17 @@ console.error(error);
 
 errorBox.textContent =
 
-"❌ SHOHIN WEATHER V6.0\n\n" +
+"❌ SHOHIN WEATHER V6.3\n\n" +
 
 (
-    error?.stack ||
-    error?.message ||
-    String(error)
+error?.stack ||
+error?.message ||
+String(error)
 );
 
 
 errorBox.classList.add(
-    "show"
+"show"
 );
 
 }
@@ -2749,38 +2890,38 @@ updateWeather();
 
 
 forecastLayer =
-    new ForecastLayer(
-        weatherData
-    );
+new ForecastLayer(
+weatherData
+);
 
-
-renderTemperatureGrid();
 
 renderForecast();
 
+showTemperatureGrid();
+
 
 online.textContent =
-    "● ONLINE";
+"● ONLINE";
 
 online.style.color =
-    "#4ade80";
+"#4ade80";
 
 
 systemStatus.textContent =
-    "SHOHIN V6.0 • ALL SYSTEMS ✓";
+"SHOHIN V6.3 • READY ✓";
 
 
 status.textContent =
-    "🌍 Weather ready";
+"🌍 Weather ready";
 
 
 loading.classList.add(
-    "hidden"
+"hidden"
 );
 
 
 console.log(
-    "SHOHIN WEATHER V6.0 READY"
+"SHOHIN WEATHER V6.3 READY"
 );
 
 }
@@ -2788,26 +2929,20 @@ catch(error){
 
 console.error(error);
 
-
 loading.classList.add(
-    "hidden"
+"hidden"
 );
-
 
 online.textContent =
-    "● ERROR";
+"● ERROR";
 
 online.style.color =
-    "#fb7185";
-
+"#fb7185";
 
 systemStatus.textContent =
-    "SHOHIN V6.0 • ERROR";
+"SHOHIN V6.3 • ERROR";
 
-
-showError(
-    error
-);
+showError(error);
 
 }
 
