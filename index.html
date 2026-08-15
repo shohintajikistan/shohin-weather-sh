@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>SHOHIN Weather V5.1</title>
+<title>SHOHIN Weather V5.2</title>
 
 <link
     rel="stylesheet"
@@ -127,7 +127,7 @@ body {
 
 
 /* =========================================
-   WEATHER CARD
+   WEATHER PANEL
 ========================================= */
 
 #weatherPanel {
@@ -248,7 +248,39 @@ body {
 
 
 /* =========================================
-   STATUS
+   GRID INFO
+========================================= */
+
+#gridInfo {
+
+    position: absolute;
+
+    z-index: 2000;
+
+    right: 15px;
+    bottom: 18px;
+
+    padding:
+        10px 14px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(5,15,28,.90);
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    color: #9eb3c6;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   SYSTEM STATUS
 ========================================= */
 
 #systemStatus {
@@ -257,8 +289,8 @@ body {
 
     z-index: 2000;
 
+    left: 15px;
     bottom: 18px;
-    left: 18px;
 
     padding:
         9px 13px;
@@ -266,7 +298,7 @@ body {
     border-radius: 12px;
 
     background:
-        rgba(5,15,28,.85);
+        rgba(5,15,28,.90);
 
     border:
         1px solid
@@ -417,6 +449,20 @@ body {
     #temperature {
 
         font-size: 50px;
+
+    }
+
+    #gridInfo {
+
+        right: 8px;
+        bottom: 8px;
+
+    }
+
+    #systemStatus {
+
+        left: 8px;
+        bottom: 8px;
 
     }
 
@@ -576,7 +622,14 @@ body {
 
     <div id="systemStatus">
 
-        SHOHIN V5.1 • Starting...
+        SHOHIN V5.2 • Starting...
+
+    </div>
+
+
+    <div id="gridInfo">
+
+        GRID: starting...
 
     </div>
 
@@ -587,7 +640,7 @@ body {
 
         <div>
 
-            🌍 SHOHIN Weather V5.1
+            🌍 SHOHIN Weather V5.2
 
         </div>
 
@@ -623,8 +676,8 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 /*
 ====================================================
- SHOHIN WEATHER V5.1
- STABLE CORE
+ SHOHIN WEATHER V5.2
+ WEATHER GRID TEST
 ====================================================
 */
 
@@ -654,6 +707,10 @@ const systemStatus =
     $("systemStatus");
 
 
+const gridInfo =
+    $("gridInfo");
+
+
 const status =
     $("weatherStatus");
 
@@ -669,6 +726,8 @@ let WeatherEngine;
 
 let MapEngine;
 
+let WeatherGrid;
+
 
 /*
 ====================================================
@@ -680,6 +739,8 @@ let MapEngine;
 let weatherEngine = null;
 
 let mapEngine = null;
+
+let weatherGrid = null;
 
 let weatherData = null;
 
@@ -727,7 +788,7 @@ function timeout(
 
 /*
 ====================================================
- LOAD CORE MODULES
+ LOAD CORE
 ====================================================
 */
 
@@ -736,10 +797,10 @@ async function loadCore() {
 
 
     loadingText.textContent =
-        "Загрузка Weather Engine...";
+        "Загрузка WeatherEngine...";
 
 
-    const engineModule =
+    const weatherModule =
         await timeout(
 
             import(
@@ -754,7 +815,7 @@ async function loadCore() {
 
 
     WeatherEngine =
-        engineModule.WeatherEngine;
+        weatherModule.WeatherEngine;
 
 
     if (
@@ -770,7 +831,7 @@ async function loadCore() {
 
 
     loadingText.textContent =
-        "Загрузка Map Engine...";
+        "Загрузка MapEngine...";
 
 
     const mapModule =
@@ -802,12 +863,46 @@ async function loadCore() {
 
     }
 
+
+    loadingText.textContent =
+        "Загрузка WeatherGrid...";
+
+
+    const gridModule =
+        await timeout(
+
+            import(
+                "./js/WeatherGrid.js"
+            ),
+
+            10000,
+
+            "WeatherGrid.js не загрузился"
+
+        );
+
+
+    WeatherGrid =
+        gridModule.WeatherGrid;
+
+
+    if (
+        typeof WeatherGrid !==
+        "function"
+    ) {
+
+        throw new Error(
+            "WeatherGrid не найден"
+        );
+
+    }
+
 }
 
 
 /*
 ====================================================
- WEATHER ENGINE
+ WEATHER
 ====================================================
 */
 
@@ -935,7 +1030,192 @@ async function startMap() {
 
 /*
 ====================================================
- UPDATE WEATHER UI
+ CREATE GRID
+====================================================
+*/
+
+
+function startGrid() {
+
+
+    loadingText.textContent =
+        "Создание Weather Grid...";
+
+
+    const latitude =
+        Number(
+            weatherEngine
+                ?.location
+                ?.latitude
+        );
+
+
+    const longitude =
+        Number(
+            weatherEngine
+                ?.location
+                ?.longitude
+        );
+
+
+    weatherGrid =
+        new WeatherGrid({
+
+            latitude:
+                Number.isFinite(
+                    latitude
+                )
+                ? latitude
+                : 38.5598,
+
+            longitude:
+                Number.isFinite(
+                    longitude
+                )
+                ? longitude
+                : 68.7870,
+
+            size:
+                15,
+
+            step:
+                0.20
+
+        });
+
+
+    const grid =
+        weatherGrid.build();
+
+
+    if (
+        !Array.isArray(
+            grid
+        )
+    ) {
+
+        throw new Error(
+            "WeatherGrid.build() не вернул массив"
+        );
+
+    }
+
+
+    /*
+    ================================================
+    TEST VALUES
+    ================================================
+    */
+
+
+    const temperature =
+        Number(
+            weatherData
+                ?.hourly
+                ?.temperature_2m
+                ?.at(0)
+        );
+
+
+    const baseTemperature =
+        Number.isFinite(
+            temperature
+        )
+        ? temperature
+        : 20;
+
+
+    const values =
+        grid.map(
+            point => {
+
+
+                const distance =
+                    Math.sqrt(
+
+                        Math.pow(
+
+                            point.latitude -
+                            latitude,
+
+                            2
+
+                        )
+
+                        +
+
+                        Math.pow(
+
+                            point.longitude -
+                            longitude,
+
+                            2
+
+                        )
+
+                    );
+
+
+                return (
+
+                    baseTemperature
+                    -
+                    distance * 2
+
+                );
+
+            }
+        );
+
+
+    weatherGrid.applyValues(
+        values
+    );
+
+
+    /*
+    ================================================
+    GRID INFO
+    ================================================
+    */
+
+
+    gridInfo.textContent =
+
+        "GRID: " +
+
+        weatherGrid.getSize() +
+
+        " × " +
+
+        weatherGrid.getSize() +
+
+        " • " +
+
+        grid.length +
+
+        " points";
+
+
+    systemStatus.textContent =
+        "SHOHIN V5.2 • GRID ✓";
+
+
+    status.textContent =
+        "🌡 Weather Grid создан";
+
+
+    console.log(
+        "SHOHIN WEATHER GRID:",
+        weatherGrid.getGrid()
+    );
+
+}
+
+
+/*
+====================================================
+ UPDATE WEATHER
 ====================================================
 */
 
@@ -959,13 +1239,6 @@ function updateWeather() {
 
 
     const i = 0;
-
-
-    /*
-    ================================================
-    TEMPERATURE
-    ================================================
-    */
 
 
     if (
@@ -999,13 +1272,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    HUMIDITY
-    ================================================
-    */
-
-
     if (
         Array.isArray(
             hourly.relative_humidity_2m
@@ -1037,13 +1303,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    RAIN
-    ================================================
-    */
-
-
     if (
         Array.isArray(
             hourly.precipitation
@@ -1073,13 +1332,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    WIND
-    ================================================
-    */
-
-
     if (
         Array.isArray(
             hourly.wind_speed_10m
@@ -1107,13 +1359,6 @@ function updateWeather() {
         }
 
     }
-
-
-    /*
-    ================================================
-    CLOUDS
-    ================================================
-    */
 
 
     if (
@@ -1147,13 +1392,6 @@ function updateWeather() {
     }
 
 
-    /*
-    ================================================
-    PRESSURE
-    ================================================
-    */
-
-
     if (
         Array.isArray(
             hourly.pressure_msl
@@ -1184,21 +1422,6 @@ function updateWeather() {
 
     }
 
-
-    /*
-    ================================================
-    STATUS
-    ================================================
-    */
-
-
-    status.textContent =
-        "🌤 Реальные погодные данные";
-
-
-    systemStatus.textContent =
-        "SHOHIN V5.1 • API ✓ • MAP ✓";
-
 }
 
 
@@ -1217,7 +1440,7 @@ async function start() {
 
         /*
         ============================================
-        CORE
+        1. MODULES
         ============================================
         */
 
@@ -1227,7 +1450,7 @@ async function start() {
 
         /*
         ============================================
-        WEATHER
+        2. WEATHER API
         ============================================
         */
 
@@ -1237,7 +1460,7 @@ async function start() {
 
         /*
         ============================================
-        MAP
+        3. MAP
         ============================================
         */
 
@@ -1247,7 +1470,17 @@ async function start() {
 
         /*
         ============================================
-        UI
+        4. GRID
+        ============================================
+        */
+
+
+        startGrid();
+
+
+        /*
+        ============================================
+        5. UI
         ============================================
         */
 
@@ -1263,37 +1496,39 @@ async function start() {
 
 
         const latitude =
-            weatherEngine
-                ?.location
-                ?.latitude;
+            Number(
+                weatherEngine
+                    ?.location
+                    ?.latitude
+            );
 
 
         const longitude =
-            weatherEngine
-                ?.location
-                ?.longitude;
+            Number(
+                weatherEngine
+                    ?.location
+                    ?.longitude
+            );
 
 
         if (
             Number.isFinite(
-                Number(latitude)
+                latitude
             )
             &&
             Number.isFinite(
-                Number(longitude)
+                longitude
             )
         ) {
 
             $("coordinates")
                 .textContent =
 
-                Number(latitude)
-                    .toFixed(4) +
+                latitude.toFixed(4) +
 
                 "° N, " +
 
-                Number(longitude)
-                    .toFixed(4) +
+                longitude.toFixed(4) +
 
                 "° E";
 
@@ -1321,30 +1556,41 @@ async function start() {
 
 
         console.log(
-            "===================================="
+            "================================"
         );
 
+
         console.log(
-            "SHOHIN WEATHER V5.1 READY"
+            "SHOHIN WEATHER V5.2 READY"
         );
+
 
         console.log(
             "WeatherEngine:",
             weatherEngine
         );
 
+
         console.log(
             "WeatherData:",
             weatherData
         );
 
-        console.log(
-            "MapEngine:",
-            mapEngine
-        );
 
         console.log(
-            "===================================="
+            "WeatherGrid:",
+            weatherGrid
+        );
+
+
+        console.log(
+            "Grid:",
+            weatherGrid.getGrid()
+        );
+
+
+        console.log(
+            "================================"
         );
 
 
@@ -1355,7 +1601,7 @@ async function start() {
 
 
         console.error(
-            "SHOHIN V5.1 ERROR:",
+            "SHOHIN V5.2 ERROR:",
             error
         );
 
@@ -1374,7 +1620,7 @@ async function start() {
 
 
         systemStatus.textContent =
-            "SHOHIN V5.1 • ERROR";
+            "SHOHIN V5.2 • ERROR";
 
 
         showError(
@@ -1388,7 +1634,7 @@ async function start() {
 
 /*
 ====================================================
- ERROR SCREEN
+ ERROR
 ====================================================
 */
 
@@ -1411,7 +1657,7 @@ function showError(
 
     errorBox.textContent =
 
-        "❌ SHOHIN WEATHER V5.1\n\n" +
+        "❌ SHOHIN WEATHER V5.2\n\n" +
 
         message;
 
@@ -1425,7 +1671,7 @@ function showError(
 
 /*
 ====================================================
- START APPLICATION
+ START
 ====================================================
 */
 
