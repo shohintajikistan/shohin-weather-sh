@@ -1,3508 +1,1277 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1,
-               maximum-scale=1,
-               viewport-fit=cover">
 
-<meta name="theme-color" content="#06111f">
+    <meta charset="UTF-8">
 
-<title>SHOHIN Weather V3</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+    <title>
+        SHOHIN Weather V5
+    </title>
 
-<style>
+    <style>
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-html,
-body{
-  width:100%;
-  height:100%;
-  margin:0;
-  overflow:hidden;
-  background:#06111f;
-  color:#fff;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-}
+        html,
+        body {
 
-button,
-input{
-  font:inherit;
-}
+            margin: 0;
+            padding: 0;
 
-button{
-  color:inherit;
-}
+            width: 100%;
+            height: 100%;
 
-/* =========================================================
-   MAP
-========================================================= */
+            background: #07111f;
 
-#map{
-  position:fixed;
-  inset:0;
-  background:#071522;
-}
+            color: white;
 
-/* =========================================================
-   WEATHER CANVAS
-========================================================= */
-
-#weatherCanvas{
-  position:absolute;
-  inset:0;
-
-  width:100%;
-  height:100%;
-
-  pointer-events:none;
-
-  z-index:5;
-}
-
-/* =========================================================
-   TOP
-========================================================= */
-
-.top{
-  position:fixed;
-
-  top:max(10px,env(safe-area-inset-top));
-  left:10px;
-  right:10px;
-
-  z-index:50;
-
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  pointer-events:none;
-}
-
-.brand{
-  pointer-events:auto;
-
-  display:flex;
-  align-items:center;
-  gap:9px;
-
-  padding:10px 13px;
-
-  border-radius:17px;
-
-  background:
-    rgba(4,15,28,.84);
-
-  border:
-    1px solid
-    rgba(255,255,255,.13);
-
-  backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 14px 45px
-    rgba(0,0,0,.28);
-}
-
-.brandLogo{
-  width:32px;
-  height:32px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:11px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #ff8a00,
-      #ffb300
-    );
-
-  font-size:17px;
-
-  box-shadow:
-    0 5px 18px
-    rgba(255,140,0,.3);
-}
-
-.brandText strong{
-  display:block;
-
-  font-size:14px;
-  font-weight:850;
-}
-
-.brandText small{
-  display:block;
-
-  margin-top:1px;
-
-  font-size:7px;
-  letter-spacing:1.1px;
-
-  opacity:.48;
-}
-
-.topActions{
-  margin-left:auto;
-
-  display:flex;
-  gap:7px;
-
-  pointer-events:auto;
-}
-
-.iconBtn{
-  width:43px;
-  height:43px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:14px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  background:
-    rgba(4,15,28,.84);
-
-  backdrop-filter:blur(18px);
-
-  cursor:pointer;
-
-  font-size:17px;
-}
-
-/* =========================================================
-   LEFT PANEL
-========================================================= */
-
-.panel{
-  position:fixed;
-
-  z-index:40;
-
-  top:70px;
-  left:10px;
-
-  width:278px;
-
-  max-height:
-    calc(100vh - 155px);
-
-  overflow:auto;
-
-  padding:10px;
-
-  border-radius:20px;
-
-  background:
-    rgba(4,15,28,.84);
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  backdrop-filter:blur(22px);
-
-  box-shadow:
-    0 20px 70px
-    rgba(0,0,0,.35);
-
-  scrollbar-width:none;
-}
-
-.panel::-webkit-scrollbar{
-  display:none;
-}
-
-.sectionTitle{
-  padding:5px 5px 8px;
-
-  font-size:8px;
-
-  letter-spacing:1.2px;
-
-  text-transform:uppercase;
-
-  opacity:.42;
-}
-
-/* =========================================================
-   LAYERS
-========================================================= */
-
-.layers{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:6px;
-}
-
-.layer{
-  min-height:58px;
-
-  padding:8px;
-
-  border-radius:13px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.08);
-
-  background:
-    rgba(255,255,255,.045);
-
-  cursor:pointer;
-
-  text-align:left;
-
-  transition:
-    .18s ease;
-}
-
-.layer:hover{
-  background:
-    rgba(255,255,255,.08);
-}
-
-.layer.active{
-  background:
-    rgba(255,255,255,.15);
-
-  border-color:
-    rgba(255,255,255,.26);
-
-  transform:
-    translateY(-1px);
-}
-
-.layerIcon{
-  font-size:17px;
-  display:block;
-  margin-bottom:3px;
-}
-
-.layerName{
-  display:block;
-
-  font-size:9px;
-
-  font-weight:750;
-}
-
-.layerValue{
-  display:block;
-
-  margin-top:2px;
-
-  font-size:7px;
-
-  opacity:.4;
-}
-
-/* =========================================================
-   FORECAST MODES
-========================================================= */
-
-.modeRow{
-  display:flex;
-
-  gap:6px;
-
-  margin-top:9px;
-}
-
-.mode{
-  flex:1;
-
-  padding:9px 5px;
-
-  border-radius:11px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.08);
-
-  background:
-    rgba(255,255,255,.045);
-
-  cursor:pointer;
-
-  font-size:8px;
-}
-
-.mode.active{
-  background:
-    rgba(255,255,255,.15);
-
-  border-color:
-    rgba(255,255,255,.25);
-}
-
-/* =========================================================
-   INFO
-========================================================= */
-
-.info{
-  margin-top:9px;
-
-  padding:11px;
-
-  border-radius:15px;
-
-  background:
-    rgba(255,255,255,.045);
-
-  border:
-    1px solid
-    rgba(255,255,255,.07);
-}
-
-.place{
-  font-size:14px;
-  font-weight:850;
-}
-
-.coords{
-  margin-top:2px;
-
-  font-size:8px;
-
-  opacity:.4;
-}
-
-.bigTemp{
-  margin-top:11px;
-
-  font-size:38px;
-
-  line-height:.95;
-
-  font-weight:850;
-}
-
-.description{
-  margin-top:5px;
-
-  font-size:9px;
-
-  opacity:.65;
-}
-
-.metrics{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:5px;
-
-  margin-top:11px;
-}
-
-.metric{
-  padding:7px;
-
-  border-radius:9px;
-
-  background:
-    rgba(255,255,255,.045);
-
-  font-size:7px;
-
-  opacity:.62;
-}
-
-.metric b{
-  display:block;
-
-  margin-top:2px;
-
-  font-size:10px;
-
-  color:#fff;
-
-  opacity:1;
-}
-
-/* =========================================================
-   CHART
-========================================================= */
-
-#chart{
-  display:block;
-
-  width:100%;
-  height:90px;
-
-  margin-top:10px;
-}
-
-/* =========================================================
-   PRESSURE LEVEL
-========================================================= */
-
-.levelBox{
-  margin-top:9px;
-}
-
-.levelSelect{
-  width:100%;
-
-  padding:9px;
-
-  border-radius:11px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.1);
-
-  background:
-    rgba(255,255,255,.06);
-
-  color:#fff;
-
-  outline:none;
-
-  font-size:9px;
-}
-
-.levelSelect option{
-  color:#111;
-}
-
-/* =========================================================
-   MAP CONTROLS
-========================================================= */
-
-.mapControls{
-  position:fixed;
-
-  z-index:45;
-
-  right:10px;
-
-  top:80px;
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:7px;
-}
-
-.mapControl{
-  width:44px;
-  height:44px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:14px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  background:
-    rgba(4,15,28,.84);
-
-  backdrop-filter:blur(18px);
-
-  cursor:pointer;
-
-  font-size:17px;
-}
-
-/* =========================================================
-   TIMELINE
-========================================================= */
-
-.timeline{
-  position:fixed;
-
-  left:10px;
-  right:10px;
-
-  bottom:
-    max(9px,env(safe-area-inset-bottom));
-
-  z-index:50;
-
-  padding:10px 12px;
-
-  border-radius:18px;
-
-  background:
-    rgba(4,15,28,.86);
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  backdrop-filter:blur(22px);
-
-  box-shadow:
-    0 18px 60px
-    rgba(0,0,0,.32);
-}
-
-.timeTop{
-  display:flex;
-  align-items:center;
-
-  gap:8px;
-}
-
-.play{
-  width:39px;
-  height:39px;
-
-  flex:0 0 auto;
-
-  border:0;
-
-  border-radius:50%;
-
-  background:#fff;
-  color:#06111f;
-
-  cursor:pointer;
-
-  font-weight:850;
-}
-
-#timelineRange{
-  flex:1;
-
-  accent-color:#fff;
-}
-
-.timeLabel{
-  width:92px;
-
-  text-align:right;
-
-  font-size:8px;
-
-  opacity:.65;
-}
-
-.legend{
-  display:flex;
-  align-items:center;
-  gap:7px;
-
-  margin-top:7px;
-
-  font-size:7px;
-
-  opacity:.45;
-}
-
-.legendBar{
-  flex:1;
-
-  height:6px;
-
-  border-radius:20px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #173c91,
-      #268ed0,
-      #6bd3ba,
-      #f5ef72,
-      #ff9d3c,
-      #d92e35
-    );
-}
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading{
-  position:fixed;
-  inset:0;
-
-  z-index:100;
-
-  display:none;
-
-  place-items:center;
-
-  pointer-events:none;
-}
-
-.loading.show{
-  display:grid;
-}
-
-.loader{
-  width:38px;
-  height:38px;
-
-  border:
-    3px solid
-    rgba(255,255,255,.16);
-
-  border-top-color:#fff;
-
-  border-radius:50%;
-
-  animation:
-    spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:600px){
-
-  .panel{
-    width:236px;
-  }
-
-  .brandText small{
-    display:none;
-  }
-
-  .brand{
-    padding:8px 10px;
-  }
-
-  .brandLogo{
-    width:29px;
-    height:29px;
-  }
-
-  .bigTemp{
-    font-size:32px;
-  }
-
-  .timeLabel{
-    width:76px;
-  }
-
-}
-
-</style>
-</head>
-
-<body>
-
-<div id="map"></div>
-
-<canvas id="weatherCanvas"></canvas>
-
-<!-- ======================================================
-     TOP
-====================================================== -->
-
-<div class="top">
-
-  <div class="brand">
-
-    <div class="brandLogo">
-      🌍
-    </div>
-
-    <div class="brandText">
-
-      <strong>
-        SHOHIN Weather
-      </strong>
-
-      <small>
-        GLOBAL METEOROLOGICAL SYSTEM V3
-      </small>
-
-    </div>
-
-  </div>
-
-  <div class="topActions">
-
-    <button
-      class="iconBtn"
-      id="searchBtn">
-      🔎
-    </button>
-
-    <button
-      class="iconBtn"
-      id="settingsBtn">
-      ⚙️
-    </button>
-
-  </div>
-
-</div>
-
-<!-- ======================================================
-     WEATHER PANEL
-====================================================== -->
-
-<aside class="panel">
-
-  <div class="sectionTitle">
-    Atmospheric layers
-  </div>
-
-  <div class="layers">
-
-    <button
-      class="layer active"
-      data-layer="temperature">
-
-      <span class="layerIcon">🌡️</span>
-      <span class="layerName">
-        Temperature
-      </span>
-      <span class="layerValue">
-        °C
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="rain">
-
-      <span class="layerIcon">🌧️</span>
-      <span class="layerName">
-        Rain
-      </span>
-      <span class="layerValue">
-        mm
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="wind">
-
-      <span class="layerIcon">💨</span>
-      <span class="layerName">
-        Wind
-      </span>
-      <span class="layerValue">
-        km/h
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="gust">
-
-      <span class="layerIcon">🌪️</span>
-      <span class="layerName">
-        Wind Gusts
-      </span>
-      <span class="layerValue">
-        km/h
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="cloud">
-
-      <span class="layerIcon">☁️</span>
-      <span class="layerName">
-        Clouds
-      </span>
-      <span class="layerValue">
-        %
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="pressure">
-
-      <span class="layerIcon">🌀</span>
-      <span class="layerName">
-        Pressure
-      </span>
-      <span class="layerValue">
-        hPa
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="humidity">
-
-      <span class="layerIcon">💧</span>
-      <span class="layerName">
-        Humidity
-      </span>
-      <span class="layerValue">
-        %
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="snow">
-
-      <span class="layerIcon">❄️</span>
-      <span class="layerName">
-        Snow
-      </span>
-      <span class="layerValue">
-        cm
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="visibility">
-
-      <span class="layerIcon">🌫️</span>
-      <span class="layerName">
-        Visibility
-      </span>
-      <span class="layerValue">
-        km
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="cape">
-
-      <span class="layerIcon">⚡</span>
-      <span class="layerName">
-        CAPE
-      </span>
-      <span class="layerValue">
-        J/kg
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="uv">
-
-      <span class="layerIcon">☀️</span>
-      <span class="layerName">
-        UV Index
-      </span>
-      <span class="layerValue">
-        index
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="solar">
-
-      <span class="layerIcon">🌞</span>
-      <span class="layerName">
-        Solar Radiation
-      </span>
-      <span class="layerValue">
-        W/m²
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="sst">
-
-      <span class="layerIcon">🌊</span>
-      <span class="layerName">
-        Sea Surface
-      </span>
-      <span class="layerValue">
-        °C
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="ocean">
-
-      <span class="layerIcon">🌊</span>
-      <span class="layerName">
-        Ocean Current
-      </span>
-      <span class="layerValue">
-        km/h
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="isobars">
-
-      <span class="layerIcon">🌀</span>
-      <span class="layerName">
-        Isobars
-      </span>
-      <span class="layerValue">
-        hPa
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="satellite">
-
-      <span class="layerIcon">🛰️</span>
-      <span class="layerName">
-        Satellite
-      </span>
-      <span class="layerValue">
-        satellite mode
-      </span>
-
-    </button>
-
-    <button
-      class="layer"
-      data-layer="radar">
-
-      <span class="layerIcon">📡</span>
-      <span class="layerName">
-        Radar
-      </span>
-      <span class="layerValue">
-        radar mode
-      </span>
-
-    </button>
-
-  </div>
-
-  <div class="sectionTitle"
-       style="margin-top:10px">
-
-    Forecast / history
-
-  </div>
-
-  <div class="modeRow">
-
-    <button
-      class="mode active"
-      data-mode="forecast">
-      ⏩ Forecast
-    </button>
-
-    <button
-      class="mode"
-      data-mode="history">
-      ⏪ History
-    </button>
-
-  </div>
-
-  <div class="levelBox">
-
-    <select
-      class="levelSelect"
-      id="pressureLevel">
-
-      <option value="">
-        Surface
-      </option>
-
-      <option value="1000">
-        1000 hPa
-      </option>
-
-      <option value="925">
-        925 hPa
-      </option>
-
-      <option value="850">
-        850 hPa
-      </option>
-
-      <option value="700">
-        700 hPa
-      </option>
-
-      <option value="500">
-        500 hPa
-      </option>
-
-      <option value="300">
-        300 hPa
-      </option>
-
-      <option value="200">
-        200 hPa
-      </option>
-
-      <option value="100">
-        100 hPa
-      </option>
-
-    </select>
-
-  </div>
-
-  <div class="info">
-
-    <div
-      class="place"
-      id="place">
-      Dushanbe
-    </div>
-
-    <div
-      class="coords"
-      id="coords">
-      38.5598, 68.7870
-    </div>
-
-    <div
-      class="bigTemp"
-      id="temperature">
-      --°
-    </div>
-
-    <div
-      class="description"
-      id="description">
-      Loading weather...
-    </div>
-
-    <div class="metrics">
-
-      <div class="metric">
-        💧 Humidity
-        <b id="mHumidity">--</b>
-      </div>
-
-      <div class="metric">
-        💨 Wind
-        <b id="mWind">--</b>
-      </div>
-
-      <div class="metric">
-        🌪️ Gust
-        <b id="mGust">--</b>
-      </div>
-
-      <div class="metric">
-        🌧️ Rain
-        <b id="mRain">--</b>
-      </div>
-
-      <div class="metric">
-        ☁️ Clouds
-        <b id="mCloud">--</b>
-      </div>
-
-      <div class="metric">
-        🌀 Pressure
-        <b id="mPressure">--</b>
-      </div>
-
-      <div class="metric">
-        ❄️ Snow
-        <b id="mSnow">--</b>
-      </div>
-
-      <div class="metric">
-        🌫️ Visibility
-        <b id="mVisibility">--</b>
-      </div>
-
-      <div class="metric">
-        ⚡ CAPE
-        <b id="mCape">--</b>
-      </div>
-
-      <div class="metric">
-        ☀️ UV
-        <b id="mUV">--</b>
-      </div>
-
-      <div class="metric">
-        🌞 Solar
-        <b id="mSolar">--</b>
-      </div>
-
-      <div class="metric">
-        🧭 Direction
-        <b id="mDirection">--</b>
-      </div>
-
-    </div>
-
-    <canvas id="chart"></canvas>
-
-  </div>
-
-</aside>
-
-<!-- ======================================================
-     MAP CONTROLS
-====================================================== -->
-
-<div class="mapControls">
-
-  <button
-    class="mapControl"
-    id="globeBtn">
-    🌐
-  </button>
-
-  <button
-    class="mapControl"
-    id="gpsBtn">
-    📍
-  </button>
-
-  <button
-    class="mapControl"
-    id="resetBtn">
-    ⌖
-  </button>
-
-</div>
-
-<!-- ======================================================
-     TIMELINE
-====================================================== -->
-
-<div class="timeline">
-
-  <div class="timeTop">
-
-    <button
-      class="play"
-      id="playBtn">
-      ▶
-    </button>
-
-    <input
-      id="timelineRange"
-      type="range"
-      min="0"
-      max="383"
-      value="0">
-
-    <div
-      class="timeLabel"
-      id="timeLabel">
-      Loading...
-    </div>
-
-  </div>
-
-  <div class="legend">
-
-    <span>
-      Low
-    </span>
-
-    <div class="legendBar"></div>
-
-    <span>
-      High
-    </span>
-
-  </div>
-
-</div>
-
-<div
-  class="loading"
-  id="loading">
-
-  <div class="loader"></div>
-
-</div>
-
-<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-
-<script>
-
-/* =========================================================
-   SHOHIN WEATHER V3
-   GLOBAL METEOROLOGICAL ENGINE
-========================================================= */
-
-"use strict";
-
-
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const SHOHIN = {
-
-  lat:38.5598,
-
-  lon:68.7870,
-
-  layer:"temperature",
-
-  mode:"forecast",
-
-  hour:0,
-
-  playing:false,
-
-  timer:null,
-
-  weather:null,
-
-  marine:null,
-
-  history:null,
-
-  cache:new Map(),
-
-  forecastHours:384,
-
-  api:"https://api.open-meteo.com/v1/forecast",
-
-  historicalApi:
-    "https://archive-api.open-meteo.com/v1/archive",
-
-  marineApi:
-    "https://marine-api.open-meteo.com/v1/marine",
-
-  variables:{
-
-    temperature:
-      "temperature_2m",
-
-    humidity:
-      "relative_humidity_2m",
-
-    rain:
-      "rain",
-
-    precipitation:
-      "precipitation",
-
-    snowfall:
-      "snowfall",
-
-    clouds:
-      "cloud_cover",
-
-    cloudsLow:
-      "cloud_cover_low",
-
-    cloudsMid:
-      "cloud_cover_mid",
-
-    cloudsHigh:
-      "cloud_cover_high",
-
-    pressure:
-      "pressure_msl",
-
-    visibility:
-      "visibility",
-
-    wind:
-      "wind_speed_10m",
-
-    direction:
-      "wind_direction_10m",
-
-    gust:
-      "wind_gusts_10m",
-
-    cape:
-      "cape",
-
-    uv:
-      "uv_index",
-
-    solar:
-      "shortwave_radiation"
-
-  },
-
-  pressureLevels:[
-    1000,
-    925,
-    850,
-    700,
-    500,
-    300,
-    200,
-    100
-  ]
-
-};
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const $ = id =>
-  document.getElementById(id);
-
-const canvas =
-  $("weatherCanvas");
-
-const ctx =
-  canvas.getContext("2d");
-
-const chart =
-  $("chart");
-
-const chartCtx =
-  chart.getContext("2d");
-
-
-/* =========================================================
-   MAP STYLE
-========================================================= */
-
-const mapStyle = {
-
-  version:8,
-
-  sources:{
-
-    osm:{
-
-      type:"raster",
-
-      tiles:[
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      ],
-
-      tileSize:256,
-
-      attribution:
-        "© OpenStreetMap contributors"
-
-    },
-
-    satellite:{
-
-      type:"raster",
-
-      tiles:[
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      ],
-
-      tileSize:256
-
-    }
-
-  },
-
-  layers:[
-
-    {
-
-      id:"osm",
-
-      type:"raster",
-
-      source:"osm",
-
-      paint:{
-        "raster-opacity":1
-      }
-
-    }
-
-  ]
-
-};
-
-
-/* =========================================================
-   MAP
-========================================================= */
-
-const map =
-  new maplibregl.Map({
-
-    container:"map",
-
-    style:mapStyle,
-
-    center:[
-      SHOHIN.lon,
-      SHOHIN.lat
-    ],
-
-    zoom:3.1,
-
-    minZoom:1,
-
-    maxZoom:18,
-
-    attributionControl:false,
-
-    renderWorldCopies:true
-
-  });
-
-
-map.addControl(
-  new maplibregl.NavigationControl({
-    showCompass:true,
-    showZoom:true,
-    visualizePitch:true
-  }),
-  "bottom-right"
-);
-
-
-/* =========================================================
-   MARKER
-========================================================= */
-
-let marker = null;
-
-
-function createMarker(){
-
-  marker =
-    new maplibregl.Marker({
-      color:"#ff9800"
-    })
-    .setLngLat([
-      SHOHIN.lon,
-      SHOHIN.lat
-    ])
-    .addTo(map);
-
-}
-
-
-/* =========================================================
-   MAP LOAD
-========================================================= */
-
-map.on(
-  "load",
-  async()=>{
-
-    createMarker();
-
-    resizeCanvas();
-
-    await loadWeather();
-
-    await loadMarine();
-
-    updateUI();
-
-    drawLayer();
-
-  }
-);
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
-
-function resizeCanvas(){
-
-  const rect =
-    canvas.getBoundingClientRect();
-
-  const dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-  canvas.width =
-    rect.width*dpr;
-
-  canvas.height =
-    rect.height*dpr;
-
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
-
-  drawLayer();
-
-}
-
-
-window.addEventListener(
-  "resize",
-  ()=>{
-
-    map.resize();
-
-    resizeCanvas();
-
-  }
-);
-
-
-/* =========================================================
-   MAP CLICK
-========================================================= */
-
-map.on(
-  "click",
-  async e=>{
-
-    SHOHIN.lon =
-      e.lngLat.lng;
-
-    SHOHIN.lat =
-      e.lngLat.lat;
-
-
-    if(marker){
-
-      marker.setLngLat([
-        SHOHIN.lon,
-        SHOHIN.lat
-      ]);
-
-    }
-
-
-    await loadWeather();
-
-    await loadMarine();
-
-    updateUI();
-
-    drawLayer();
-
-  }
-);
-
-
-/* =========================================================
-   WEATHER REQUEST
-========================================================= */
-
-async function loadWeather(){
-
-  const key =
-    `${SHOHIN.lat.toFixed(2)}:`+
-    `${SHOHIN.lon.toFixed(2)}:`+
-    SHOHIN.mode;
-
-
-  if(
-    SHOHIN.cache.has(key)
-  ){
-
-    SHOHIN.weather =
-      SHOHIN.cache.get(key);
-
-    return;
-
-  }
-
-
-  showLoading(true);
-
-
-  try{
-
-    const hourly =
-      Object.values(
-        SHOHIN.variables
-      ).join(",");
-
-
-    let url;
-
-
-    if(
-      SHOHIN.mode ===
-      "forecast"
-    ){
-
-      url =
-        SHOHIN.api+
-        `?latitude=${SHOHIN.lat}`+
-        `&longitude=${SHOHIN.lon}`+
-        `&hourly=${hourly}`+
-        `&forecast_days=16`+
-        `&past_days=2`+
-        `&timezone=auto`+
-        `&wind_speed_unit=kmh`+
-        `&temperature_unit=celsius`;
-
-
-    }
-    else{
-
-      const end =
-        new Date();
-
-      end.setDate(
-        end.getDate()-1
-      );
-
-
-      const start =
-        new Date();
-
-      start.setDate(
-        start.getDate()-7
-      );
-
-
-      const fmt =
-        date =>
-          date
-          .toISOString()
-          .slice(0,10);
-
-
-      url =
-        SHOHIN.historicalApi+
-        `?latitude=${SHOHIN.lat}`+
-        `&longitude=${SHOHIN.lon}`+
-        `&hourly=${hourly}`+
-        `&start_date=${fmt(start)}`+
-        `&end_date=${fmt(end)}`+
-        `&timezone=auto`+
-        `&wind_speed_unit=kmh`+
-        `&temperature_unit=celsius`;
-
-    }
-
-
-    const response =
-      await fetch(url);
-
-
-    if(!response.ok)
-      throw new Error(
-        "Weather request failed"
-      );
-
-
-    const data =
-      await response.json();
-
-
-    SHOHIN.weather =
-      data;
-
-
-    SHOHIN.cache.set(
-      key,
-      data
-    );
-
-
-    SHOHIN.hour = 0;
-
-    $("timelineRange").max =
-      Math.max(
-        0,
-        data.hourly.time.length-1
-      );
-
-
-  }
-  catch(error){
-
-    console.error(
-      "SHOHIN WEATHER",
-      error
-    );
-
-    $("description").textContent =
-      "Weather data unavailable";
-
-  }
-  finally{
-
-    showLoading(false);
-
-  }
-
-}
-
-
-/* =========================================================
-   MARINE
-========================================================= */
-
-async function loadMarine(){
-
-  try{
-
-    const url =
-      SHOHIN.marineApi+
-      `?latitude=${SHOHIN.lat}`+
-      `&longitude=${SHOHIN.lon}`+
-      `&hourly=`+
-      `sea_surface_temperature,`+
-      `ocean_current_velocity,`+
-      `ocean_current_direction`+
-      `&forecast_days=7`+
-      `&timezone=auto`;
-
-
-    const response =
-      await fetch(url);
-
-
-    if(!response.ok)
-      throw new Error(
-        "Marine request failed"
-      );
-
-
-    SHOHIN.marine =
-      await response.json();
-
-  }
-  catch(error){
-
-    console.warn(
-      "Marine unavailable",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   UI
-========================================================= */
-
-function getIndex(){
-
-  if(!SHOHIN.weather)
-    return 0;
-
-  return Math.min(
-    SHOHIN.hour,
-    SHOHIN.weather.hourly.time.length-1
-  );
-
-}
-
-
-function val(name){
-
-  const data =
-    SHOHIN.weather?.hourly;
-
-  if(
-    !data ||
-    !data[name]
-  )
-    return null;
-
-  return data[name][
-    getIndex()
-  ];
-
-}
-
-
-function updateUI(){
-
-  if(!SHOHIN.weather)
-    return;
-
-
-  const i =
-    getIndex();
-
-  const h =
-    SHOHIN.weather.hourly;
-
-
-  const temp =
-    h.temperature_2m?.[i];
-
-
-  $("temperature").textContent =
-    temp == null
-      ? "--°"
-      : `${Math.round(temp)}°`;
-
-
-  $("mHumidity").textContent =
-    format(
-      h.relative_humidity_2m?.[i],
-      "%",
-      0
-    );
-
-
-  $("mWind").textContent =
-    format(
-      h.wind_speed_10m?.[i],
-      " km/h",
-      0
-    );
-
-
-  $("mGust").textContent =
-    format(
-      h.wind_gusts_10m?.[i],
-      " km/h",
-      0
-    );
-
-
-  $("mRain").textContent =
-    format(
-      h.rain?.[i],
-      " mm",
-      1
-    );
-
-
-  $("mCloud").textContent =
-    format(
-      h.cloud_cover?.[i],
-      "%",
-      0
-    );
-
-
-  $("mPressure").textContent =
-    format(
-      h.pressure_msl?.[i],
-      " hPa",
-      0
-    );
-
-
-  $("mSnow").textContent =
-    format(
-      h.snowfall?.[i],
-      " cm",
-      1
-    );
-
-
-  $("mVisibility").textContent =
-    h.visibility?.[i] == null
-      ? "--"
-      : `${(
-          h.visibility[i]/1000
-        ).toFixed(1)} km`;
-
-
-  $("mCape").textContent =
-    format(
-      h.cape?.[i],
-      " J/kg",
-      0
-    );
-
-
-  $("mUV").textContent =
-    format(
-      h.uv_index?.[i],
-      "",
-      1
-    );
-
-
-  $("mSolar").textContent =
-    format(
-      h.shortwave_radiation?.[i],
-      " W/m²",
-      0
-    );
-
-
-  $("mDirection").textContent =
-    format(
-      h.wind_direction_10m?.[i],
-      "°",
-      0
-    );
-
-
-  const time =
-    new Date(
-      h.time[i]
-    );
-
-
-  $("timeLabel").textContent =
-    time.toLocaleString(
-      undefined,
-      {
-        weekday:"short",
-        day:"2-digit",
-        month:"short",
-        hour:"2-digit",
-        minute:"2-digit"
-      }
-    );
-
-
-  $("coords").textContent =
-    `${SHOHIN.lat.toFixed(4)}, `+
-    `${SHOHIN.lon.toFixed(4)}`;
-
-
-  drawChart();
-
-}
-
-
-function format(
-  value,
-  suffix="",
-  decimals=0
-){
-
-  if(
-    value == null ||
-    Number.isNaN(value)
-  )
-    return "--";
-
-  return (
-    Number(value)
-    .toFixed(decimals)
-    +
-    suffix
-  );
-
-}
-
-
-/* =========================================================
-   DESCRIPTION
-========================================================= */
-
-function weatherDescription(){
-
-  const code =
-    SHOHIN.weather
-    ?.hourly
-    ?.weather_code
-    ?.[getIndex()];
-
-
-  if(code == null)
-    return "Weather";
-
-
-  if(code === 0)
-    return "Clear sky";
-
-  if(code <= 3)
-    return "Cloudy";
-
-  if(code <= 48)
-    return "Fog";
-
-  if(code <= 57)
-    return "Drizzle";
-
-  if(code <= 67)
-    return "Rain";
-
-  if(code <= 77)
-    return "Snow";
-
-  if(code <= 82)
-    return "Rain showers";
-
-  if(code <= 86)
-    return "Snow showers";
-
-  if(code >= 95)
-    return "Thunderstorm";
-
-  return "Weather";
-
-}
-
-
-/* =========================================================
-   CHART
-========================================================= */
-
-function drawChart(){
-
-  if(!SHOHIN.weather)
-    return;
-
-
-  const rect =
-    chart.getBoundingClientRect();
-
-  const dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-
-  chart.width =
-    rect.width*dpr;
-
-  chart.height =
-    rect.height*dpr;
-
-
-  chartCtx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
-
-
-  chartCtx.clearRect(
-    0,
-    0,
-    rect.width,
-    rect.height
-  );
-
-
-  const values =
-    SHOHIN.weather
-    .hourly
-    .temperature_2m
-    .slice(
-      0,
-      Math.min(
-        48,
-        SHOHIN.weather
-        .hourly
-        .temperature_2m
-        .length
-      )
-    );
-
-
-  if(values.length<2)
-    return;
-
-
-  const min =
-    Math.min(...values)-2;
-
-  const max =
-    Math.max(...values)+2;
-
-
-  chartCtx.strokeStyle =
-    "rgba(255,255,255,.08)";
-
-  chartCtx.lineWidth=1;
-
-
-  for(
-    let j=1;
-    j<4;
-    j++
-  ){
-
-    const y =
-      rect.height*j/4;
-
-
-    chartCtx.beginPath();
-
-    chartCtx.moveTo(
-      0,
-      y
-    );
-
-    chartCtx.lineTo(
-      rect.width,
-      y
-    );
-
-    chartCtx.stroke();
-
-  }
-
-
-  chartCtx.beginPath();
-
-
-  values.forEach(
-    (v,i)=>{
-
-      const x =
-        4+
-        i/
-        (values.length-1)*
-        (rect.width-8);
-
-
-      const y =
-        rect.height-
-        (
-          (v-min)/
-          (max-min)
-        )*
-        (rect.height-12)-
-        6;
-
-
-      if(i===0)
-        chartCtx.moveTo(
-          x,
-          y
-        );
-      else
-        chartCtx.lineTo(
-          x,
-          y
-        );
-
-    }
-  );
-
-
-  chartCtx.strokeStyle="#fff";
-
-  chartCtx.lineWidth=2;
-
-  chartCtx.stroke();
-
-}
-
-
-/* =========================================================
-   WEATHER RENDERER
-========================================================= */
-
-function drawLayer(){
-
-  if(!SHOHIN.weather)
-    return;
-
-
-  resizeCanvasInternal();
-
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.clientWidth,
-    canvas.clientHeight
-  );
-
-
-  const layer =
-    SHOHIN.layer;
-
-
-  if(
-    layer ===
-    "wind" ||
-    layer ===
-    "gust" ||
-    layer ===
-    "ocean"
-  ){
-
-    drawParticles();
-
-    return;
-
-  }
-
-
-  if(layer==="isobars"){
-
-    drawIsobars();
-
-    return;
-
-  }
-
-
-  if(layer==="satellite"){
-
-    drawSatellite();
-
-    return;
-
-  }
-
-
-  if(layer==="radar"){
-
-    drawRadar();
-
-    return;
-
-  }
-
-
-  drawAtmosphere();
-
-}
-
-
-/* =========================================================
-   CANVAS SIZE
-========================================================= */
-
-function resizeCanvasInternal(){
-
-  const rect =
-    canvas.getBoundingClientRect();
-
-  const dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-
-  if(
-    canvas.width !== rect.width*dpr ||
-    canvas.height !== rect.height*dpr
-  ){
-
-    canvas.width =
-      rect.width*dpr;
-
-    canvas.height =
-      rect.height*dpr;
-
-    ctx.setTransform(
-      dpr,
-      0,
-      0,
-      dpr,
-      0,
-      0
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   ATMOSPHERIC MAP
-========================================================= */
-
-function drawAtmosphere(){
-
-  const width =
-    canvas.clientWidth;
-
-  const height =
-    canvas.clientHeight;
-
-
-  const gradient =
-    ctx.createLinearGradient(
-      0,
-      0,
-      width,
-      height
-    );
-
-
-  switch(
-    SHOHIN.layer
-  ){
-
-    case "temperature":
-
-      gradient.addColorStop(
-        0,
-        "rgba(20,65,220,.22)"
-      );
-
-      gradient.addColorStop(
-        .25,
-        "rgba(30,150,220,.12)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(250,240,80,.10)"
-      );
-
-      gradient.addColorStop(
-        .75,
-        "rgba(255,130,35,.14)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(210,30,35,.22)"
-      );
-
-      break;
-
-
-    case "rain":
-
-      gradient.addColorStop(
-        0,
-        "rgba(25,100,240,.08)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(20,160,255,.22)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(20,50,210,.20)"
-      );
-
-      break;
-
-
-    case "cloud":
-
-      gradient.addColorStop(
-        0,
-        "rgba(255,255,255,.05)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(220,230,240,.22)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(100,120,140,.14)"
-      );
-
-      break;
-
-
-    case "pressure":
-
-      gradient.addColorStop(
-        0,
-        "rgba(80,70,220,.15)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(80,160,255,.08)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(220,70,190,.15)"
-      );
-
-      break;
-
-
-    case "humidity":
-
-      gradient.addColorStop(
-        0,
-        "rgba(30,120,255,.16)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(20,200,210,.13)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(70,90,255,.18)"
-      );
-
-      break;
-
-
-    case "snow":
-
-      gradient.addColorStop(
-        0,
-        "rgba(255,255,255,.05)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(170,210,255,.2)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(220,240,255,.18)"
-      );
-
-      break;
-
-
-    case "visibility":
-
-      gradient.addColorStop(
-        0,
-        "rgba(180,180,180,.16)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(80,80,100,.22)"
-      );
-
-      break;
-
-
-    case "cape":
-
-      gradient.addColorStop(
-        0,
-        "rgba(60,80,255,.10)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(180,70,255,.16)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(255,70,50,.20)"
-      );
-
-      break;
-
-
-    case "uv":
-
-      gradient.addColorStop(
-        0,
-        "rgba(50,100,255,.10)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(255,220,30,.15)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(255,60,20,.22)"
-      );
-
-      break;
-
-
-    case "solar":
-
-      gradient.addColorStop(
-        0,
-        "rgba(20,60,200,.08)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(255,220,30,.18)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(255,90,20,.20)"
-      );
-
-      break;
-
-
-    case "sst":
-
-      gradient.addColorStop(
-        0,
-        "rgba(10,50,180,.20)"
-      );
-
-      gradient.addColorStop(
-        .5,
-        "rgba(20,180,210,.15)"
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(255,120,30,.18)"
-      );
-
-      break;
-
-  }
-
-
-  ctx.fillStyle =
-    gradient;
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-}
-
-
-/* =========================================================
-   WIND PARTICLES
-========================================================= */
-
-const particles=[];
-
-
-for(
-  let i=0;
-  i<280;
-  i++
-){
-
-  particles.push({
-
-    x:Math.random(),
-
-    y:Math.random(),
-
-    speed:
-      .001+
-      Math.random()*.003,
-
-    life:
-      Math.random()
-
-  });
-
-}
-
-
-function drawParticles(){
-
-  const width =
-    canvas.clientWidth;
-
-  const height =
-    canvas.clientHeight;
-
-
-  ctx.strokeStyle =
-    "rgba(255,255,255,.42)";
-
-  ctx.lineWidth=1;
-
-
-  const factor =
-    SHOHIN.layer==="gust"
-      ? 2.3
-      : 1;
-
-
-  for(
-    const p of particles
-  ){
-
-    p.x +=
-      p.speed*factor;
-
-
-    if(p.x>1)
-      p.x=0;
-
-
-    const x =
-      p.x*width;
-
-    const y =
-      p.y*height;
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y
-    );
-
-    ctx.lineTo(
-      x+22*factor,
-      y-5
-    );
-
-    ctx.stroke();
-
-  }
-
-}
-
-
-/* =========================================================
-   ISOBARS
-========================================================= */
-
-function drawIsobars(){
-
-  const width =
-    canvas.clientWidth;
-
-  const height =
-    canvas.clientHeight;
-
-
-  ctx.strokeStyle =
-    "rgba(255,255,255,.32)";
-
-  ctx.lineWidth=1;
-
-
-  for(
-    let i=0;
-    i<11;
-    i++
-  ){
-
-    const y =
-      height*
-      (
-        .08+
-        i*.085
-      );
-
-
-    ctx.beginPath();
-
-
-    for(
-      let x=0;
-      x<=width;
-      x+=10
-    ){
-
-      const wave =
-        Math.sin(
-          x*.012+i*.8
-        )*16;
-
-
-      const yy =
-        y+wave;
-
-
-      if(x===0)
-        ctx.moveTo(
-          x,
-          yy
-        );
-      else
-        ctx.lineTo(
-          x,
-          yy
-        );
-
-    }
-
-
-    ctx.stroke();
-
-
-    ctx.fillStyle =
-      "rgba(255,255,255,.45)";
-
-    ctx.font =
-      "9px system-ui";
-
-
-    ctx.fillText(
-      String(
-        980+i*4
-      ),
-      8,
-      y-4
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   SATELLITE MODE
-========================================================= */
-
-function drawSatellite(){
-
-  const width =
-    canvas.clientWidth;
-
-  const height =
-    canvas.clientHeight;
-
-
-  const g =
-    ctx.createRadialGradient(
-      width*.5,
-      height*.45,
-      20,
-      width*.5,
-      height*.45,
-      Math.max(
-        width,
-        height
-      )
-    );
-
-
-  g.addColorStop(
-    0,
-    "rgba(255,255,255,.04)"
-  );
-
-  g.addColorStop(
-    .4,
-    "rgba(170,190,210,.10)"
-  );
-
-  g.addColorStop(
-    1,
-    "rgba(20,30,40,.25)"
-  );
-
-
-  ctx.fillStyle=g;
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-}
-
-
-/* =========================================================
-   RADAR
-========================================================= */
-
-function drawRadar(){
-
-  const width =
-    canvas.clientWidth;
-
-  const height =
-    canvas.clientHeight;
-
-
-  const cx =
-    width/2;
-
-  const cy =
-    height/2;
-
-
-  for(
-    let r=40;
-    r<Math.max(width,height);
-    r+=45
-  ){
-
-    ctx.strokeStyle =
-      `rgba(
-        60,
-        160,
-        255,
-        ${Math.max(
-          .02,
-          .13-r/
-          Math.max(
-            width,
-            height
-          )*.08
-        )}
-      )`;
-
-    ctx.lineWidth=18;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      cx,
-      cy,
-      r,
-      0,
-      Math.PI*2
-    );
-
-    ctx.stroke();
-
-  }
-
-}
-
-
-/* =========================================================
-   LAYER SWITCH
-========================================================= */
-
-document
-.querySelectorAll(".layer")
-.forEach(
-  button=>{
-
-    button.addEventListener(
-      "click",
-      ()=>{
-
-        document
-        .querySelectorAll(".layer")
-        .forEach(
-          b=>
-          b.classList.remove(
-            "active"
-          )
-        );
-
-
-        button.classList.add(
-          "active"
-        );
-
-
-        SHOHIN.layer =
-          button.dataset.layer;
-
-
-        drawLayer();
-
-      }
-    );
-
-  }
-);
-
-
-/* =========================================================
-   MODE SWITCH
-========================================================= */
-
-document
-.querySelectorAll(".mode")
-.forEach(
-  button=>{
-
-    button.addEventListener(
-      "click",
-      async()=>{
-
-        document
-        .querySelectorAll(".mode")
-        .forEach(
-          b=>
-          b.classList.remove(
-            "active"
-          )
-        );
-
-
-        button.classList.add(
-          "active"
-        );
-
-
-        SHOHIN.mode =
-          button.dataset.mode;
-
-
-        await loadWeather();
-
-        updateUI();
-
-        drawLayer();
-
-      }
-    );
-
-  }
-);
-
-
-/* =========================================================
-   PRESSURE LEVEL
-========================================================= */
-
-$("pressureLevel")
-.addEventListener(
-  "change",
-  ()=>{
-
-    const level =
-      $("pressureLevel").value;
-
-
-    if(level){
-
-      console.log(
-        "Pressure level:",
-        level,
-        "hPa"
-      );
-
-    }
-
-    drawLayer();
-
-  }
-);
-
-
-/* =========================================================
-   TIMELINE
-========================================================= */
-
-$("timelineRange")
-.addEventListener(
-  "input",
-  ()=>{
-
-    SHOHIN.hour =
-      Number(
-        $("timelineRange").value
-      );
-
-
-    updateUI();
-
-    drawLayer();
-
-  }
-);
-
-
-/* =========================================================
-   PLAY
-========================================================= */
-
-$("playBtn")
-.addEventListener(
-  "click",
-  ()=>{
-
-    if(SHOHIN.playing){
-
-      clearInterval(
-        SHOHIN.timer
-      );
-
-      SHOHIN.timer=null;
-
-      SHOHIN.playing=false;
-
-      $("playBtn").textContent =
-        "▶";
-
-      return;
-
-    }
-
-
-    SHOHIN.playing=true;
-
-    $("playBtn").textContent =
-      "❚❚";
-
-
-    SHOHIN.timer =
-      setInterval(
-        ()=>{
-
-          const max =
-            Number(
-              $("timelineRange").max
-            );
-
-
-          SHOHIN.hour++;
-
-
-          if(
-            SHOHIN.hour>max
-          )
-            SHOHIN.hour=0;
-
-
-          $("timelineRange").value =
-            SHOHIN.hour;
-
-
-          updateUI();
-
-          drawLayer();
-
-        },
-        550
-      );
-
-  }
-);
-
-
-/* =========================================================
-   GLOBE
-========================================================= */
-
-$("globeBtn")
-.addEventListener(
-  "click",
-  ()=>{
-
-    try{
-
-      map.setProjection({
-        type:"globe"
-      });
-
-      map.flyTo({
-        zoom:1.7,
-        speed:.6
-      });
-
-    }
-    catch(error){
-
-      console.warn(
-        "Globe unsupported",
-        error
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   GPS
-========================================================= */
-
-$("gpsBtn")
-.addEventListener(
-  "click",
-  ()=>{
-
-    if(
-      !navigator.geolocation
-    ){
-
-      alert(
-        "GPS недоступен"
-      );
-
-      return;
-
-    }
-
-
-    navigator
-    .geolocation
-    .getCurrentPosition(
-      async position=>{
-
-        SHOHIN.lat =
-          position
-          .coords
-          .latitude;
-
-        SHOHIN.lon =
-          position
-          .coords
-          .longitude;
-
-
-        map.flyTo({
-
-          center:[
-            SHOHIN.lon,
-            SHOHIN.lat
-          ],
-
-          zoom:8,
-
-          speed:.8,
-
-          curve:1.2
-
-        });
-
-
-        if(marker){
-
-          marker.setLngLat([
-            SHOHIN.lon,
-            SHOHIN.lat
-          ]);
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
         }
 
 
-        await loadWeather();
+        body {
 
-        await loadMarine();
+            overflow: hidden;
+
+        }
+
+
+        #app {
+
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+
+            height: 64px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 20px;
+
+            background:
+                rgba(5, 15, 28, .94);
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.1);
+
+            position: relative;
+
+            z-index: 10;
+
+        }
+
+
+        .logo {
+
+            font-size: 21px;
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+        }
+
+
+        .logo span {
+
+            color: #4db8ff;
+
+        }
+
+
+        #status {
+
+            font-size: 13px;
+
+            color: #9db2c8;
+
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+
+            flex: 1;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        #map {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+
+                radial-gradient(
+                    circle at 50% 40%,
+                    #163b5d 0%,
+                    #091b2c 45%,
+                    #040b13 100%
+                );
+
+        }
+
+
+        /* =========================
+           WEATHER CARD
+        ========================= */
+
+        #weatherCard {
+
+            position: absolute;
+
+            top: 20px;
+
+            left: 20px;
+
+            width: 300px;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(8,20,35,.82);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(16px);
+
+            box-shadow:
+                0 15px 50px
+                rgba(0,0,0,.35);
+
+            z-index: 5;
+
+        }
+
+
+        #location {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        #temperature {
+
+            font-size: 58px;
+
+            font-weight: 300;
+
+            line-height: 1;
+
+        }
+
+
+        #description {
+
+            margin-top: 8px;
+
+            color: #a9bfd4;
+
+        }
+
+
+        /* =========================
+           METRICS
+        ========================= */
+
+        #metrics {
+
+            margin-top: 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+
+        }
+
+
+        .metric {
+
+            padding: 12px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(255,255,255,.06);
+
+        }
+
+
+        .metric-title {
+
+            font-size: 11px;
+
+            color: #8fa6bb;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .metric-value {
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =========================
+           CONTROLS
+        ========================= */
+
+        #controls {
+
+            position: absolute;
+
+            right: 20px;
+
+            top: 20px;
+
+            z-index: 5;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+        }
+
+
+        button {
+
+            border: none;
+
+            outline: none;
+
+            cursor: pointer;
+
+            color: white;
+
+            background:
+                rgba(8,20,35,.88);
+
+            border:
+                1px solid
+                rgba(255,255,255,.1);
+
+            padding:
+                11px 15px;
+
+            border-radius: 12px;
+
+            backdrop-filter:
+                blur(12px);
+
+        }
+
+
+        button:hover {
+
+            background:
+                rgba(35,90,130,.9);
+
+        }
+
+
+        /* =========================
+           TIMELINE
+        ========================= */
+
+        #timeline {
+
+            position: absolute;
+
+            left: 20px;
+            right: 20px;
+
+            bottom: 20px;
+
+            height: 80px;
+
+            z-index: 5;
+
+            border-radius: 18px;
+
+            background:
+                rgba(5,15,27,.9);
+
+            border:
+                1px solid
+                rgba(255,255,255,.1);
+
+            backdrop-filter:
+                blur(15px);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding:
+                15px 20px;
+
+        }
+
+
+        #play {
+
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            font-size: 18px;
+
+        }
+
+
+        #timeSlider {
+
+            flex: 1;
+
+        }
+
+
+        #timeLabel {
+
+            width: 160px;
+
+            font-size: 13px;
+
+            color: #a8bed3;
+
+            text-align: center;
+
+        }
+
+
+        input[type="range"] {
+
+            width: 100%;
+
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        #loading {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(2,8,15,.65);
+
+            backdrop-filter:
+                blur(5px);
+
+            z-index: 20;
+
+        }
+
+
+        #loading.hidden {
+
+            display: none;
+
+        }
+
+
+        .loader {
+
+            width: 45px;
+            height: 45px;
+
+            border:
+                4px solid
+                rgba(255,255,255,.15);
+
+            border-top-color:
+                #4db8ff;
+
+            border-radius: 50%;
+
+            animation:
+                spin .8s linear infinite;
+
+        }
+
+
+        @keyframes spin {
+
+            to {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (
+            max-width: 700px
+        ) {
+
+            #weatherCard {
+
+                left: 10px;
+                right: 10px;
+
+                width: auto;
+
+                top: 10px;
+
+            }
+
+
+            #controls {
+
+                right: 10px;
+
+                top: auto;
+
+                bottom: 115px;
+
+            }
+
+
+            #timeline {
+
+                left: 10px;
+                right: 10px;
+
+                bottom: 10px;
+
+            }
+
+
+            #timeLabel {
+
+                display: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div id="app">
+
+
+    <header>
+
+        <div class="logo">
+
+            🌍 SHOHIN
+            <span>WEATHER</span>
+
+        </div>
+
+
+        <div id="status">
+
+            V5 Engine
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+
+        <div id="map">
+
+            <!--
+                Следующий этап:
+                здесь будет настоящий
+                WebGL weather renderer
+            -->
+
+        </div>
+
+
+        <!-- WEATHER CARD -->
+
+        <div id="weatherCard">
+
+            <div id="location">
+
+                Dushanbe
+
+            </div>
+
+
+            <div id="temperature">
+
+                --°
+
+            </div>
+
+
+            <div id="description">
+
+                Загрузка ECMWF...
+
+            </div>
+
+
+            <div id="metrics">
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        💧 Влажность
+
+                    </div>
+
+                    <div
+                        id="humidity"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        🌧 Осадки
+
+                    </div>
+
+                    <div
+                        id="rain"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        💨 Ветер
+
+                    </div>
+
+                    <div
+                        id="wind"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        🌀 Давление
+
+                    </div>
+
+                    <div
+                        id="pressure"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        ☁ Облака
+
+                    </div>
+
+                    <div
+                        id="clouds"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-title">
+
+                        ⚡ CAPE
+
+                    </div>
+
+                    <div
+                        id="cape"
+                        class="metric-value"
+                    >
+
+                        --
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div id="controls">
+
+            <button
+                id="temperatureButton"
+            >
+
+                🌡 Температура
+
+            </button>
+
+
+            <button
+                id="windButton"
+            >
+
+                💨 Ветер
+
+            </button>
+
+
+            <button
+                id="rainButton"
+            >
+
+                🌧 Дождь
+
+            </button>
+
+
+            <button
+                id="cloudButton"
+            >
+
+                ☁ Облака
+
+            </button>
+
+        </div>
+
+
+        <!-- TIMELINE -->
+
+        <div id="timeline">
+
+
+            <button
+                id="play"
+            >
+
+                ▶
+
+            </button>
+
+
+            <input
+                id="timeSlider"
+                type="range"
+                min="0"
+                max="0"
+                step="0.25"
+                value="0"
+            >
+
+
+            <div id="timeLabel">
+
+                Загрузка...
+
+            </div>
+
+
+        </div>
+
+
+        <!-- LOADING -->
+
+        <div
+            id="loading"
+        >
+
+            <div class="loader"></div>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script type="module">
+
+
+import {
+    WeatherEngine
+}
+from "./js/WeatherEngine.js";
+
+
+/* ==================================
+   SHOHIN WEATHER V5
+================================== */
+
+
+const weather =
+    new WeatherEngine();
+
+
+const $ =
+    id =>
+        document.getElementById(id);
+
+
+/* ==================================
+   UI
+================================== */
+
+const status =
+    $("status");
+
+const loading =
+    $("loading");
+
+const location =
+    $("location");
+
+const temperature =
+    $("temperature");
+
+const description =
+    $("description");
+
+const humidity =
+    $("humidity");
+
+const rain =
+    $("rain");
+
+const wind =
+    $("wind");
+
+const pressure =
+    $("pressure");
+
+const clouds =
+    $("clouds");
+
+const cape =
+    $("cape");
+
+const slider =
+    $("timeSlider");
+
+const timeLabel =
+    $("timeLabel");
+
+const play =
+    $("play");
+
+
+/* ==================================
+   LOADING
+================================== */
+
+weather.on(
+    "loading",
+    value => {
+
+        if (value) {
+
+            loading.classList
+                .remove("hidden");
+
+            status.textContent =
+                "Загрузка ECMWF...";
+
+        }
+        else {
+
+            loading.classList
+                .add("hidden");
+
+            status.textContent =
+                "V5 Engine • ONLINE";
+
+        }
+
+    }
+);
+
+
+/* ==================================
+   READY
+================================== */
+
+weather.on(
+    "ready",
+    () => {
+
+        status.textContent =
+            "ECMWF • ONLINE";
+
 
         updateUI();
 
-        drawLayer();
 
-      },
+        slider.max =
+            Math.max(
+                0,
+                weather.getTimelineLength()-1
+            );
 
-      error=>{
-
-        console.warn(
-          "GPS",
-          error
-        );
-
-      },
-
-      {
-
-        enableHighAccuracy:true,
-
-        timeout:10000,
-
-        maximumAge:30000
-
-      }
-
-    );
-
-  }
+    }
 );
 
 
-/* =========================================================
-   RESET
-========================================================= */
+/* ==================================
+   TIME
+================================== */
 
-$("resetBtn")
-.addEventListener(
-  "click",
-  ()=>{
+weather.on(
+    "time",
+    () => {
 
-    map.flyTo({
+        updateUI();
 
-      center:[
-        SHOHIN.lon,
-        SHOHIN.lat
-      ],
-
-      zoom:3.1,
-
-      speed:.8
-
-    });
-
-  }
+    }
 );
 
 
-/* =========================================================
-   SEARCH
-========================================================= */
+/* ==================================
+   ERROR
+================================== */
 
-$("searchBtn")
-.addEventListener(
-  "click",
-  async()=>{
+weather.on(
+    "error",
+    error => {
 
-    const place =
-      prompt(
-        "Введите город или место:"
-      );
+        loading.classList
+            .add("hidden");
 
 
-    if(!place)
-      return;
+        status.textContent =
+            "API ERROR";
 
 
-    try{
+        description.textContent =
+            error.message;
 
-      const url =
-        "https://geocoding-api.open-meteo.com/v1/search"+
-        `?name=${encodeURIComponent(place)}`+
-        "&count=1"+
-        "&language=ru"+
-        "&format=json";
-
-
-      const response =
-        await fetch(url);
-
-
-      const data =
-        await response.json();
-
-
-      if(
-        !data.results ||
-        !data.results.length
-      ){
-
-        alert(
-          "Место не найдено"
+        console.error(
+            error
         );
 
+    }
+);
+
+
+/* ==================================
+   UPDATE UI
+================================== */
+
+function updateUI() {
+
+    const frame =
+        weather.getCurrentFrame();
+
+
+    if (!frame)
         return;
 
-      }
+
+    const values =
+        frame.values;
 
 
-      const result =
-        data.results[0];
+    location.textContent =
+        weather.location.name ||
+        "Dushanbe";
 
 
-      SHOHIN.lat =
-        result.latitude;
+    if (
+        Number.isFinite(
+            values.temperature_2m
+        )
+    ) {
 
-      SHOHIN.lon =
-        result.longitude;
-
-
-      $("place").textContent =
-        result.name;
-
-
-      map.flyTo({
-
-        center:[
-          SHOHIN.lon,
-          SHOHIN.lat
-        ],
-
-        zoom:8,
-
-        speed:.8
-
-      });
-
-
-      if(marker){
-
-        marker.setLngLat([
-          SHOHIN.lon,
-          SHOHIN.lat
-        ]);
-
-      }
-
-
-      await loadWeather();
-
-      await loadMarine();
-
-      updateUI();
-
-      drawLayer();
-
-    }
-    catch(error){
-
-      console.error(error);
-
-      alert(
-        "Ошибка поиска"
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-$("settingsBtn")
-.addEventListener(
-  "click",
-  ()=>{
-
-    const choice =
-      prompt(
-        "SHOHIN Weather V3\n\n"+
-        "1 — 2D\n"+
-        "2 — 3D Globe\n"+
-        "3 — Reset"
-      );
-
-
-    if(choice==="1"){
-
-      map.setProjection({
-        type:"mercator"
-      });
+        temperature.textContent =
+            Math.round(
+                values.temperature_2m
+            ) +
+            "°";
 
     }
 
 
-    if(choice==="2"){
+    humidity.textContent =
+        format(
+            values.relative_humidity_2m,
+            "%",
+            0
+        );
 
-      map.setProjection({
-        type:"globe"
-      });
+
+    rain.textContent =
+        format(
+            values.precipitation,
+            " mm",
+            1
+        );
+
+
+    wind.textContent =
+        format(
+            values.wind_speed_10m,
+            " km/h",
+            1
+        );
+
+
+    pressure.textContent =
+        format(
+            values.pressure_msl,
+            " hPa",
+            0
+        );
+
+
+    clouds.textContent =
+        format(
+            values.cloud_cover,
+            "%",
+            0
+        );
+
+
+    cape.textContent =
+        format(
+            values.cape,
+            " J/kg",
+            0
+        );
+
+
+    if (frame.time) {
+
+        timeLabel.textContent =
+            formatDate(
+                frame.time
+            );
 
     }
 
 
-    if(choice==="3"){
+    slider.value =
+        frame.position;
 
-      location.reload();
+}
+
+
+/* ==================================
+   FORMAT NUMBER
+================================== */
+
+function format(
+    value,
+    unit = "",
+    decimals = 0
+) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        Number.isNaN(
+            Number(value)
+        )
+    ) {
+
+        return "--";
 
     }
 
-  }
-);
 
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-function showLoading(
-  state
-){
-
-  $("loading")
-    .classList
-    .toggle(
-      "show",
-      state
+    return (
+        Number(value)
+            .toFixed(decimals)
+        +
+        unit
     );
 
 }
 
 
-/* =========================================================
-   ANIMATION
-========================================================= */
+/* ==================================
+   DATE
+================================== */
 
-function animationLoop(){
+function formatDate(
+    value
+) {
 
-  if(
-    SHOHIN.layer==="wind" ||
-    SHOHIN.layer==="gust" ||
-    SHOHIN.layer==="ocean"
-  ){
+    const date =
+        new Date(value);
 
-    drawLayer();
 
-  }
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
 
-  requestAnimationFrame(
-    animationLoop
-  );
+        return value;
+
+    }
+
+
+    return date.toLocaleString(
+        "ru-RU",
+        {
+
+            day:"2-digit",
+
+            month:"2-digit",
+
+            hour:"2-digit",
+
+            minute:"2-digit"
+
+        }
+    );
 
 }
 
 
-animationLoop();
+/* ==================================
+   TIMELINE
+================================== */
+
+slider.addEventListener(
+    "input",
+    () => {
+
+        weather.setTime(
+            Number(
+                slider.value
+            )
+        );
+
+    }
+);
 
 
-/* =========================================================
-   INITIAL UI
-========================================================= */
+/* ==================================
+   PLAY
+================================== */
 
-$("description").textContent =
-  "Global weather system";
+play.addEventListener(
+    "click",
+    () => {
+
+        const playing =
+            weather.togglePlay();
 
 
-/* =========================================================
-   GLOBAL ERROR HANDLER
-========================================================= */
+        play.textContent =
+            playing
+                ? "⏸"
+                : "▶";
 
-window.addEventListener(
-  "error",
-  event=>{
+    }
+);
+
+
+/* ==================================
+   LAYERS
+================================== */
+
+$("temperatureButton")
+    .onclick = () => {
+
+        weather.setLayer(
+            "temperature"
+        );
+
+        description.textContent =
+            "🌡 Температурный слой";
+
+    };
+
+
+$("windButton")
+    .onclick = () => {
+
+        weather.setLayer(
+            "wind"
+        );
+
+        description.textContent =
+            "💨 Ветровой слой";
+
+    };
+
+
+$("rainButton")
+    .onclick = () => {
+
+        weather.setLayer(
+            "rain"
+        );
+
+        description.textContent =
+            "🌧 Осадки";
+
+    };
+
+
+$("cloudButton")
+    .onclick = () => {
+
+        weather.setLayer(
+            "clouds"
+        );
+
+        description.textContent =
+            "☁ Облачность";
+
+    };
+
+
+/* ==================================
+   START
+================================== */
+
+try {
+
+    await weather.load();
+
+}
+catch (error) {
 
     console.error(
-      "SHOHIN ERROR:",
-      event.error || event.message
+        "SHOHIN V5 failed:",
+        error
     );
 
-  }
-);
+}
+
 
 </script>
 
+
 </body>
+
 </html>
