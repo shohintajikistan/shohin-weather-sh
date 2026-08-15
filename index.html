@@ -2,593 +2,1019 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="theme-color" content="#071522">
-<title>SHOHIN Weather — Global</title>
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               viewport-fit=cover">
+
+<meta name="theme-color" content="#07121f">
+
+<title>SHOHIN Weather V2</title>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
 
 <style>
+
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    background:#071522;
-    color:white;
+    background:#07121f;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
-
-button,input{
-    font:inherit;
-}
-
-#app{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    background:#071522;
-}
-
-/* MAP */
 
 #map{
-    position:absolute;
+    position:fixed;
     inset:0;
-    width:100%;
-    height:100%;
-    display:block;
 }
 
-/* TOP */
+/* =========================
+   TOP BAR
+========================= */
 
-.top{
-    position:absolute;
-    top:14px;
-    left:14px;
-    right:14px;
+.topbar{
+
+    position:fixed;
+
+    top:
+        max(12px,env(safe-area-inset-top));
+
+    left:12px;
+    right:12px;
+
     z-index:20;
+
     display:flex;
     align-items:center;
+
     gap:10px;
+
     pointer-events:none;
 }
 
-.brand{
+.logo{
+
     pointer-events:auto;
-    padding:11px 15px;
+
+    padding:
+        11px 15px;
+
     border-radius:17px;
-    background:rgba(5,16,29,.78);
-    border:1px solid rgba(255,255,255,.12);
-    backdrop-filter:blur(18px);
-    box-shadow:0 10px 35px rgba(0,0,0,.25);
+
+    background:
+        rgba(5,16,29,.82);
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    backdrop-filter:
+        blur(18px);
+
+    color:white;
+
+    box-shadow:
+        0 12px 40px
+        rgba(0,0,0,.25);
 }
 
-.brand strong{
+.logo strong{
+
     display:block;
+
     font-size:16px;
+
     font-weight:850;
 }
 
-.brand span{
+.logo small{
+
     display:block;
+
     margin-top:2px;
-    font-size:9px;
+
+    font-size:8px;
+
     letter-spacing:1.1px;
+
     opacity:.55;
 }
 
-.close{
+#close{
+
     margin-left:auto;
+
     pointer-events:auto;
+
     width:44px;
     height:44px;
-    border:1px solid rgba(255,255,255,.12);
+
     border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    background:
+        rgba(5,16,29,.84);
+
     color:white;
-    background:rgba(5,16,29,.82);
-    backdrop-filter:blur(15px);
+
     cursor:pointer;
-    font-size:18px;
+
+    backdrop-filter:
+        blur(18px);
 }
 
-/* LEFT PANEL */
+/* =========================
+   WEATHER PANEL
+========================= */
 
 .panel{
-    position:absolute;
-    z-index:15;
-    top:78px;
-    left:14px;
-    width:280px;
-    max-height:calc(100vh - 180px);
+
+    position:fixed;
+
+    top:82px;
+    left:12px;
+
+    z-index:20;
+
+    width:285px;
+
+    max-height:
+        calc(100vh - 185px);
+
     overflow:auto;
+
     padding:12px;
+
     border-radius:21px;
-    background:rgba(5,16,29,.80);
-    border:1px solid rgba(255,255,255,.11);
-    backdrop-filter:blur(20px);
-    box-shadow:0 18px 55px rgba(0,0,0,.30);
+
+    background:
+        rgba(5,16,29,.83);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(20px);
+
+    color:white;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.32);
 }
 
-.panel::-webkit-scrollbar{
-    width:3px;
-}
+.title{
 
-.panel::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.2);
-    border-radius:20px;
-}
+    margin:
+        4px 4px 8px;
 
-.section-title{
-    margin:5px 4px 8px;
     font-size:9px;
+
+    letter-spacing:1.1px;
+
     text-transform:uppercase;
-    letter-spacing:1.2px;
+
     opacity:.5;
 }
 
 .layers{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:7px;
 }
 
 .layer{
-    border:1px solid rgba(255,255,255,.09);
-    background:rgba(255,255,255,.055);
-    color:white;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
     border-radius:13px;
+
     padding:10px 8px;
-    text-align:left;
+
+    background:
+        rgba(255,255,255,.055);
+
+    color:white;
+
     cursor:pointer;
-    transition:.2s;
+
+    text-align:left;
+
     font-size:11px;
 }
 
 .layer b{
+
     display:block;
+
     font-size:18px;
+
     margin-bottom:3px;
 }
 
 .layer.active{
-    background:rgba(255,255,255,.16);
-    border-color:rgba(255,255,255,.3);
+
+    background:
+        rgba(255,255,255,.17);
+
+    border-color:
+        rgba(255,255,255,.28);
 }
 
-/* INFO */
+/* =========================
+   WEATHER INFO
+========================= */
 
 .info{
+
     display:none;
+
     margin-top:10px;
+
     padding:12px;
+
     border-radius:16px;
-    background:rgba(255,255,255,.055);
+
+    background:
+        rgba(255,255,255,.055);
 }
 
 .location{
+
     font-size:15px;
+
     font-weight:800;
 }
 
-.coordinates{
+.coords{
+
     margin-top:3px;
+
     font-size:9px;
+
     opacity:.45;
 }
 
-.temperature{
-    margin:11px 0;
-    font-size:38px;
-    font-weight:850;
+.temp{
+
+    margin:
+        12px 0;
+
+    font-size:39px;
+
     line-height:1;
+
+    font-weight:850;
 }
 
 .metrics{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:6px;
 }
 
 .metric{
+
     padding:8px;
+
     border-radius:10px;
-    background:rgba(255,255,255,.055);
+
+    background:
+        rgba(255,255,255,.055);
+
     font-size:9px;
+
     opacity:.8;
 }
 
 .metric b{
+
     display:block;
+
     margin-top:3px;
+
     font-size:11px;
+
     opacity:1;
 }
 
-/* CHART */
-
 #chart{
+
     width:100%;
+
     height:105px;
+
     display:block;
+
     margin-top:10px;
 }
 
-/* BOTTOM */
+/* =========================
+   TIME BAR
+========================= */
 
-.bottom{
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:14px;
+.timeline{
+
+    position:fixed;
+
     z-index:20;
+
+    left:12px;
+    right:12px;
+
+    bottom:
+        max(12px,env(safe-area-inset-bottom));
+
     padding:11px;
+
     border-radius:19px;
-    background:rgba(5,16,29,.83);
-    border:1px solid rgba(255,255,255,.11);
-    backdrop-filter:blur(20px);
-    box-shadow:0 15px 50px rgba(0,0,0,.3);
+
+    background:
+        rgba(5,16,29,.84);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+        0 15px 50px
+        rgba(0,0,0,.3);
+
+    color:white;
 }
 
-.time-row{
+.timeRow{
+
     display:flex;
+
     align-items:center;
+
     gap:9px;
 }
 
-.play{
-    flex:0 0 auto;
+#play{
+
     width:42px;
     height:42px;
+
+    flex:0 0 auto;
+
     border:0;
+
     border-radius:50%;
+
     background:white;
-    color:#071522;
-    cursor:pointer;
+
+    color:#07121f;
+
     font-weight:800;
+
+    cursor:pointer;
 }
 
 #time{
+
     flex:1;
+
     accent-color:white;
 }
 
-.time-label{
+#timeText{
+
     width:100px;
+
     text-align:right;
+
     font-size:9px;
+
     opacity:.7;
 }
 
 .legend{
+
     display:flex;
+
     align-items:center;
-    gap:7px;
+
+    gap:8px;
+
     margin-top:8px;
+
     font-size:8px;
+
     opacity:.55;
 }
 
 .gradient{
+
     flex:1;
+
     height:6px;
-    border-radius:10px;
-    background:linear-gradient(
-        90deg,
-        #2454a6,
-        #4ca7dc,
-        #9bd6a0,
-        #ffff91,
-        #f6a44d,
-        #df3333
-    );
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2454a6,
+            #4ca7dc,
+            #9bd6a0,
+            #ffff91,
+            #f6a44d,
+            #df3333
+        );
 }
 
-/* OPEN BUTTON */
+/* =========================
+   MAP BUTTON
+========================= */
 
-.open{
-    position:absolute;
-    z-index:30;
-    right:15px;
-    bottom:85px;
-    padding:12px 15px;
-    border:1px solid rgba(255,255,255,.13);
-    border-radius:15px;
-    background:rgba(5,16,29,.85);
+.mapButtons{
+
+    position:fixed;
+
+    right:12px;
+
+    bottom:105px;
+
+    z-index:21;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.mapButton{
+
+    width:45px;
+    height:45px;
+
+    border-radius:14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    background:
+        rgba(5,16,29,.83);
+
     color:white;
-    backdrop-filter:blur(15px);
+
+    backdrop-filter:
+        blur(15px);
+
     cursor:pointer;
-    font-weight:750;
-    box-shadow:0 10px 35px rgba(0,0,0,.3);
+
+    font-size:18px;
 }
 
-/* LOADING */
+/* =========================
+   LOADING
+========================= */
 
-.loading{
-    position:absolute;
+#loading{
+
+    position:fixed;
+
     inset:0;
-    z-index:50;
+
+    z-index:100;
+
     display:none;
+
     align-items:center;
+
     justify-content:center;
-    background:rgba(0,0,0,.12);
+
     pointer-events:none;
 }
 
-.loading.show{
+#loading.show{
+
     display:flex;
 }
 
 .spinner{
+
     width:38px;
     height:38px;
-    border:3px solid rgba(255,255,255,.18);
+
+    border:
+        3px solid
+        rgba(255,255,255,.18);
+
     border-top-color:white;
+
     border-radius:50%;
-    animation:spin .7s linear infinite;
+
+    animation:
+        spin .7s linear infinite;
 }
 
 @keyframes spin{
-    to{transform:rotate(360deg)}
+
+    to{
+        transform:rotate(360deg);
+    }
 }
 
-/* RESPONSIVE */
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:600px){
 
     .panel{
+
         width:238px;
-        top:70px;
+
+        top:72px;
     }
 
-    .temperature{
+    .temp{
+
         font-size:31px;
     }
 
-    .bottom{
-        left:8px;
-        right:8px;
-        bottom:8px;
+    .timeline{
+
+        left:7px;
+        right:7px;
+        bottom:7px;
     }
 
-    .time-label{
-        width:80px;
+    #timeText{
+
+        width:82px;
+
         font-size:8px;
     }
 
-    .open{
-        right:10px;
-        bottom:82px;
-    }
 }
+
 </style>
 </head>
 
 <body>
 
-<div id="app">
+<div id="map"></div>
 
-    <canvas id="map"></canvas>
+<!-- TOP -->
 
-    <!-- HEADER -->
-    <div class="top">
+<div class="topbar">
 
-        <div class="brand">
-            <strong>🌍 SHOHIN Weather</strong>
-            <span>GLOBAL METEOROLOGICAL SYSTEM</span>
-        </div>
+    <div class="logo">
 
-        <button class="close" id="close">✕</button>
+        <strong>
+            🌍 SHOHIN Weather
+        </strong>
 
-    </div>
-
-    <!-- PANEL -->
-    <div class="panel">
-
-        <div class="section-title">
-            Weather Layers
-        </div>
-
-        <div class="layers">
-
-            <button class="layer active" data-layer="temperature">
-                <b>🌡️</b>
-                Temperature
-            </button>
-
-            <button class="layer" data-layer="rain">
-                <b>🌧️</b>
-                Precipitation
-            </button>
-
-            <button class="layer" data-layer="wind">
-                <b>💨</b>
-                Wind
-            </button>
-
-            <button class="layer" data-layer="cloud">
-                <b>☁️</b>
-                Clouds
-            </button>
-
-            <button class="layer" data-layer="pressure">
-                <b>🌀</b>
-                Pressure
-            </button>
-
-            <button class="layer" data-layer="humidity">
-                <b>💧</b>
-                Humidity
-            </button>
-
-        </div>
-
-        <div class="info" id="info">
-
-            <div class="location" id="location">
-                Dushanbe
-            </div>
-
-            <div class="coordinates" id="coordinates">
-                38.5598, 68.7870
-            </div>
-
-            <div class="temperature" id="temperature">
-                --°
-            </div>
-
-            <div class="metrics">
-
-                <div class="metric">
-                    💧 Humidity
-                    <b id="humidity">--%</b>
-                </div>
-
-                <div class="metric">
-                    💨 Wind
-                    <b id="wind">-- km/h</b>
-                </div>
-
-                <div class="metric">
-                    🌧️ Rain
-                    <b id="rain">-- mm</b>
-                </div>
-
-                <div class="metric">
-                    🌀 Pressure
-                    <b id="pressure">-- hPa</b>
-                </div>
-
-                <div class="metric">
-                    ☁️ Clouds
-                    <b id="cloud">--%</b>
-                </div>
-
-                <div class="metric">
-                    🧭 Direction
-                    <b id="direction">--°</b>
-                </div>
-
-            </div>
-
-            <canvas id="chart"></canvas>
-
-        </div>
+        <small>
+            GLOBAL METEOROLOGICAL SYSTEM
+        </small>
 
     </div>
 
-    <!-- TIME -->
-    <div class="bottom">
-
-        <div class="time-row">
-
-            <button class="play" id="play">
-                ▶
-            </button>
-
-            <input
-                id="time"
-                type="range"
-                min="0"
-                max="23"
-                step="1"
-                value="0"
-            >
-
-            <div class="time-label" id="timeLabel">
-                Loading...
-            </div>
-
-        </div>
-
-        <div class="legend">
-            <span>Cold</span>
-            <div class="gradient"></div>
-            <span>Hot</span>
-        </div>
-
-    </div>
-
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-    </div>
-
-    <button class="open" id="open">
-        🌍 Global Weather
+    <button id="close">
+        ✕
     </button>
 
 </div>
 
+<!-- WEATHER PANEL -->
+
+<div class="panel">
+
+    <div class="title">
+        Weather Layers
+    </div>
+
+    <div class="layers">
+
+        <button
+            class="layer active"
+            data-layer="temperature">
+
+            <b>🌡️</b>
+            Temperature
+
+        </button>
+
+        <button
+            class="layer"
+            data-layer="rain">
+
+            <b>🌧️</b>
+            Rain
+
+        </button>
+
+        <button
+            class="layer"
+            data-layer="wind">
+
+            <b>💨</b>
+            Wind
+
+        </button>
+
+        <button
+            class="layer"
+            data-layer="cloud">
+
+            <b>☁️</b>
+            Clouds
+
+        </button>
+
+        <button
+            class="layer"
+            data-layer="pressure">
+
+            <b>🌀</b>
+            Pressure
+
+        </button>
+
+        <button
+            class="layer"
+            data-layer="humidity">
+
+            <b>💧</b>
+            Humidity
+
+        </button>
+
+    </div>
+
+    <div class="info" id="info">
+
+        <div
+            class="location"
+            id="location">
+
+            Dushanbe
+
+        </div>
+
+        <div
+            class="coords"
+            id="coords">
+
+            38.5598, 68.7870
+
+        </div>
+
+        <div
+            class="temp"
+            id="temp">
+
+            --°
+
+        </div>
+
+        <div class="metrics">
+
+            <div class="metric">
+                💧 Humidity
+                <b id="humidity">
+                    --%
+                </b>
+            </div>
+
+            <div class="metric">
+                💨 Wind
+                <b id="wind">
+                    -- km/h
+                </b>
+            </div>
+
+            <div class="metric">
+                🌧️ Rain
+                <b id="rain">
+                    -- mm
+                </b>
+            </div>
+
+            <div class="metric">
+                🌀 Pressure
+                <b id="pressure">
+                    -- hPa
+                </b>
+            </div>
+
+            <div class="metric">
+                ☁️ Clouds
+                <b id="cloud">
+                    --%
+                </b>
+            </div>
+
+            <div class="metric">
+                🧭 Direction
+                <b id="direction">
+                    --°
+                </b>
+            </div>
+
+        </div>
+
+        <canvas id="chart"></canvas>
+
+    </div>
+
+</div>
+
+<!-- MAP CONTROLS -->
+
+<div class="mapButtons">
+
+    <button
+        class="mapButton"
+        id="globe">
+        🌐
+    </button>
+
+    <button
+        class="mapButton"
+        id="gps">
+        📍
+    </button>
+
+</div>
+
+<!-- TIMELINE -->
+
+<div class="timeline">
+
+    <div class="timeRow">
+
+        <button id="play">
+            ▶
+        </button>
+
+        <input
+            id="time"
+            type="range"
+            min="0"
+            max="23"
+            value="0">
+
+        <div id="timeText">
+            Loading...
+        </div>
+
+    </div>
+
+    <div class="legend">
+
+        <span>Cold</span>
+
+        <div class="gradient"></div>
+
+        <span>Hot</span>
+
+    </div>
+
+</div>
+
+<div id="loading">
+
+    <div class="spinner"></div>
+
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+
 <script>
-"use strict";
 
 /* =========================================================
-   SHOHIN WEATHER GLOBAL ENGINE
-   ========================================================= */
+   SHOHIN WEATHER V2
+   REAL WEBGL MAP ENGINE
+========================================================= */
 
-const canvas =
-    document.getElementById("map");
+"use strict";
 
-const ctx =
-    canvas.getContext("2d");
 
-const chart =
-    document.getElementById("chart");
+/* =========================================================
+   STATE
+========================================================= */
 
-const chartCtx =
-    chart.getContext("2d");
+const state = {
 
-const UI = {
+    lat:38.5598,
 
-    open:document.getElementById("open"),
-    close:document.getElementById("close"),
+    lon:68.7870,
 
-    loading:document.getElementById("loading"),
+    layer:"temperature",
 
-    info:document.getElementById("info"),
+    hour:0,
 
-    location:document.getElementById("location"),
-    coordinates:document.getElementById("coordinates"),
+    weather:null,
 
-    temperature:document.getElementById("temperature"),
-    humidity:document.getElementById("humidity"),
-    wind:document.getElementById("wind"),
-    rain:document.getElementById("rain"),
-    pressure:document.getElementById("pressure"),
-    cloud:document.getElementById("cloud"),
-    direction:document.getElementById("direction"),
+    playing:false,
 
-    time:document.getElementById("time"),
-    timeLabel:document.getElementById("timeLabel"),
+    timer:null
 
-    play:document.getElementById("play")
 };
-
-let W = 0;
-let H = 0;
-
-let layer = "temperature";
-
-let lat = 38.5598;
-let lon = 68.7870;
-
-let hour = 0;
-
-let data = null;
-
-let playing = false;
-let timer = null;
 
 const cache = new Map();
 
-/* =========================================================
-   CANVAS
-   ========================================================= */
 
-function resize(){
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const $ = id =>
+    document.getElementById(id);
+
+const info =
+    $("info");
+
+const loading =
+    $("loading");
+
+
+/* =========================================================
+   MAP STYLE
+========================================================= */
+
+const style = {
+
+    version:8,
+
+    sources:{
+
+        osm:{
+
+            type:"raster",
+
+            tiles:[
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+
+            tileSize:256,
+
+            attribution:
+                "© OpenStreetMap contributors"
+
+        }
+
+    },
+
+    layers:[
+
+        {
+
+            id:"osm",
+
+            type:"raster",
+
+            source:"osm",
+
+            paint:{
+
+                "raster-opacity":1
+
+            }
+
+        }
+
+    ]
+
+};
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+const map =
+    new maplibregl.Map({
+
+        container:"map",
+
+        style:style,
+
+        center:[
+            state.lon,
+            state.lat
+        ],
+
+        zoom:3.1,
+
+        minZoom:1,
+
+        maxZoom:18,
+
+        attributionControl:false
+
+    });
+
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+map.addControl(
+    new maplibregl.NavigationControl({
+        showCompass:true,
+        showZoom:true,
+        visualizePitch:true
+    }),
+    "bottom-right"
+);
+
+
+/* =========================================================
+   WEATHER CANVAS
+========================================================= */
+
+let weatherCanvas = null;
+
+let weatherContext = null;
+
+
+function createWeatherCanvas(){
+
+    if(weatherCanvas)
+        return;
+
+    weatherCanvas =
+        document.createElement("canvas");
+
+    weatherCanvas.style.position =
+        "absolute";
+
+    weatherCanvas.style.inset =
+        "0";
+
+    weatherCanvas.style.width =
+        "100%";
+
+    weatherCanvas.style.height =
+        "100%";
+
+    weatherCanvas.style.pointerEvents =
+        "none";
+
+    weatherCanvas.style.zIndex =
+        "2";
+
+    document
+        .getElementById("map")
+        .appendChild(
+            weatherCanvas
+        );
+
+    weatherContext =
+        weatherCanvas.getContext("2d");
+
+    resizeWeatherCanvas();
+
+}
+
+
+function resizeWeatherCanvas(){
+
+    if(!weatherCanvas)
+        return;
 
     const dpr =
         Math.min(
@@ -596,17 +1022,762 @@ function resize(){
             2
         );
 
-    W = window.innerWidth;
-    H = window.innerHeight;
+    const rect =
+        document
+        .getElementById("map")
+        .getBoundingClientRect();
 
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
+    weatherCanvas.width =
+        rect.width*dpr;
 
-    canvas.style.width =
-        W + "px";
+    weatherCanvas.height =
+        rect.height*dpr;
 
-    canvas.style.height =
-        H + "px";
+    weatherCanvas.style.width =
+        rect.width+"px";
+
+    weatherCanvas.style.height =
+        rect.height+"px";
+
+    weatherContext.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    drawWeather();
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeWeatherCanvas
+);
+
+
+/* =========================================================
+   MAP LOAD
+========================================================= */
+
+map.on(
+    "load",
+    ()=>{
+
+        createWeatherCanvas();
+
+        loadWeather(
+            state.lat,
+            state.lon
+        );
+
+        addLocationMarker();
+
+    }
+);
+
+
+/* =========================================================
+   LOCATION MARKER
+========================================================= */
+
+let marker = null;
+
+
+function addLocationMarker(){
+
+    marker =
+        new maplibregl.Marker({
+            color:"#ffffff"
+        })
+        .setLngLat([
+            state.lon,
+            state.lat
+        ])
+        .addTo(map);
+
+}
+
+
+/* =========================================================
+   CLICK MAP
+========================================================= */
+
+map.on(
+    "click",
+    async event=>{
+
+        state.lon =
+            event.lngLat.lng;
+
+        state.lat =
+            event.lngLat.lat;
+
+        if(marker){
+
+            marker.setLngLat([
+                state.lon,
+                state.lat
+            ]);
+
+        }
+
+        state.hour=0;
+
+        $("time").value=0;
+
+        updateCoordinates();
+
+        await loadWeather(
+            state.lat,
+            state.lon
+        );
+
+    }
+);
+
+
+/* =========================================================
+   OPEN-METEO
+========================================================= */
+
+async function loadWeather(
+    lat,
+    lon
+){
+
+    const key =
+        `${lat.toFixed(2)},${lon.toFixed(2)}`;
+
+    if(cache.has(key)){
+
+        state.weather =
+            cache.get(key);
+
+        updateUI();
+
+        drawWeather();
+
+        return;
+
+    }
+
+    loading.classList.add(
+        "show"
+    );
+
+    try{
+
+        const params = [
+
+            "temperature_2m",
+
+            "relative_humidity_2m",
+
+            "precipitation",
+
+            "cloud_cover",
+
+            "pressure_msl",
+
+            "wind_speed_10m",
+
+            "wind_direction_10m"
+
+        ].join(",");
+
+
+        const url =
+            "https://api.open-meteo.com/v1/forecast"+
+            `?latitude=${encodeURIComponent(lat)}`+
+            `&longitude=${encodeURIComponent(lon)}`+
+            `&hourly=${params}`+
+            "&forecast_days=2"+
+            "&timezone=auto";
+
+
+        const response =
+            await fetch(url);
+
+
+        if(!response.ok)
+            throw new Error(
+                "Weather API error"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        state.weather =
+            result;
+
+
+        cache.set(
+            key,
+            result
+        );
+
+
+        updateUI();
+
+        drawWeather();
+
+    }
+    catch(error){
+
+        console.error(
+            "SHOHIN WEATHER",
+            error
+        );
+
+    }
+    finally{
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    const h =
+        state.weather?.hourly;
+
+    if(!h)
+        return;
+
+
+    info.style.display =
+        "block";
+
+
+    const i =
+        Math.min(
+            state.hour,
+            h.time.length-1
+        );
+
+
+    $("temp").textContent =
+        `${Math.round(
+            h.temperature_2m[i]
+        )}°`;
+
+
+    $("humidity").textContent =
+        `${Math.round(
+            h.relative_humidity_2m[i]
+        )}%`;
+
+
+    $("wind").textContent =
+        `${Math.round(
+            h.wind_speed_10m[i]
+        )} km/h`;
+
+
+    $("rain").textContent =
+        `${Number(
+            h.precipitation[i]
+        ).toFixed(1)} mm`;
+
+
+    $("pressure").textContent =
+        `${Math.round(
+            h.pressure_msl[i]
+        )} hPa`;
+
+
+    $("cloud").textContent =
+        `${Math.round(
+            h.cloud_cover[i]
+        )}%`;
+
+
+    $("direction").textContent =
+        `${Math.round(
+            h.wind_direction_10m[i]
+        )}°`;
+
+
+    $("coords").textContent =
+        `${state.lat.toFixed(4)}, `+
+        `${state.lon.toFixed(4)}`;
+
+
+    const date =
+        new Date(
+            h.time[i]
+        );
+
+
+    $("timeText").textContent =
+        date.toLocaleString(
+            undefined,
+            {
+                weekday:"short",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+
+    drawChart();
+
+}
+
+
+/* =========================================================
+   WEATHER VISUALIZATION
+========================================================= */
+
+function drawWeather(){
+
+    if(!weatherCanvas)
+        return;
+
+    resizeWeatherCanvasInternal();
+
+    const ctx =
+        weatherContext;
+
+    const width =
+        weatherCanvas.clientWidth;
+
+    const height =
+        weatherCanvas.clientHeight;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    /*
+       We don't paint giant opaque blocks.
+
+       Instead we create a very light
+       atmospheric overlay.
+
+       The real map remains clearly visible.
+    */
+
+
+    if(state.layer==="wind"){
+
+        drawWind(
+            ctx,
+            width,
+            height
+        );
+
+        return;
+
+    }
+
+
+    if(state.layer==="rain"){
+
+        drawRain(
+            ctx,
+            width,
+            height
+        );
+
+        return;
+
+    }
+
+
+    if(state.layer==="cloud"){
+
+        drawClouds(
+            ctx,
+            width,
+            height
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Temperature / humidity /
+       pressure visual atmosphere.
+    */
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+    if(state.layer==="temperature"){
+
+        gradient.addColorStop(
+            0,
+            "rgba(20,90,220,.18)"
+        );
+
+        gradient.addColorStop(
+            .35,
+            "rgba(50,180,220,.08)"
+        );
+
+        gradient.addColorStop(
+            .5,
+            "rgba(255,230,80,.10)"
+        );
+
+        gradient.addColorStop(
+            .75,
+            "rgba(255,120,30,.12)"
+        );
+
+        gradient.addColorStop(
+            1,
+            "rgba(220,30,40,.18)"
+        );
+
+    }
+
+
+    else if(state.layer==="humidity"){
+
+        gradient.addColorStop(
+            0,
+            "rgba(20,120,255,.15)"
+        );
+
+        gradient.addColorStop(
+            .5,
+            "rgba(30,210,220,.10)"
+        );
+
+        gradient.addColorStop(
+            1,
+            "rgba(80,100,255,.18)"
+        );
+
+    }
+
+
+    else{
+
+        gradient.addColorStop(
+            0,
+            "rgba(170,70,255,.10)"
+        );
+
+        gradient.addColorStop(
+            .5,
+            "rgba(90,130,255,.08)"
+        );
+
+        gradient.addColorStop(
+            1,
+            "rgba(220,80,255,.12)"
+        );
+
+    }
+
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+}
+
+
+/* =========================================================
+   INTERNAL RESIZE
+========================================================= */
+
+function resizeWeatherCanvasInternal(){
+
+    if(!weatherCanvas)
+        return;
+
+    const rect =
+        document
+        .getElementById("map")
+        .getBoundingClientRect();
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    if(
+        weatherCanvas.width !==
+        rect.width*dpr ||
+        weatherCanvas.height !==
+        rect.height*dpr
+    ){
+
+        weatherCanvas.width =
+            rect.width*dpr;
+
+        weatherCanvas.height =
+            rect.height*dpr;
+
+        weatherContext.setTransform(
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   WIND
+========================================================= */
+
+const particles = [];
+
+for(
+    let i=0;
+    i<180;
+    i++
+){
+
+    particles.push({
+
+        x:Math.random(),
+
+        y:Math.random(),
+
+        speed:
+            .001+
+            Math.random()*.003
+
+    });
+
+}
+
+
+function drawWind(
+    ctx,
+    width,
+    height
+){
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,.38)";
+
+    ctx.lineWidth=1.1;
+
+
+    for(
+        const p of particles
+    ){
+
+        p.x +=
+            p.speed;
+
+
+        if(p.x>1)
+            p.x=0;
+
+
+        const x =
+            p.x*width;
+
+        const y =
+            p.y*height;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            y
+        );
+
+        ctx.lineTo(
+            x+18,
+            y-5
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================================================
+   RAIN
+========================================================= */
+
+function drawRain(
+    ctx,
+    width,
+    height
+){
+
+    ctx.fillStyle =
+        "rgba(40,150,255,.25)";
+
+
+    for(
+        let i=0;
+        i<350;
+        i++
+    ){
+
+        const x =
+            (i*83+
+             state.hour*18)
+            %width;
+
+        const y =
+            (i*47+
+             state.hour*30)
+            %height;
+
+
+        ctx.fillRect(
+            x,
+            y,
+            2,
+            9
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOUDS
+========================================================= */
+
+function drawClouds(
+    ctx,
+    width,
+    height
+){
+
+    ctx.fillStyle =
+        "rgba(235,240,245,.11)";
+
+
+    for(
+        let i=0;
+        i<45;
+        i++
+    ){
+
+        const x =
+            (
+                i*131+
+                state.hour*12
+            )%width;
+
+        const y =
+            (
+                i*73
+            )%height;
+
+
+        const radius =
+            25+
+            (i%5)*10;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            radius,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+function drawChart(){
+
+    if(!state.weather)
+        return;
+
+
+    const values =
+        state.weather
+        .hourly
+        .temperature_2m
+        .slice(0,24);
+
+
+    const width =
+        chart.clientWidth;
+
+    const height =
+        chart.clientHeight;
+
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio||1,
+            2
+        );
+
+
+    chart.width =
+        width*dpr;
+
+    chart.height =
+        height*dpr;
+
+
+    const ctx =
+        chart.getContext("2d");
+
 
     ctx.setTransform(
         dpr,
@@ -617,768 +1788,14 @@ function resize(){
         0
     );
 
-    draw();
-
-}
-
-window.addEventListener(
-    "resize",
-    resize
-);
-
-/* =========================================================
-   PROJECTION
-   ========================================================= */
-
-function project(latitude,longitude){
-
-    return {
-
-        x:
-            ((longitude + 180) / 360) * W,
-
-        y:
-            ((90 - latitude) / 180) * H
-
-    };
-
-}
-
-/* =========================================================
-   COLORS
-   ========================================================= */
-
-function tempColor(t){
-
-    const stops = [
-
-        [-30,[38,88,170]],
-        [-10,[64,151,220]],
-        [0,[95,190,175]],
-        [15,[244,237,105]],
-        [25,[247,155,63]],
-        [35,[221,57,48]],
-        [45,[135,28,43]]
-
-    ];
-
-    if(t <= stops[0][0])
-        return rgb(stops[0][1]);
-
-    if(t >= stops.at(-1)[0])
-        return rgb(stops.at(-1)[1]);
-
-    for(let i=0;i<stops.length-1;i++){
-
-        const a = stops[i];
-        const b = stops[i+1];
-
-        if(t>=a[0] && t<=b[0]){
-
-            const k =
-                (t-a[0]) /
-                (b[0]-a[0]);
-
-            return rgb([
-
-                Math.round(
-                    a[1][0]+
-                    (b[1][0]-a[1][0])*k
-                ),
-
-                Math.round(
-                    a[1][1]+
-                    (b[1][1]-a[1][1])*k
-                ),
-
-                Math.round(
-                    a[1][2]+
-                    (b[1][2]-a[1][2])*k
-                )
-
-            ]);
-
-        }
-
-    }
-
-    return "#777";
-
-}
-
-function rgb(c){
-
-    return `rgb(${c[0]},${c[1]},${c[2]})`;
-
-}
-
-/* =========================================================
-   DRAW
-   ========================================================= */
-
-function draw(){
 
     ctx.clearRect(
         0,
         0,
-        W,
-        H
+        width,
+        height
     );
 
-    /* background */
-
-    const bg =
-        ctx.createLinearGradient(
-            0,
-            0,
-            0,
-            H
-        );
-
-    bg.addColorStop(
-        0,
-        "#061525"
-    );
-
-    bg.addColorStop(
-        .5,
-        "#0b2637"
-    );
-
-    bg.addColorStop(
-        1,
-        "#06131f"
-    );
-
-    ctx.fillStyle = bg;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-    drawGrid();
-
-    drawField();
-
-    drawSelection();
-
-}
-
-/* =========================================================
-   GRID
-   ========================================================= */
-
-function drawGrid(){
-
-    ctx.save();
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.055)";
-
-    ctx.lineWidth = 1;
-
-    for(
-        let longitude=-180;
-        longitude<=180;
-        longitude+=30
-    ){
-
-        const a =
-            project(-90,longitude);
-
-        const b =
-            project(90,longitude);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            a.x,
-            a.y
-        );
-
-        ctx.lineTo(
-            b.x,
-            b.y
-        );
-
-        ctx.stroke();
-
-    }
-
-    for(
-        let latitude=-60;
-        latitude<=60;
-        latitude+=30
-    ){
-
-        const a =
-            project(latitude,-180);
-
-        const b =
-            project(latitude,180);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            a.x,
-            a.y
-        );
-
-        ctx.lineTo(
-            b.x,
-            b.y
-        );
-
-        ctx.stroke();
-
-    }
-
-    ctx.restore();
-
-}
-
-/* =========================================================
-   WEATHER FIELD
-   ========================================================= */
-
-function drawField(){
-
-    const step =
-        W < 600 ? 42 : 62;
-
-    for(
-        let y=0;
-        y<H;
-        y+=step
-    ){
-
-        for(
-            let x=0;
-            x<W;
-            x+=step
-        ){
-
-            const latitude =
-                90 -
-                (y/H)*180;
-
-            const longitude =
-                (x/W)*360-180;
-
-            let color;
-
-            if(layer==="temperature"){
-
-                let t =
-                    31 -
-                    Math.abs(latitude)*.43;
-
-                t +=
-                    Math.sin(
-                        (longitude +
-                        hour*8) *
-                        Math.PI/90
-                    )*3;
-
-                t +=
-                    Math.cos(
-                        latitude*
-                        Math.PI/45
-                    )*2;
-
-                color =
-                    tempColor(t);
-
-            }
-
-            else if(layer==="rain"){
-
-                const r =
-                    5 +
-                    Math.sin(
-                        (
-                            latitude+
-                            longitude+
-                            hour*5
-                        ) *
-                        Math.PI/45
-                    )*8;
-
-                color =
-                    `rgba(
-                        35,
-                        145,
-                        255,
-                        ${Math.min(
-                            .55,
-                            Math.max(0,r/28)
-                        )}
-                    )`;
-
-            }
-
-            else if(layer==="cloud"){
-
-                const c =
-                    45 +
-                    Math.sin(
-                        (
-                            latitude*2+
-                            longitude+
-                            hour*4
-                        ) *
-                        Math.PI/80
-                    )*35;
-
-                color =
-                    `rgba(
-                        225,
-                        235,
-                        245,
-                        ${Math.max(
-                            .04,
-                            c/260
-                        )}
-                    )`;
-
-            }
-
-            else if(layer==="humidity"){
-
-                const h =
-                    50 +
-                    Math.cos(
-                        latitude*
-                        Math.PI/90
-                    )*40;
-
-                color =
-                    `rgba(
-                        45,
-                        190,
-                        220,
-                        ${h/270}
-                    )`;
-
-            }
-
-            else if(layer==="pressure"){
-
-                const p =
-                    1013+
-                    Math.sin(
-                        (
-                            latitude+
-                            longitude+
-                            hour
-                        ) *
-                        Math.PI/70
-                    )*15;
-
-                const a =
-                    .12+
-                    Math.abs(
-                        p-1013
-                    )/100;
-
-                color =
-                    `rgba(
-                        180,
-                        90,
-                        255,
-                        ${Math.min(.48,a)}
-                    )`;
-
-            }
-
-            else{
-
-                const a =
-                    .15+
-                    Math.abs(
-                        Math.sin(
-                            (
-                                latitude+
-                                longitude+
-                                hour*5
-                            ) *
-                            Math.PI/60
-                        )
-                    )*.35;
-
-                color =
-                    `rgba(
-                        55,
-                        220,
-                        180,
-                        ${a}
-                    )`;
-
-            }
-
-            ctx.fillStyle =
-                color;
-
-            ctx.fillRect(
-                x,
-                y,
-                step+1,
-                step+1
-            );
-
-        }
-
-    }
-
-    ctx.fillStyle =
-        "rgba(3,12,22,.38)";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-    /* WIND ANIMATION */
-
-    if(layer==="wind"){
-
-        ctx.save();
-
-        ctx.strokeStyle =
-            "rgba(255,255,255,.55)";
-
-        ctx.lineWidth = 1.3;
-
-        for(
-            let i=0;
-            i<100;
-            i++
-        ){
-
-            const x =
-                (
-                    i*139+
-                    hour*25
-                )%W;
-
-            const y =
-                (
-                    i*73
-                )%H;
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x,
-                y
-            );
-
-            ctx.lineTo(
-                x+14,
-                y-4
-            );
-
-            ctx.stroke();
-
-        }
-
-        ctx.restore();
-
-    }
-
-}
-
-/* =========================================================
-   SELECTED LOCATION
-   ========================================================= */
-
-function drawSelection(){
-
-    const p =
-        project(
-            lat,
-            lon
-        );
-
-    ctx.save();
-
-    ctx.beginPath();
-
-    ctx.arc(
-        p.x,
-        p.y,
-        12,
-        0,
-        Math.PI*2
-    );
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.9)";
-
-    ctx.lineWidth = 2;
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    ctx.arc(
-        p.x,
-        p.y,
-        4,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle =
-        "#fff";
-
-    ctx.fill();
-
-    ctx.restore();
-
-}
-
-/* =========================================================
-   OPEN WEATHER API
-   ========================================================= */
-
-async function getWeather(){
-
-    const key =
-        `${lat.toFixed(3)},${lon.toFixed(3)}`;
-
-    if(cache.has(key)){
-
-        data =
-            cache.get(key);
-
-        update();
-
-        return;
-
-    }
-
-    UI.loading.classList.add(
-        "show"
-    );
-
-    try{
-
-        const url =
-            "https://api.open-meteo.com/v1/forecast"+
-            `?latitude=${lat}`+
-            `&longitude=${lon}`+
-            "&hourly="+
-            [
-                "temperature_2m",
-                "relative_humidity_2m",
-                "precipitation",
-                "cloud_cover",
-                "pressure_msl",
-                "wind_speed_10m",
-                "wind_direction_10m"
-            ].join(",")+
-            "&forecast_days=2"+
-            "&timezone=auto";
-
-        const response =
-            await fetch(url);
-
-        if(!response.ok)
-            throw new Error(
-                "Weather request failed"
-            );
-
-        data =
-            await response.json();
-
-        cache.set(
-            key,
-            data
-        );
-
-        update();
-
-    }
-    catch(error){
-
-        console.error(
-            "SHOHIN WEATHER:",
-            error
-        );
-
-        UI.location.textContent =
-            "Weather data unavailable";
-
-    }
-    finally{
-
-        UI.loading.classList.remove(
-            "show"
-        );
-
-    }
-
-}
-
-/* =========================================================
-   UPDATE INFORMATION
-   ========================================================= */
-
-function update(){
-
-    if(!data?.hourly)
-        return;
-
-    UI.info.style.display =
-        "block";
-
-    const h =
-        data.hourly;
-
-    const i =
-        Math.min(
-            hour,
-            h.time.length-1
-        );
-
-    const t =
-        h.temperature_2m?.[i];
-
-    const hum =
-        h.relative_humidity_2m?.[i];
-
-    const wind =
-        h.wind_speed_10m?.[i];
-
-    const rain =
-        h.precipitation?.[i];
-
-    const pressure =
-        h.pressure_msl?.[i];
-
-    const cloud =
-        h.cloud_cover?.[i];
-
-    const direction =
-        h.wind_direction_10m?.[i];
-
-    UI.temperature.textContent =
-        Number.isFinite(t)
-        ? `${Math.round(t)}°`
-        : "--°";
-
-    UI.humidity.textContent =
-        Number.isFinite(hum)
-        ? `${Math.round(hum)}%`
-        : "--%";
-
-    UI.wind.textContent =
-        Number.isFinite(wind)
-        ? `${Math.round(wind)} km/h`
-        : "-- km/h";
-
-    UI.rain.textContent =
-        Number.isFinite(rain)
-        ? `${rain.toFixed(1)} mm`
-        : "-- mm";
-
-    UI.pressure.textContent =
-        Number.isFinite(pressure)
-        ? `${Math.round(pressure)} hPa`
-        : "-- hPa";
-
-    UI.cloud.textContent =
-        Number.isFinite(cloud)
-        ? `${Math.round(cloud)}%`
-        : "--%";
-
-    UI.direction.textContent =
-        Number.isFinite(direction)
-        ? `${Math.round(direction)}°`
-        : "--°";
-
-    UI.coordinates.textContent =
-        `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-
-    if(h.time?.[i]){
-
-        const date =
-            new Date(h.time[i]);
-
-        UI.timeLabel.textContent =
-            date.toLocaleString(
-                undefined,
-                {
-                    weekday:"short",
-                    hour:"2-digit",
-                    minute:"2-digit"
-                }
-            );
-
-    }
-
-    drawChart();
-
-}
-
-/* =========================================================
-   CHART
-   ========================================================= */
-
-function drawChart(){
-
-    if(!data?.hourly)
-        return;
-
-    const values =
-        data.hourly.temperature_2m
-        ?.slice(0,24)
-        ?.filter(
-            Number.isFinite
-        );
-
-    if(!values?.length)
-        return;
-
-    const w =
-        chart.clientWidth;
-
-    const h =
-        chart.clientHeight;
-
-    const dpr =
-        Math.min(
-            window.devicePixelRatio||1,
-            2
-        );
-
-    chart.width =
-        w*dpr;
-
-    chart.height =
-        h*dpr;
-
-    chartCtx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
-
-    chartCtx.clearRect(
-        0,
-        0,
-        w,
-        h
-    );
 
     const min =
         Math.min(...values)-2;
@@ -1386,37 +1803,42 @@ function drawChart(){
     const max =
         Math.max(...values)+2;
 
-    /* GRID */
 
-    chartCtx.strokeStyle =
+    ctx.strokeStyle =
         "rgba(255,255,255,.08)";
 
-    chartCtx.lineWidth=1;
+    ctx.lineWidth=1;
 
-    for(let i=1;i<4;i++){
+
+    for(
+        let i=1;
+        i<4;
+        i++
+    ){
 
         const y =
-            (h/4)*i;
+            height*i/4;
 
-        chartCtx.beginPath();
 
-        chartCtx.moveTo(
+        ctx.beginPath();
+
+        ctx.moveTo(
             0,
             y
         );
 
-        chartCtx.lineTo(
-            w,
+        ctx.lineTo(
+            width,
             y
         );
 
-        chartCtx.stroke();
+        ctx.stroke();
 
     }
 
-    /* LINE */
 
-    chartCtx.beginPath();
+    ctx.beginPath();
+
 
     values.forEach(
         (value,i)=>{
@@ -1424,28 +1846,27 @@ function drawChart(){
             const x =
                 4+
                 i/
-                Math.max(
-                    1,
-                    values.length-1
-                )*
-                (w-8);
+                (values.length-1)*
+                (width-8);
+
 
             const y =
-                h-
+                height-
                 (
                     (value-min)/
                     (max-min)
                 )*
-                (h-12)-
+                (height-12)-
                 6;
 
+
             if(i===0)
-                chartCtx.moveTo(
+                ctx.moveTo(
                     x,
                     y
                 );
             else
-                chartCtx.lineTo(
+                ctx.lineTo(
                     x,
                     y
                 );
@@ -1453,58 +1874,20 @@ function drawChart(){
         }
     );
 
-    chartCtx.strokeStyle =
+
+    ctx.strokeStyle =
         "#ffffff";
 
-    chartCtx.lineWidth=2;
+    ctx.lineWidth=2;
 
-    chartCtx.stroke();
+    ctx.stroke();
 
 }
 
-/* =========================================================
-   MAP CLICK
-   ========================================================= */
-
-canvas.addEventListener(
-    "click",
-    async event=>{
-
-        const rect =
-            canvas.getBoundingClientRect();
-
-        const x =
-            event.clientX-
-            rect.left;
-
-        const y =
-            event.clientY-
-            rect.top;
-
-        lon =
-            (x/W)*360-180;
-
-        lat =
-            90-
-            (y/H)*180;
-
-        hour=0;
-
-        UI.time.value=0;
-
-        UI.location.textContent =
-            "Selected location";
-
-        draw();
-
-        await getWeather();
-
-    }
-);
 
 /* =========================================================
    LAYERS
-   ========================================================= */
+========================================================= */
 
 document
 .querySelectorAll(".layer")
@@ -1524,14 +1907,17 @@ document
                     )
                 );
 
+
                 button.classList.add(
                     "active"
                 );
 
-                layer =
+
+                state.layer =
                     button.dataset.layer;
 
-                draw();
+
+                drawWeather();
 
             }
         );
@@ -1539,125 +1925,236 @@ document
     }
 );
 
-/* =========================================================
-   TIME SLIDER
-   ========================================================= */
 
-UI.time.addEventListener(
+/* =========================================================
+   TIME
+========================================================= */
+
+$("time")
+.addEventListener(
     "input",
     ()=>{
 
-        hour =
+        state.hour =
             Number(
-                UI.time.value
+                $("time").value
             );
 
-        draw();
+        updateUI();
 
-        update();
+        drawWeather();
 
     }
 );
 
+
 /* =========================================================
    PLAY
-   ========================================================= */
+========================================================= */
 
-UI.play.addEventListener(
+$("play")
+.addEventListener(
     "click",
     ()=>{
 
-        if(playing){
+        if(state.playing){
 
-            clearInterval(timer);
+            clearInterval(
+                state.timer
+            );
 
-            timer=null;
+            state.timer=null;
 
-            playing=false;
+            state.playing=false;
 
-            UI.play.textContent="▶";
+            $("play").textContent="▶";
 
             return;
 
         }
 
-        playing=true;
 
-        UI.play.textContent="❚❚";
+        state.playing=true;
 
-        timer =
+        $("play").textContent="❚❚";
+
+
+        state.timer =
             setInterval(
                 ()=>{
 
-                    hour++;
+                    state.hour++;
 
-                    if(hour>23)
-                        hour=0;
+                    if(
+                        state.hour>23
+                    )
+                        state.hour=0;
 
-                    UI.time.value =
-                        hour;
 
-                    draw();
+                    $("time").value =
+                        state.hour;
 
-                    update();
+
+                    updateUI();
+
+                    drawWeather();
 
                 },
-                650
+                550
             );
 
     }
 );
 
+
 /* =========================================================
-   BUTTONS
-   ========================================================= */
+   GLOBE MODE
+========================================================= */
 
-UI.open.addEventListener(
+$("globe")
+.addEventListener(
     "click",
     ()=>{
 
-        UI.open.style.display =
-            "none";
+        const current =
+            map.getProjection();
 
-        document.body.style.overflow =
-            "hidden";
 
-        resize();
+        /*
+           MapLibre supports globe
+           projection on supported styles.
+        */
 
-        getWeather();
+        try{
 
-    }
-);
+            map.setProjection({
+                type:"globe"
+            });
 
-UI.close.addEventListener(
-    "click",
-    ()=>{
+        }
+        catch(error){
 
-        UI.open.style.display =
-            "block";
-
-        if(playing){
-
-            clearInterval(timer);
-
-            timer=null;
-
-            playing=false;
-
-            UI.play.textContent="▶";
+            console.warn(
+                "Globe projection unavailable",
+                error
+            );
 
         }
 
     }
 );
 
+
+/* =========================================================
+   GPS
+========================================================= */
+
+$("gps")
+.addEventListener(
+    "click",
+    ()=>{
+
+        if(
+            !navigator.geolocation
+        ){
+
+            alert(
+                "GPS не поддерживается"
+            );
+
+            return;
+
+        }
+
+
+        navigator
+        .geolocation
+        .getCurrentPosition(
+            position=>{
+
+                state.lat =
+                    position
+                    .coords
+                    .latitude;
+
+                state.lon =
+                    position
+                    .coords
+                    .longitude;
+
+
+                map.flyTo({
+
+                    center:[
+                        state.lon,
+                        state.lat
+                    ],
+
+                    zoom:8,
+
+                    speed:.8,
+
+                    curve:1.2
+
+                });
+
+
+                if(marker){
+
+                    marker.setLngLat([
+                        state.lon,
+                        state.lat
+                    ]);
+
+                }
+
+
+                loadWeather(
+                    state.lat,
+                    state.lon
+                );
+
+            },
+
+            error=>{
+
+                console.warn(
+                    "GPS:",
+                    error
+                );
+
+            },
+
+            {
+
+                enableHighAccuracy:true,
+
+                timeout:10000,
+
+                maximumAge:30000
+
+            }
+
+        );
+
+    }
+);
+
+
 /* =========================================================
    START
-   ========================================================= */
+========================================================= */
 
-resize();
+window.addEventListener(
+    "resize",
+    ()=>{
+        if(map)
+            map.resize();
 
-getWeather();
+        drawWeather();
+
+    }
+);
 
 </script>
 
