@@ -1,8 +1,9 @@
 /*
 ====================================================
- SHOHIN WEATHER V6.0
+ SHOHIN WEATHER
  RealRadarLayer.js
- REAL WEATHER RADAR
+ V6.1
+ REAL RADAR TILE ENGINE
  SOURCE: RainViewer
 ====================================================
 */
@@ -14,36 +15,41 @@ export class RealRadarLayer {
         this.mapEngine = mapEngine;
 
         this.opacity =
-            Number(
-                options.opacity ?? 0.70
-            );
+            Number(options.opacity ?? 0.70);
+
+        this.minZoom =
+            Number(options.minZoom ?? 0);
 
         this.maxZoom =
-            Number(
-                options.maxZoom ?? 7
-            );
+            Number(options.maxZoom ?? 18);
+
+        this.tileSize = 256;
 
         this.layer = null;
+
+        this.host = "";
 
         this.frames = [];
 
         this.currentFrame = -1;
 
-        this.host = null;
-
-        this.timer = null;
-
         this.visible = false;
 
         this.loading = false;
+
+        this.animationTimer = null;
+
+        this.animationRunning = false;
+
+        this.animationInterval = 700;
 
     }
 
 
     /*
-    ================================================
-    LOAD RADAR METADATA
-    ================================================
+    =================================================
+     RAINVIEWER API
+    =================================================
     */
 
     async load() {
@@ -52,10 +58,10 @@ export class RealRadarLayer {
             await fetch(
                 "https://api.rainviewer.com/public/weather-maps.json",
                 {
+                    method: "GET",
                     cache: "no-store"
                 }
             );
-
 
         if (!response.ok) {
 
@@ -66,27 +72,35 @@ export class RealRadarLayer {
 
         }
 
-
         const data =
             await response.json();
 
-
-        if (
-            !data ||
-            !data.host ||
-            !data.radar
-        ) {
+        if (!data) {
 
             throw new Error(
-                "RainViewer: invalid radar response"
+                "RainViewer: empty response"
             );
 
         }
 
+        if (!data.host) {
+
+            throw new Error(
+                "RainViewer: host missing"
+            );
+
+        }
+
+        if (!data.radar) {
+
+            throw new Error(
+                "RainViewer: radar data missing"
+            );
+
+        }
 
         this.host =
             data.host;
-
 
         const past =
             Array.isArray(
@@ -97,7 +111,6 @@ export class RealRadarLayer {
             :
             [];
 
-
         const nowcast =
             Array.isArray(
                 data.radar.nowcast
@@ -107,13 +120,10 @@ export class RealRadarLayer {
             :
             [];
 
-
-        this.frames =
-            [
-                ...past,
-                ...nowcast
-            ];
-
+        this.frames = [
+            ...past,
+            ...nowcast
+        ];
 
         if (
             this.frames.length === 0
@@ -125,24 +135,55 @@ export class RealRadarLayer {
 
         }
 
-
         return data;
 
     }
 
 
     /*
-    ================================================
-    CREATE TILE LAYER
-    ================================================
+    =================================================
+     TILE URL
+    =================================================
     */
 
-    createFrame(
-        frame
-    ) {
+    getTileURL(frame) {
 
         if (
-            !this.mapEngine?.map
+            !this.host ||
+            !frame ||
+            !frame.path
+        ) {
+
+            throw new Error(
+                "RainViewer: invalid frame"
+            );
+
+        }
+
+        return (
+
+            this.host +
+
+            frame.path +
+
+            "/256/{z}/{x}/{y}/2/1_1.png"
+
+        );
+
+    }
+
+
+    /*
+    =================================================
+     CREATE REAL TILE LAYER
+    =================================================
+    */
+
+    createFrame(frame) {
+
+        if (
+            !this.mapEngine ||
+            !this.mapEngine.map
         ) {
 
             throw new Error(
@@ -151,37 +192,8 @@ export class RealRadarLayer {
 
         }
 
-
-        if (
-            !this.host ||
-            !frame?.path
-        ) {
-
-            throw new Error(
-                "RealRadarLayer: invalid radar frame"
-            );
-
-        }
-
-
-        const map =
-            this.mapEngine.map;
-
-
-        const zoom =
-            Math.min(
-                map.getZoom(),
-                this.maxZoom
-            );
-
-
         const tileURL =
-
-            this.host +
-
-            frame.path +
-
-            "/256/{z}/{x}/{y}/2/1_1.png";
+            this.getTileURL(frame);
 
 
         const layer =
@@ -189,23 +201,64 @@ export class RealRadarLayer {
                 tileURL,
                 {
 
-                    opacity:
-                        this.opacity,
+                    tileSize:
+                        this.tileSize,
 
                     minZoom:
-                        0,
+                        this.minZoom,
 
                     maxZoom:
                         this.maxZoom,
 
-                    tileSize:
-                        256,
+                    opacity:
+                        this.opacity,
+
+                    updateWhenIdle:
+                        false,
+
+                    updateWhenZooming:
+                        true,
+
+                    keepBuffer:
+                        4,
+
+                    updateInterval:
+                        100,
+
+                    detectRetina:
+                        false,
+
+                    crossOrigin:
+                        true,
 
                     attribution:
-                        'Weather radar by <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
+                        'Weather radar by <a href="https://www.rainviewer.com/" target="_blank" rel="noopener noreferrer">RainViewer</a>'
 
                 }
             );
+
+
+        /*
+        =============================================
+         FORCE FULL MAP REFRESH
+        =============================================
+        */
+
+        layer.on(
+            "load",
+            () => {
+
+                if (
+                    this.mapEngine?.map
+                ) {
+
+                    this.mapEngine.map
+                        .invalidateSize();
+
+                }
+
+            }
+        );
 
 
         return layer;
@@ -214,16 +267,39 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    SHOW LATEST RADAR
-    ================================================
+    =================================================
+     REMOVE CURRENT LAYER
+    =================================================
+    */
+
+    removeCurrentLayer() {
+
+        if (
+            this.layer &&
+            this.mapEngine?.map
+        ) {
+
+            this.mapEngine.map
+                .removeLayer(
+                    this.layer
+                );
+
+        }
+
+        this.layer = null;
+
+    }
+
+
+    /*
+    =================================================
+     SHOW
+    =================================================
     */
 
     async show() {
 
-        if (
-            this.loading
-        ) {
+        if (this.loading) {
 
             return false;
 
@@ -246,11 +322,20 @@ export class RealRadarLayer {
 
         try {
 
-            this.hide();
-
+            /*
+            =========================================
+             LOAD RADAR METADATA
+            =========================================
+            */
 
             await this.load();
 
+
+            /*
+            =========================================
+             LATEST FRAME
+            =========================================
+            */
 
             this.currentFrame =
                 this.frames.length - 1;
@@ -262,27 +347,72 @@ export class RealRadarLayer {
                 ];
 
 
+            /*
+            =========================================
+             REMOVE OLD
+            =========================================
+            */
+
+            this.removeCurrentLayer();
+
+
+            /*
+            =========================================
+             CREATE REAL TILE LAYER
+            =========================================
+            */
+
             this.layer =
                 this.createFrame(
                     frame
                 );
 
 
+            /*
+            =========================================
+             ADD TO ENTIRE MAP
+            =========================================
+            */
+
             this.layer.addTo(
                 this.mapEngine.map
             );
 
 
-            this.visible = true;
+            /*
+            =========================================
+             FORCE TILE CALCULATION
+            =========================================
+            */
+
+            setTimeout(
+                () => {
+
+                    if (
+                        this.mapEngine?.map
+                    ) {
+
+                        this.mapEngine.map
+                            .invalidateSize();
+
+                    }
+
+                },
+                100
+            );
+
+
+            this.visible =
+                true;
 
 
             return true;
 
         }
-
         finally {
 
-            this.loading = false;
+            this.loading =
+                false;
 
         }
 
@@ -290,14 +420,12 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    SHOW FRAME
-    ================================================
+    =================================================
+     SHOW SPECIFIC FRAME
+    =================================================
     */
 
-    showFrame(
-        index
-    ) {
+    showFrame(index) {
 
         if (
             !this.mapEngine?.map
@@ -317,51 +445,46 @@ export class RealRadarLayer {
         }
 
 
-        let safeIndex =
+        let frameIndex =
             Number(index);
 
 
         if (
             !Number.isFinite(
-                safeIndex
+                frameIndex
             )
         ) {
 
-            safeIndex =
+            frameIndex =
                 this.frames.length - 1;
 
         }
 
 
-        safeIndex =
+        frameIndex =
             Math.max(
                 0,
                 Math.min(
                     this.frames.length - 1,
                     Math.floor(
-                        safeIndex
+                        frameIndex
                     )
                 )
             );
 
 
-        if (
-            this.layer
-        ) {
+        const frame =
+            this.frames[
+                frameIndex
+            ];
 
-            this.mapEngine.map
-                .removeLayer(
-                    this.layer
-                );
 
-        }
+        this.removeCurrentLayer();
 
 
         this.layer =
             this.createFrame(
-                this.frames[
-                    safeIndex
-                ]
+                frame
             );
 
 
@@ -371,7 +494,7 @@ export class RealRadarLayer {
 
 
         this.currentFrame =
-            safeIndex;
+            frameIndex;
 
 
         this.visible =
@@ -384,9 +507,9 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    LATEST FRAME
-    ================================================
+    =================================================
+     LATEST
+    =================================================
     */
 
     latest() {
@@ -408,9 +531,9 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    PREVIOUS FRAME
-    ================================================
+    =================================================
+     PREVIOUS
+    =================================================
     */
 
     previous() {
@@ -432,9 +555,9 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    NEXT FRAME
-    ================================================
+    =================================================
+     NEXT
+    =================================================
     */
 
     next() {
@@ -457,9 +580,9 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    ANIMATE RADAR
-    ================================================
+    =================================================
+     START ANIMATION
+    =================================================
     */
 
     startAnimation(
@@ -478,37 +601,61 @@ export class RealRadarLayer {
         }
 
 
-        this.currentFrame = 0;
+        this.animationInterval =
+            Math.max(
+                300,
+                Number(interval) || 700
+            );
 
 
-        this.timer =
+        this.animationRunning =
+            true;
+
+
+        let index =
+            this.currentFrame >= 0
+            ?
+            this.currentFrame
+            :
+            0;
+
+
+        this.currentFrame =
+            index;
+
+
+        this.animationTimer =
             setInterval(
                 () => {
 
-                    this.currentFrame++;
+                    if (
+                        !this.frames.length
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    index++;
 
 
                     if (
-                        this.currentFrame >=
+                        index >=
                         this.frames.length
                     ) {
 
-                        this.currentFrame = 0;
+                        index = 0;
 
                     }
 
 
                     this.showFrame(
-                        this.currentFrame
+                        index
                     );
 
                 },
-
-                Math.max(
-                    250,
-                    Number(interval) || 700
-                )
-
+                this.animationInterval
             );
 
 
@@ -518,33 +665,51 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    STOP ANIMATION
-    ================================================
+    =================================================
+     STOP ANIMATION
+    =================================================
     */
 
     stopAnimation() {
 
         if (
-            this.timer
+            this.animationTimer
         ) {
 
             clearInterval(
-                this.timer
+                this.animationTimer
             );
 
         }
 
 
-        this.timer = null;
+        this.animationTimer =
+            null;
+
+
+        this.animationRunning =
+            false;
 
     }
 
 
     /*
-    ================================================
-    HIDE
-    ================================================
+    =================================================
+     IS ANIMATING
+    =================================================
+    */
+
+    isAnimating() {
+
+        return this.animationRunning;
+
+    }
+
+
+    /*
+    =================================================
+     HIDE
+    =================================================
     */
 
     hide() {
@@ -552,32 +717,23 @@ export class RealRadarLayer {
         this.stopAnimation();
 
 
-        if (
-            this.layer &&
-            this.mapEngine?.map
-        ) {
-
-            this.mapEngine.map
-                .removeLayer(
-                    this.layer
-                );
-
-        }
+        this.removeCurrentLayer();
 
 
-        this.layer = null;
+        this.visible =
+            false;
 
-        this.visible = false;
 
-        this.currentFrame = -1;
+        this.currentFrame =
+            -1;
 
     }
 
 
     /*
-    ================================================
-    TOGGLE
-    ================================================
+    =================================================
+     TOGGLE
+    =================================================
     */
 
     async toggle() {
@@ -599,9 +755,22 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    GET FRAMES
-    ================================================
+    =================================================
+     VISIBILITY
+    =================================================
+    */
+
+    isVisible() {
+
+        return this.visible;
+
+    }
+
+
+    /*
+    =================================================
+     FRAMES
+    =================================================
     */
 
     getFrames() {
@@ -612,9 +781,9 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    GET CURRENT FRAME
-    ================================================
+    =================================================
+     CURRENT FRAME
+    =================================================
     */
 
     getCurrentFrame() {
@@ -628,17 +797,21 @@ export class RealRadarLayer {
         }
 
 
-        return this.frames[
-            this.currentFrame
-        ] || null;
+        return (
+            this.frames[
+                this.currentFrame
+            ]
+            ||
+            null
+        );
 
     }
 
 
     /*
-    ================================================
-    GET FRAME TIME
-    ================================================
+    =================================================
+     CURRENT TIME
+    =================================================
     */
 
     getCurrentTime() {
@@ -648,7 +821,8 @@ export class RealRadarLayer {
 
 
         if (
-            !frame?.time
+            !frame ||
+            !frame.time
         ) {
 
             return null;
@@ -664,21 +838,34 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    SET OPACITY
-    ================================================
+    =================================================
+     OPACITY
+    =================================================
     */
 
-    setOpacity(
-        value
-    ) {
+    setOpacity(value) {
+
+        const opacity =
+            Number(value);
+
+
+        if (
+            !Number.isFinite(
+                opacity
+            )
+        ) {
+
+            return;
+
+        }
+
 
         this.opacity =
             Math.max(
                 0,
                 Math.min(
                     1,
-                    Number(value)
+                    opacity
                 )
             );
 
@@ -697,14 +884,49 @@ export class RealRadarLayer {
 
 
     /*
-    ================================================
-    IS VISIBLE
-    ================================================
+    =================================================
+     MAP REFRESH
+    =================================================
     */
 
-    isVisible() {
+    refresh() {
 
-        return this.visible;
+        if (
+            this.mapEngine?.map
+        ) {
+
+            this.mapEngine.map
+                .invalidateSize();
+
+        }
+
+
+        if (
+            this.layer
+        ) {
+
+            this.layer.redraw();
+
+        }
+
+    }
+
+
+    /*
+    =================================================
+     DESTROY
+    =================================================
+    */
+
+    destroy() {
+
+        this.hide();
+
+        this.frames = [];
+
+        this.host = "";
+
+        this.mapEngine = null;
 
     }
 
