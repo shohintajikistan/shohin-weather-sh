@@ -2,67 +2,1360 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SHOHIN Weather V5</title>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SHOHIN Weather V5 — Core Test</title>
 
     <style>
-        body {
-            margin: 0;
-            background: #07111f;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+
+        * {
+            box-sizing: border-box;
         }
 
-        .box {
-            text-align: center;
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            min-height: 100%;
+
+            background:
+                #06101d;
+
+            color: white;
+
+            font-family:
+                Arial,
+                sans-serif;
+
         }
+
+
+        body {
+
+            padding: 20px;
+
+        }
+
+
+        .app {
+
+            max-width: 900px;
+
+            margin: auto;
+
+        }
+
+
+        header {
+
+            padding: 25px 0;
+
+            text-align: center;
+
+        }
+
 
         h1 {
-            font-size: 38px;
+
+            margin: 0;
+
+            font-size: 32px;
+
         }
 
-        .ok {
-            color: #4ade80;
-            font-size: 20px;
+
+        h1 span {
+
+            color: #38bdf8;
+
         }
+
+
+        .subtitle {
+
+            margin-top: 8px;
+
+            color: #8da4b8;
+
+        }
+
+
+        .status {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid
+                rgba(255,255,255,.1);
+
+        }
+
+
+        .status.ok {
+
+            border-color:
+                rgba(34,197,94,.4);
+
+        }
+
+
+        .status.error {
+
+            border-color:
+                rgba(239,68,68,.5);
+
+        }
+
+
+        .dot {
+
+            display: inline-block;
+
+            width: 10px;
+            height: 10px;
+
+            margin-right: 8px;
+
+            border-radius: 50%;
+
+            background: #64748b;
+
+        }
+
+
+        .ok .dot {
+
+            background: #22c55e;
+
+        }
+
+
+        .error .dot {
+
+            background: #ef4444;
+
+        }
+
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(240px, 1fr)
+                );
+
+            gap: 12px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .card {
+
+            padding: 18px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(10,25,42,.85);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+        }
+
+
+        .card-title {
+
+            color: #8da4b8;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .value {
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+        }
+
+
+        .small {
+
+            margin-top: 6px;
+
+            color: #8da4b8;
+
+            font-size: 12px;
+
+        }
+
+
+        .chain {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255,255,255,.04);
+
+        }
+
+
+        .chain-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.06);
+
+        }
+
+
+        .chain-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .check {
+
+            width: 24px;
+            height: 24px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #263447;
+
+        }
+
+
+        .check.ok {
+
+            background: #166534;
+
+        }
+
+
+        .check.error {
+
+            background: #991b1b;
+
+        }
+
+
+        button {
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            background:
+                #1687c9;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background:
+                #1999e3;
+
+        }
+
+
+        button:disabled {
+
+            opacity: .5;
+
+            cursor: wait;
+
+        }
+
+
+        pre {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            max-height: 300px;
+
+            overflow: auto;
+
+            border-radius: 14px;
+
+            background:
+                #020811;
+
+            color: #9ddcff;
+
+            font-size: 12px;
+
+            white-space: pre-wrap;
+
+            word-break: break-word;
+
+        }
+
+
+        .temperature {
+
+            font-size: 48px;
+
+        }
+
+
+        .success-message {
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(34,197,94,.12);
+
+            border:
+                1px solid
+                rgba(34,197,94,.35);
+
+            color: #86efac;
+
+            display: none;
+
+        }
+
+
+        @media (
+            max-width: 600px
+        ) {
+
+            body {
+
+                padding: 12px;
+
+            }
+
+
+            h1 {
+
+                font-size: 26px;
+
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="box">
 
-    <h1>🌍 SHOHIN WEATHER</h1>
+<div class="app">
 
-    <div id="result">
-        Проверка V5...
+
+    <header>
+
+        <h1>
+            🌍 SHOHIN
+            <span>WEATHER V5</span>
+        </h1>
+
+        <div class="subtitle">
+            Core system diagnostic
+        </div>
+
+    </header>
+
+
+    <!-- MAIN STATUS -->
+
+    <div
+        id="mainStatus"
+        class="status"
+    >
+
+        <span class="dot"></span>
+
+        Проверяем систему...
+
     </div>
+
+
+    <!-- CHAIN -->
+
+    <div class="chain">
+
+        <h3>
+            🔗 Weather Engine Chain
+        </h3>
+
+
+        <div class="chain-item">
+
+            <div
+                id="checkEngine"
+                class="check"
+            >
+                ?
+            </div>
+
+            <div>
+                WeatherEngine.js
+            </div>
+
+        </div>
+
+
+        <div class="chain-item">
+
+            <div
+                id="checkData"
+                class="check"
+            >
+                ?
+            </div>
+
+            <div>
+                DataManager.js
+            </div>
+
+        </div>
+
+
+        <div class="chain-item">
+
+            <div
+                id="checkECMWF"
+                class="check"
+            >
+                ?
+            </div>
+
+            <div>
+                ECMWF.js
+            </div>
+
+        </div>
+
+
+        <div class="chain-item">
+
+            <div
+                id="checkAPI"
+                class="check"
+            >
+                ?
+            </div>
+
+            <div>
+                Open-Meteo API
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div class="grid">
+
+
+        <div class="card">
+
+            <div class="card-title">
+                📍 LOCATION
+            </div>
+
+            <div
+                id="location"
+                class="value"
+            >
+                --
+            </div>
+
+            <div
+                id="coordinates"
+                class="small"
+            >
+                --
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                🌡 TEMPERATURE
+            </div>
+
+            <div
+                id="temperature"
+                class="value temperature"
+            >
+                --°
+            </div>
+
+            <div class="small">
+                temperature_2m
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                💧 HUMIDITY
+            </div>
+
+            <div
+                id="humidity"
+                class="value"
+            >
+                --%
+            </div>
+
+            <div class="small">
+                relative_humidity_2m
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                🌧 PRECIPITATION
+            </div>
+
+            <div
+                id="precipitation"
+                class="value"
+            >
+                -- mm
+            </div>
+
+            <div class="small">
+                precipitation
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                💨 WIND
+            </div>
+
+            <div
+                id="wind"
+                class="value"
+            >
+                -- km/h
+            </div>
+
+            <div class="small">
+                wind_speed_10m
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                🌀 PRESSURE
+            </div>
+
+            <div
+                id="pressure"
+                class="value"
+            >
+                -- hPa
+            </div>
+
+            <div class="small">
+                pressure_msl
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                ☁ CLOUDS
+            </div>
+
+            <div
+                id="clouds"
+                class="value"
+            >
+                --%
+            </div>
+
+            <div class="small">
+                cloud_cover
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                🕐 FORECAST
+            </div>
+
+            <div
+                id="hours"
+                class="value"
+            >
+                --
+            </div>
+
+            <div class="small">
+                hourly data points
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SUCCESS -->
+
+    <div
+        id="success"
+        class="success-message"
+    >
+
+        ✅ <strong>SHOHIN Weather V5 Core работает!</strong>
+
+        <br><br>
+
+        WeatherEngine → DataManager → ECMWF →
+        Open-Meteo API успешно связаны.
+
+    </div>
+
+
+    <!-- RETRY -->
+
+    <button
+        id="retry"
+    >
+
+        🔄 Проверить снова
+
+    </button>
+
+
+    <!-- RAW DATA -->
+
+    <pre
+        id="debug"
+    >Ожидание данных...</pre>
+
 
 </div>
 
 
 <script type="module">
 
-import { WeatherEngine }
+
+/*
+==================================================
+SHOHIN WEATHER V5
+FULL CORE CHAIN TEST
+==================================================
+
+index.html
+     ↓
+WeatherEngine
+     ↓
+DataManager
+     ↓
+ECMWF
+     ↓
+Open-Meteo API
+==================================================
+*/
+
+
+import {
+    WeatherEngine
+}
 from "./js/WeatherEngine.js";
 
-const weather =
-    new WeatherEngine();
 
-await weather.load();
+/* ================================================
+   ELEMENTS
+================================================ */
 
-document.getElementById("result").innerHTML =
-    `<div class="ok">
-        ✓ WeatherEngine работает
-    </div>`;
+
+const mainStatus =
+    document.getElementById(
+        "mainStatus"
+    );
+
+
+const checkEngine =
+    document.getElementById(
+        "checkEngine"
+    );
+
+
+const checkData =
+    document.getElementById(
+        "checkData"
+    );
+
+
+const checkECMWF =
+    document.getElementById(
+        "checkECMWF"
+    );
+
+
+const checkAPI =
+    document.getElementById(
+        "checkAPI"
+    );
+
+
+const locationElement =
+    document.getElementById(
+        "location"
+    );
+
+
+const coordinatesElement =
+    document.getElementById(
+        "coordinates"
+    );
+
+
+const temperatureElement =
+    document.getElementById(
+        "temperature"
+    );
+
+
+const humidityElement =
+    document.getElementById(
+        "humidity"
+    );
+
+
+const precipitationElement =
+    document.getElementById(
+        "precipitation"
+    );
+
+
+const windElement =
+    document.getElementById(
+        "wind"
+    );
+
+
+const pressureElement =
+    document.getElementById(
+        "pressure"
+    );
+
+
+const cloudsElement =
+    document.getElementById(
+        "clouds"
+    );
+
+
+const hoursElement =
+    document.getElementById(
+        "hours"
+    );
+
+
+const debug =
+    document.getElementById(
+        "debug"
+    );
+
+
+const success =
+    document.getElementById(
+        "success"
+    );
+
+
+const retry =
+    document.getElementById(
+        "retry"
+    );
+
+
+/* ================================================
+   HELPERS
+================================================ */
+
+
+function setCheck(
+    element,
+    success
+) {
+
+    element.className =
+        "check " +
+        (
+            success
+                ? "ok"
+                : "error"
+        );
+
+
+    element.textContent =
+        success
+            ? "✓"
+            : "×";
+
+}
+
+
+function number(
+    value,
+    decimals = 1
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        !Number.isFinite(
+            Number(value)
+        )
+    ) {
+
+        return "--";
+
+    }
+
+
+    return Number(value)
+        .toFixed(decimals);
+
+}
+
+
+/* ================================================
+   ENGINE
+================================================ */
+
+
+let weather;
+
+
+try {
+
+    /*
+     * STEP 1
+     * Import WeatherEngine
+     */
+
+    weather =
+        new WeatherEngine();
+
+
+    setCheck(
+        checkEngine,
+        true
+    );
+
+
+}
+catch (error) {
+
+    setCheck(
+        checkEngine,
+        false
+    );
+
+
+    showError(
+        "WeatherEngine не загрузился",
+        error
+    );
+
+}
+
+
+/* ================================================
+   TEST DATA MANAGER
+================================================ */
+
+
+if (weather) {
+
+    try {
+
+        if (
+            weather.data
+        ) {
+
+            setCheck(
+                checkData,
+                true
+            );
+
+        }
+        else {
+
+            throw new Error(
+                "DataManager не найден внутри WeatherEngine"
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        setCheck(
+            checkData,
+            false
+        );
+
+
+        showError(
+            "DataManager ошибка",
+            error
+        );
+
+    }
+
+}
+
+
+/* ================================================
+   TEST ECMWF
+================================================ */
+
+
+if (weather) {
+
+    try {
+
+        if (
+            weather.ecmwf
+        ) {
+
+            setCheck(
+                checkECMWF,
+                true
+            );
+
+        }
+        else {
+
+            throw new Error(
+                "ECMWF не найден внутри WeatherEngine"
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        setCheck(
+            checkECMWF,
+            false
+        );
+
+
+        showError(
+            "ECMWF ошибка",
+            error
+        );
+
+    }
+
+}
+
+
+/* ================================================
+   LOAD API
+================================================ */
+
+
+async function runTest() {
+
+    retry.disabled =
+        true;
+
+
+    success.style.display =
+        "none";
+
+
+    mainStatus.className =
+        "status";
+
+
+    mainStatus.innerHTML =
+        `
+        <span class="dot"></span>
+        Подключаемся к погодному API...
+        `;
+
+
+    try {
+
+        /*
+         * STEP 4
+         *
+         * WeatherEngine
+         * →
+         * DataManager
+         * →
+         * ECMWF
+         * →
+         * API
+         */
+
+        const data =
+            await weather.load();
+
+
+        /*
+         * API SUCCESS
+         */
+
+        setCheck(
+            checkAPI,
+            true
+        );
+
+
+        /*
+         * Extract current values
+         */
+
+        const hourly =
+            data.hourly || {};
+
+
+        const times =
+            hourly.time || [];
+
+
+        /*
+         * First forecast hour
+         */
+
+        const i = 0;
+
+
+        const temperature =
+            hourly.temperature_2m?.[i];
+
+
+        const humidity =
+            hourly.relative_humidity_2m?.[i];
+
+
+        const precipitation =
+            hourly.precipitation?.[i];
+
+
+        const wind =
+            hourly.wind_speed_10m?.[i];
+
+
+        const pressure =
+            hourly.pressure_msl?.[i];
+
+
+        const clouds =
+            hourly.cloud_cover?.[i];
+
+
+        /*
+         * LOCATION
+         */
+
+        locationElement.textContent =
+            "Dushanbe";
+
+
+        coordinatesElement.textContent =
+            `${data.latitude ?? 38.5598},
+             ${data.longitude ?? 68.7870}`;
+
+
+        /*
+         * WEATHER
+         */
+
+        temperatureElement.textContent =
+            number(
+                temperature,
+                1
+            ) + "°";
+
+
+        humidityElement.textContent =
+            number(
+                humidity,
+                0
+            ) + "%";
+
+
+        precipitationElement.textContent =
+            number(
+                precipitation,
+                1
+            ) + " mm";
+
+
+        windElement.textContent =
+            number(
+                wind,
+                1
+            ) + " km/h";
+
+
+        pressureElement.textContent =
+            number(
+                pressure,
+                0
+            ) + " hPa";
+
+
+        cloudsElement.textContent =
+            number(
+                clouds,
+                0
+            ) + "%";
+
+
+        hoursElement.textContent =
+            times.length;
+
+
+        /*
+         * SUCCESS
+         */
+
+        mainStatus.className =
+            "status ok";
+
+
+        mainStatus.innerHTML =
+            `
+            <span class="dot"></span>
+            SHOHIN Weather V5 Core ONLINE
+            `;
+
+
+        success.style.display =
+            "block";
+
+
+        /*
+         * DEBUG
+         */
+
+        debug.textContent =
+            JSON.stringify(
+                {
+                    message:
+                        "FULL CHAIN SUCCESS",
+
+                    location:
+                        data.latitude +
+                        ", " +
+                        data.longitude,
+
+                    timezone:
+                        data.timezone,
+
+                    hourlyPoints:
+                        times.length,
+
+                    temperature,
+
+                    humidity,
+
+                    precipitation,
+
+                    wind,
+
+                    pressure,
+
+                    clouds
+
+                },
+                null,
+                2
+            );
+
+
+    }
+    catch (error) {
+
+        setCheck(
+            checkAPI,
+            false
+        );
+
+
+        showError(
+            "API не ответил",
+            error
+        );
+
+    }
+    finally {
+
+        retry.disabled =
+            false;
+
+    }
+
+}
+
+
+/* ================================================
+   ERROR
+================================================ */
+
+
+function showError(
+    title,
+    error
+) {
+
+    mainStatus.className =
+        "status error";
+
+
+    mainStatus.innerHTML =
+        `
+        <span class="dot"></span>
+        ❌ ${title}
+        `;
+
+
+    debug.textContent =
+        [
+            title,
+
+            "",
+
+            "ERROR:",
+
+            error?.message ||
+            error,
+
+            "",
+
+            "Проверь Console браузера."
+
+        ].join("\n");
+
+}
+
+
+/* ================================================
+   RETRY
+================================================ */
+
+
+retry.addEventListener(
+    "click",
+    runTest
+);
+
+
+/* ================================================
+   START
+================================================ */
+
+
+if (weather) {
+
+    runTest();
+
+}
+
 
 </script>
 
+
 </body>
+
 </html>
