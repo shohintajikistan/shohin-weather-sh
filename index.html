@@ -27,6 +27,7 @@ html,
 body {
 
     margin: 0;
+
     width: 100%;
     height: 100%;
 
@@ -129,7 +130,7 @@ body {
 
     width: 315px;
 
-    padding: 19px;
+    padding: 18px;
 
     border-radius: 20px;
 
@@ -238,7 +239,7 @@ body {
     top: 88px;
     right: 15px;
 
-    width: 160px;
+    width: 165px;
 
     padding: 10px;
 
@@ -287,13 +288,6 @@ body {
     cursor: pointer;
 
     text-align: left;
-
-}
-
-.layerButton:hover {
-
-    background:
-        rgba(56,189,248,.20);
 
 }
 
@@ -391,6 +385,8 @@ body {
 
     color: white;
 
+    white-space: pre-wrap;
+
 }
 
 #error.show {
@@ -425,7 +421,7 @@ body {
         top: 75px;
         right: 8px;
 
-        width: 135px;
+        width: 140px;
 
     }
 
@@ -456,244 +452,264 @@ body {
 <div id="app">
 
 
-    <div id="map"></div>
+<div id="map"></div>
 
 
-    <div id="topbar">
+<div id="topbar">
 
-        <div class="logo">
+    <div class="logo">
 
-            🌍 SHOHIN
-            <span>WEATHER</span>
+        🌍 SHOHIN
+        <span>WEATHER</span>
 
-        </div>
+    </div>
 
-        <div id="online">
+    <div id="online">
 
-            ● CONNECTING
+        ● CONNECTING
 
-        </div>
+    </div>
+
+</div>
+
+
+<div id="weatherPanel">
+
+
+    <div id="location">
+
+        Dushanbe
 
     </div>
 
 
-    <div id="weatherPanel">
+    <div id="coordinates">
 
-
-        <div id="location">
-
-            Dushanbe
-
-        </div>
-
-
-        <div id="coordinates">
-
-            38.5598° N,
-            68.7870° E
-
-        </div>
-
-
-        <div id="temperature">
-
-            --°C
-
-        </div>
-
-
-        <div id="weatherStatus">
-
-            Загрузка...
-
-        </div>
-
-
-        <div id="metrics">
-
-
-            <div class="metric">
-
-                <div class="metric-title">
-
-                    💧 Влажность
-
-                </div>
-
-                <div
-                    id="humidity"
-                    class="metric-value"
-                >
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <div class="metric-title">
-
-                    🌧 Осадки
-
-                </div>
-
-                <div
-                    id="rain"
-                    class="metric-value"
-                >
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <div class="metric-title">
-
-                    💨 Ветер
-
-                </div>
-
-                <div
-                    id="wind"
-                    class="metric-value"
-                >
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <div class="metric-title">
-
-                    ☁ Облака
-
-                </div>
-
-                <div
-                    id="clouds"
-                    class="metric-value"
-                >
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="metric">
-
-                <div class="metric-title">
-
-                    🌀 Давление
-
-                </div>
-
-                <div
-                    id="pressure"
-                    class="metric-value"
-                >
-                    --
-                </div>
-
-            </div>
-
-
-        </div>
+        38.5598° N,
+        68.7870° E
 
     </div>
 
 
-    <div id="layers">
+    <div id="temperature">
 
-
-        <div class="layerTitle">
-
-            WEATHER LAYERS
-
-        </div>
-
-
-        <button
-            class="layerButton active"
-            id="temperatureLayer"
-        >
-            🌡 Temperature
-        </button>
-
-
-        <button
-            class="layerButton"
-            id="rainLayer"
-        >
-            🌧 Rain
-        </button>
-
-
-        <button
-            class="layerButton"
-            id="windLayer"
-        >
-            💨 Wind
-        </button>
-
-
-        <button
-            class="layerButton"
-            id="cloudLayer"
-        >
-            ☁ Clouds
-        </button>
-
-
-        <button
-            class="layerButton"
-            id="pressureLayer"
-        >
-            🌀 Pressure
-        </button>
-
+        --°C
 
     </div>
 
 
-    <div id="loading">
+    <div id="weatherStatus">
 
-        <div class="loader"></div>
-
-        <div>
-
-            🌍 SHOHIN Weather V5
-
-        </div>
-
-        <div
-            style="
-                margin-top:6px;
-                color:#8fa8bd;
-                font-size:13px;
-            "
-        >
-
-            Загрузка метеосистемы...
-
-        </div>
+        Загрузка...
 
     </div>
 
 
-    <div id="error"></div>
+    <div id="metrics">
+
+
+        <div class="metric">
+
+            <div class="metric-title">
+
+                💧 Влажность
+
+            </div>
+
+            <div
+                id="humidity"
+                class="metric-value"
+            >
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-title">
+
+                🌧 Осадки
+
+            </div>
+
+            <div
+                id="rain"
+                class="metric-value"
+            >
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-title">
+
+                💨 Ветер
+
+            </div>
+
+            <div
+                id="wind"
+                class="metric-value"
+            >
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-title">
+
+                ☁ Облака
+
+            </div>
+
+            <div
+                id="clouds"
+                class="metric-value"
+            >
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-title">
+
+                🌀 Давление
+
+            </div>
+
+            <div
+                id="pressure"
+                class="metric-value"
+            >
+
+                --
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div id="layers">
+
+
+    <div class="layerTitle">
+
+        WEATHER LAYERS
+
+    </div>
+
+
+    <button
+        class="layerButton active"
+        id="temperatureLayer"
+    >
+
+        🌡 Temperature
+
+    </button>
+
+
+    <button
+        class="layerButton"
+        id="rainLayer"
+    >
+
+        🌧 Rain
+
+    </button>
+
+
+    <button
+        class="layerButton"
+        id="windLayer"
+    >
+
+        💨 Wind
+
+    </button>
+
+
+    <button
+        class="layerButton"
+        id="cloudLayer"
+    >
+
+        ☁ Clouds
+
+    </button>
+
+
+    <button
+        class="layerButton"
+        id="pressureLayer"
+    >
+
+        🌀 Pressure
+
+    </button>
+
+
+</div>
+
+
+<div id="loading">
+
+    <div class="loader"></div>
+
+    <div>
+
+        🌍 SHOHIN Weather V5
+
+    </div>
+
+    <div
+        style="
+            margin-top:6px;
+            color:#8fa8bd;
+            font-size:13px;
+        "
+    >
+
+        Weather Engine → Grid → Renderer
+
+    </div>
+
+</div>
+
+
+<div id="error"></div>
 
 
 </div>
 
 
 <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-></script>
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script type="module">
@@ -701,8 +717,7 @@ body {
 
 /*
 ====================================================
- SHOHIN WEATHER V5
- MAIN ENGINE
+ IMPORTS
 ====================================================
 */
 
@@ -731,31 +746,38 @@ import {
 from "./js/RainLayer.js";
 
 
+import {
+    WeatherGrid
+}
+from "./js/WeatherGrid.js";
+
+
+import {
+    WeatherRenderer
+}
+from "./js/WeatherRenderer.js";
+
+
 /*
 ====================================================
- GLOBAL OBJECTS
+ STATE
 ====================================================
 */
 
 
-let weatherEngine =
-    null;
+let weatherEngine = null;
 
+let mapEngine = null;
 
-let mapEngine =
-    null;
+let weatherLayers = null;
 
+let rainLayer = null;
 
-let weatherLayers =
-    null;
+let weatherGrid = null;
 
+let weatherRenderer = null;
 
-let rainLayer =
-    null;
-
-
-let weatherData =
-    null;
+let weatherData = null;
 
 
 /*
@@ -767,9 +789,7 @@ let weatherData =
 
 const $ =
     id =>
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
 const loading =
@@ -797,8 +817,11 @@ const status =
 
 async function start() {
 
-
     try {
+
+
+        online.textContent =
+            "● WEATHER";
 
 
         /*
@@ -806,10 +829,6 @@ async function start() {
         1. WEATHER ENGINE
         ============================================
         */
-
-
-        online.textContent =
-            "● WEATHER";
 
 
         weatherEngine =
@@ -822,7 +841,7 @@ async function start() {
 
         /*
         ============================================
-        2. MAP ENGINE
+        2. MAP
         ============================================
         */
 
@@ -854,7 +873,7 @@ async function start() {
 
         /*
         ============================================
-        3. WEATHER LAYERS
+        3. OLD WEATHER LAYERS
         ============================================
         */
 
@@ -871,7 +890,7 @@ async function start() {
 
         /*
         ============================================
-        4. RAIN LAYER
+        4. RAIN
         ============================================
         */
 
@@ -888,7 +907,162 @@ async function start() {
 
         /*
         ============================================
-        5. WEATHER UI
+        5. GRID
+        ============================================
+        */
+
+
+        weatherGrid =
+            new WeatherGrid({
+
+                latitude:
+                    weatherEngine
+                        .location
+                        .latitude,
+
+                longitude:
+                    weatherEngine
+                        .location
+                        .longitude,
+
+                size:
+                    15,
+
+                step:
+                    0.20
+
+            });
+
+
+        /*
+        ============================================
+        BUILD GRID
+        ============================================
+        */
+
+
+        const grid =
+            weatherGrid.build();
+
+
+        /*
+        ============================================
+        CREATE LOCAL FIELD
+        ============================================
+
+        Пока используем реальные текущие
+        значения API как основу поля.
+
+        Это тест архитектуры.
+        Следующим этапом каждая точка
+        будет получать собственное
+        значение из настоящей метеосетки.
+        ============================================
+        */
+
+
+        const currentTemperature =
+            Number(
+                weatherData
+                    ?.hourly
+                    ?.temperature_2m?.[0]
+            );
+
+
+        const safeTemperature =
+            Number.isFinite(
+                currentTemperature
+            )
+            ? currentTemperature
+            : 20;
+
+
+        /*
+        ============================================
+        SMALL NATURAL GRADIENT
+        ============================================
+        */
+
+
+        const values =
+            grid.map(
+                point => {
+
+
+                    const distance =
+                        Math.sqrt(
+
+                            Math.pow(
+                                point.latitude -
+                                weatherEngine
+                                    .location
+                                    .latitude,
+
+                                2
+                            )
+
+                            +
+
+                            Math.pow(
+                                point.longitude -
+                                weatherEngine
+                                    .location
+                                    .longitude,
+
+                                2
+                            )
+
+                        );
+
+
+                    return (
+                        safeTemperature
+                        -
+                        distance * 2
+                    );
+
+                }
+            );
+
+
+        weatherGrid.applyValues(
+            values
+        );
+
+
+        /*
+        ============================================
+        6. RENDERER
+        ============================================
+        */
+
+
+        weatherRenderer =
+            new WeatherRenderer(
+
+                mapEngine,
+
+                {
+
+                    opacity:
+                        0.60,
+
+                    radius:
+                        38
+
+                }
+
+            );
+
+
+        weatherRenderer.setGrid(
+            weatherGrid.getGrid()
+        );
+
+
+        /*
+        ============================================
+        7. WEATHER UI
         ============================================
         */
 
@@ -898,12 +1072,9 @@ async function start() {
 
         /*
         ============================================
-        6. DEFAULT TEMPERATURE
+        READY
         ============================================
         */
-
-
-        weatherLayers.temperature();
 
 
         setActive(
@@ -912,7 +1083,7 @@ async function start() {
 
 
         status.textContent =
-            "🌡 Temperature активен";
+            "🌡 Weather Grid активен";
 
 
         online.textContent =
@@ -935,7 +1106,7 @@ async function start() {
 
 
         console.error(
-            "SHOHIN V5:",
+            "SHOHIN V5 ERROR:",
             error
         );
 
@@ -948,17 +1119,13 @@ async function start() {
             "#fb7185";
 
 
-        status.textContent =
-            "Ошибка запуска";
+        loading.classList.add(
+            "hidden"
+        );
 
 
         showError(
             error
-        );
-
-
-        loading.classList.add(
-            "hidden"
         );
 
     }
@@ -968,7 +1135,7 @@ async function start() {
 
 /*
 ====================================================
- WEATHER DATA
+ WEATHER UI
 ====================================================
 */
 
@@ -1115,8 +1282,7 @@ $("temperatureLayer")
             rainLayer.hide();
 
 
-            weatherLayers
-                .temperature();
+            weatherRenderer.show();
 
 
             setActive(
@@ -1125,7 +1291,7 @@ $("temperatureLayer")
 
 
             status.textContent =
-                "🌡 Temperature";
+                "🌡 Temperature Grid";
 
 
         }
@@ -1159,8 +1325,7 @@ $("rainLayer")
         try {
 
 
-            weatherLayers
-                .removeActive();
+            weatherRenderer.hide();
 
 
             rainLayer.show();
@@ -1178,9 +1343,11 @@ $("rainLayer")
 
             status.textContent =
                 "🌧 Rain: " +
+
                 Number(
                     value || 0
                 ).toFixed(1) +
+
                 " mm";
 
 
@@ -1201,7 +1368,7 @@ $("rainLayer")
 
 /*
 ====================================================
- OTHER LAYERS
+ WIND
 ====================================================
 */
 
@@ -1211,9 +1378,16 @@ $("windLayer")
     "click",
     () => {
 
+
+        weatherRenderer.hide();
+
+        rainLayer.hide();
+
+
         setActive(
             "windLayer"
         );
+
 
         status.textContent =
             "💨 Wind — следующий модуль";
@@ -1222,14 +1396,28 @@ $("windLayer")
 );
 
 
+/*
+====================================================
+ CLOUDS
+====================================================
+*/
+
+
 $("cloudLayer")
 .addEventListener(
     "click",
     () => {
 
+
+        weatherRenderer.hide();
+
+        rainLayer.hide();
+
+
         setActive(
             "cloudLayer"
         );
+
 
         status.textContent =
             "☁ Clouds — следующий модуль";
@@ -1238,14 +1426,28 @@ $("cloudLayer")
 );
 
 
+/*
+====================================================
+ PRESSURE
+====================================================
+*/
+
+
 $("pressureLayer")
 .addEventListener(
     "click",
     () => {
 
+
+        weatherRenderer.hide();
+
+        rainLayer.hide();
+
+
         setActive(
             "pressureLayer"
         );
+
 
         status.textContent =
             "🌀 Pressure — следующий модуль";
@@ -1323,7 +1525,7 @@ function showError(
 
 /*
 ====================================================
- RUN
+ START
 ====================================================
 */
 
@@ -1332,7 +1534,6 @@ start();
 
 
 </script>
-
 
 </body>
 
