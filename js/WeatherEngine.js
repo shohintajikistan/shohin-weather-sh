@@ -1,71 +1,63 @@
+import { DataManager } from "./DataManager.js";
+import { ECMWF } from "./ECMWF.js";
+
 export class WeatherEngine {
 
     constructor() {
+
+        this.data = new DataManager();
+
+        this.ecmwf = new ECMWF();
 
         this.location = {
             latitude: 38.5598,
             longitude: 68.7870
         };
 
-        this.model = "ecmwf_hres";
-
-        this.layer = "temperature";
-
-        this.forecast = null;
-
-        this.currentTime = 0;
-
-        this.isLoading = false;
+        this.weather = null;
 
     }
 
 
-    setLocation(latitude, longitude) {
+    async load() {
 
-        this.location.latitude = latitude;
-        this.location.longitude = longitude;
+        const key =
+            `${this.location.latitude},${this.location.longitude}`;
 
-    }
+        this.weather =
+            await this.data.get(
+                key,
+                () =>
+                    this.ecmwf.getWeather(
+                        this.location.latitude,
+                        this.location.longitude
+                    )
+            );
 
-
-    setLayer(layer) {
-
-        this.layer = layer;
-
-    }
-
-
-    setForecast(data) {
-
-        this.forecast = data;
+        return this.weather;
 
     }
 
 
-    setTime(time) {
+    async setLocation(
+        latitude,
+        longitude
+    ) {
 
-        this.currentTime = time;
+        this.location.latitude =
+            latitude;
+
+        this.location.longitude =
+            longitude;
+
+        return this.load();
 
     }
 
 
-    getState() {
+    getWeather() {
 
-        return {
-
-            location: this.location,
-
-            model: this.model,
-
-            layer: this.layer,
-
-            forecast: this.forecast,
-
-            currentTime: this.currentTime,
-
-            isLoading: this.isLoading
-
-        };
+        return this.weather;
 
     }
 
