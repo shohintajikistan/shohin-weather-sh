@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>SHOHIN Weather V5.2</title>
+<title>SHOHIN Weather V5.3</title>
 
 <link
     rel="stylesheet"
@@ -18,6 +18,10 @@
 />
 
 <style>
+
+/* =================================================
+   BASE
+================================================= */
 
 * {
     box-sizing: border-box;
@@ -63,21 +67,21 @@ body {
 }
 
 
-/* =========================================
+/* =================================================
    TOP BAR
-========================================= */
+================================================= */
 
 #topbar {
 
     position: absolute;
 
-    top: 15px;
-    left: 15px;
-    right: 15px;
+    top: 14px;
+    left: 14px;
+    right: 14px;
 
-    height: 58px;
+    height: 56px;
 
-    z-index: 2000;
+    z-index: 3000;
 
     display: flex;
 
@@ -85,7 +89,7 @@ body {
 
     justify-content: space-between;
 
-    padding: 0 18px;
+    padding: 0 17px;
 
     border-radius: 17px;
 
@@ -97,7 +101,7 @@ body {
         rgba(255,255,255,.12);
 
     backdrop-filter:
-        blur(15px);
+        blur(16px);
 
     color: white;
 
@@ -105,9 +109,11 @@ body {
 
 .logo {
 
-    font-size: 21px;
+    font-size: 20px;
 
     font-weight: 800;
+
+    letter-spacing: .2px;
 
 }
 
@@ -126,22 +132,22 @@ body {
 }
 
 
-/* =========================================
-   WEATHER PANEL
-========================================= */
+/* =================================================
+   WEATHER CARD
+================================================= */
 
 #weatherPanel {
 
     position: absolute;
 
-    z-index: 2000;
+    z-index: 3000;
 
-    top: 88px;
-    left: 15px;
+    top: 84px;
+    left: 14px;
 
-    width: 315px;
+    width: 310px;
 
-    padding: 18px;
+    padding: 17px;
 
     border-radius: 20px;
 
@@ -181,7 +187,7 @@ body {
 
     margin-top: 14px;
 
-    font-size: 58px;
+    font-size: 56px;
 
     line-height: 1;
 
@@ -200,28 +206,28 @@ body {
 }
 
 
-/* =========================================
+/* =================================================
    METRICS
-========================================= */
+================================================= */
 
 #metrics {
 
-    margin-top: 18px;
+    margin-top: 17px;
 
     display: grid;
 
     grid-template-columns:
         1fr 1fr;
 
-    gap: 8px;
+    gap: 7px;
 
 }
 
 .metric {
 
-    padding: 11px;
+    padding: 10px;
 
-    border-radius: 12px;
+    border-radius: 11px;
 
     background:
         rgba(255,255,255,.06);
@@ -230,7 +236,7 @@ body {
 
 .metric-title {
 
-    font-size: 11px;
+    font-size: 10px;
 
     color: #8fa8bd;
 
@@ -238,32 +244,114 @@ body {
 
 .metric-value {
 
-    margin-top: 5px;
+    margin-top: 4px;
 
-    font-size: 15px;
+    font-size: 14px;
 
     font-weight: 600;
 
 }
 
 
-/* =========================================
+/* =================================================
+   LAYER PANEL
+================================================= */
+
+#layers {
+
+    position: absolute;
+
+    z-index: 3000;
+
+    top: 84px;
+    right: 14px;
+
+    width: 155px;
+
+    padding: 9px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(5,15,28,.90);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(16px);
+
+}
+
+.layerTitle {
+
+    padding:
+        5px 7px 7px;
+
+    color: #8fa8bd;
+
+    font-size: 10px;
+
+}
+
+.layerButton {
+
+    width: 100%;
+
+    margin: 3px 0;
+
+    padding: 9px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    color: white;
+
+    background:
+        rgba(255,255,255,.06);
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 12px;
+
+}
+
+.layerButton:hover {
+
+    background:
+        rgba(56,189,248,.18);
+
+}
+
+.layerButton.active {
+
+    background:
+        rgba(56,189,248,.30);
+
+}
+
+
+/* =================================================
    GRID INFO
-========================================= */
+================================================= */
 
 #gridInfo {
 
     position: absolute;
 
-    z-index: 2000;
+    z-index: 3000;
 
-    right: 15px;
-    bottom: 18px;
+    right: 14px;
+    bottom: 14px;
 
     padding:
-        10px 14px;
+        9px 12px;
 
-    border-radius: 12px;
+    border-radius: 11px;
 
     background:
         rgba(5,15,28,.90);
@@ -272,30 +360,30 @@ body {
         1px solid
         rgba(255,255,255,.10);
 
-    color: #9eb3c6;
+    color: #a8bdcf;
 
-    font-size: 12px;
+    font-size: 11px;
 
 }
 
 
-/* =========================================
+/* =================================================
    SYSTEM STATUS
-========================================= */
+================================================= */
 
 #systemStatus {
 
     position: absolute;
 
-    z-index: 2000;
+    z-index: 3000;
 
-    left: 15px;
-    bottom: 18px;
+    left: 14px;
+    bottom: 14px;
 
     padding:
-        9px 13px;
+        9px 12px;
 
-    border-radius: 12px;
+    border-radius: 11px;
 
     background:
         rgba(5,15,28,.90);
@@ -304,16 +392,16 @@ body {
         1px solid
         rgba(255,255,255,.10);
 
-    color: #9eb3c6;
+    color: #a8bdcf;
 
-    font-size: 12px;
+    font-size: 11px;
 
 }
 
 
-/* =========================================
+/* =================================================
    LOADING
-========================================= */
+================================================= */
 
 #loading {
 
@@ -321,7 +409,7 @@ body {
 
     inset: 0;
 
-    z-index: 5000;
+    z-index: 7000;
 
     display: flex;
 
@@ -345,8 +433,8 @@ body {
 
 .loader {
 
-    width: 45px;
-    height: 45px;
+    width: 44px;
+    height: 44px;
 
     border-radius: 50%;
 
@@ -360,7 +448,7 @@ body {
     animation:
         spin .8s linear infinite;
 
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 
 }
 
@@ -376,9 +464,9 @@ body {
 }
 
 
-/* =========================================
+/* =================================================
    ERROR
-========================================= */
+================================================= */
 
 #error {
 
@@ -386,20 +474,20 @@ body {
 
     position: absolute;
 
-    z-index: 6000;
+    z-index: 8000;
 
-    left: 15px;
-    right: 15px;
+    left: 14px;
+    right: 14px;
 
-    bottom: 15px;
+    bottom: 14px;
 
     max-height: 50%;
 
     overflow: auto;
 
-    padding: 15px;
+    padding: 14px;
 
-    border-radius: 14px;
+    border-radius: 13px;
 
     background:
         rgba(127,29,29,.97);
@@ -408,7 +496,7 @@ body {
 
     white-space: pre-wrap;
 
-    font-size: 13px;
+    font-size: 12px;
 
 }
 
@@ -419,9 +507,9 @@ body {
 }
 
 
-/* =========================================
+/* =================================================
    MOBILE
-========================================= */
+================================================= */
 
 @media (
     max-width: 650px
@@ -429,40 +517,49 @@ body {
 
     #topbar {
 
-        top: 8px;
-        left: 8px;
-        right: 8px;
+        top: 7px;
+        left: 7px;
+        right: 7px;
 
     }
 
     #weatherPanel {
 
-        top: 75px;
-        left: 8px;
+        top: 72px;
+        left: 7px;
 
-        width: 275px;
+        width: 270px;
 
-        padding: 15px;
+        padding: 14px;
+
+    }
+
+    #layers {
+
+        top: 72px;
+        right: 7px;
+
+        width: 140px;
 
     }
 
     #temperature {
 
-        font-size: 50px;
-
-    }
-
-    #gridInfo {
-
-        right: 8px;
-        bottom: 8px;
+        font-size: 48px;
 
     }
 
     #systemStatus {
 
-        left: 8px;
-        bottom: 8px;
+        left: 7px;
+        bottom: 7px;
+
+    }
+
+    #gridInfo {
+
+        right: 7px;
+        bottom: 7px;
 
     }
 
@@ -482,6 +579,10 @@ body {
     <div id="map"></div>
 
 
+    <!-- =========================================
+         TOP BAR
+    ========================================== -->
+
     <div id="topbar">
 
         <div class="logo">
@@ -499,6 +600,10 @@ body {
 
     </div>
 
+
+    <!-- =========================================
+         WEATHER
+    ========================================== -->
 
     <div id="weatherPanel">
 
@@ -538,14 +643,18 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
+
                     💧 Влажность
+
                 </div>
 
                 <div
                     id="humidity"
                     class="metric-value"
                 >
+
                     --
+
                 </div>
 
             </div>
@@ -554,14 +663,18 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
+
                     🌧 Осадки
+
                 </div>
 
                 <div
                     id="rain"
                     class="metric-value"
                 >
+
                     --
+
                 </div>
 
             </div>
@@ -570,14 +683,18 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
+
                     💨 Ветер
+
                 </div>
 
                 <div
                     id="wind"
                     class="metric-value"
                 >
+
                     --
+
                 </div>
 
             </div>
@@ -586,14 +703,18 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
+
                     ☁ Облака
+
                 </div>
 
                 <div
                     id="clouds"
                     class="metric-value"
                 >
+
                     --
+
                 </div>
 
             </div>
@@ -602,14 +723,18 @@ body {
             <div class="metric">
 
                 <div class="metric-title">
+
                     🌀 Давление
+
                 </div>
 
                 <div
                     id="pressure"
                     class="metric-value"
                 >
+
                     --
+
                 </div>
 
             </div>
@@ -620,9 +745,90 @@ body {
     </div>
 
 
+    <!-- =========================================
+         LAYERS
+    ========================================== -->
+
+    <div id="layers">
+
+
+        <div class="layerTitle">
+
+            WEATHER LAYERS
+
+        </div>
+
+
+        <button
+            id="temperatureLayer"
+            class="layerButton active"
+        >
+
+            🌡 Temperature
+
+        </button>
+
+
+        <button
+            id="gridLayer"
+            class="layerButton"
+        >
+
+            🔥 Temperature Grid
+
+        </button>
+
+
+        <button
+            id="rainLayer"
+            class="layerButton"
+        >
+
+            🌧 Rain
+
+        </button>
+
+
+        <button
+            id="windLayer"
+            class="layerButton"
+        >
+
+            💨 Wind
+
+        </button>
+
+
+        <button
+            id="cloudLayer"
+            class="layerButton"
+        >
+
+            ☁ Clouds
+
+        </button>
+
+
+        <button
+            id="pressureLayer"
+            class="layerButton"
+        >
+
+            🌀 Pressure
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =========================================
+         INFO
+    ========================================== -->
+
     <div id="systemStatus">
 
-        SHOHIN V5.2 • Starting...
+        SHOHIN V5.3 • Starting...
 
     </div>
 
@@ -634,13 +840,17 @@ body {
     </div>
 
 
+    <!-- =========================================
+         LOADING
+    ========================================== -->
+
     <div id="loading">
 
         <div class="loader"></div>
 
         <div>
 
-            🌍 SHOHIN Weather V5.2
+            🌍 SHOHIN Weather V5.3
 
         </div>
 
@@ -676,8 +886,8 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 /*
 ====================================================
- SHOHIN WEATHER V5.2
- WEATHER GRID TEST
+ SHOHIN WEATHER V5.3
+ LIGHTWEIGHT WEATHER RENDERER
 ====================================================
 */
 
@@ -744,6 +954,10 @@ let weatherGrid = null;
 
 let weatherData = null;
 
+let temperatureLayer = null;
+
+let gridVisible = true;
+
 
 /*
 ====================================================
@@ -788,12 +1002,12 @@ function timeout(
 
 /*
 ====================================================
- LOAD CORE
+ LOAD MODULES
 ====================================================
 */
 
 
-async function loadCore() {
+async function loadModules() {
 
 
     loadingText.textContent =
@@ -902,7 +1116,7 @@ async function loadCore() {
 
 /*
 ====================================================
- WEATHER
+ WEATHER ENGINE
 ====================================================
 */
 
@@ -1010,7 +1224,7 @@ async function startMap() {
                 safeLon,
 
             zoom:
-                6
+                7
 
         });
 
@@ -1030,16 +1244,16 @@ async function startMap() {
 
 /*
 ====================================================
- CREATE GRID
+ CREATE WEATHER GRID
 ====================================================
 */
 
 
-function startGrid() {
+function createGrid() {
 
 
     loadingText.textContent =
-        "Создание Weather Grid...";
+        "Создание температурной сетки...";
 
 
     const latitude =
@@ -1058,28 +1272,36 @@ function startGrid() {
         );
 
 
+    const safeLat =
+        Number.isFinite(
+            latitude
+        )
+        ? latitude
+        : 38.5598;
+
+
+    const safeLon =
+        Number.isFinite(
+            longitude
+        )
+        ? longitude
+        : 68.7870;
+
+
     weatherGrid =
         new WeatherGrid({
 
             latitude:
-                Number.isFinite(
-                    latitude
-                )
-                ? latitude
-                : 38.5598,
+                safeLat,
 
             longitude:
-                Number.isFinite(
-                    longitude
-                )
-                ? longitude
-                : 68.7870,
+                safeLon,
 
             size:
-                15,
+                17,
 
             step:
-                0.20
+                0.15
 
         });
 
@@ -1101,14 +1323,7 @@ function startGrid() {
     }
 
 
-    /*
-    ================================================
-    TEST VALUES
-    ================================================
-    */
-
-
-    const temperature =
+    const currentTemperature =
         Number(
             weatherData
                 ?.hourly
@@ -1119,9 +1334,9 @@ function startGrid() {
 
     const baseTemperature =
         Number.isFinite(
-            temperature
+            currentTemperature
         )
-        ? temperature
+        ? currentTemperature
         : 20;
 
 
@@ -1134,33 +1349,33 @@ function startGrid() {
                     Math.sqrt(
 
                         Math.pow(
-
                             point.latitude -
-                            latitude,
-
+                            safeLat,
                             2
-
                         )
 
                         +
 
                         Math.pow(
-
                             point.longitude -
-                            longitude,
-
+                            safeLon,
                             2
-
                         )
 
                     );
 
 
+                /*
+                ==================================
+                NATURAL TEMPERATURE GRADIENT
+                ==================================
+                */
+
                 return (
 
-                    baseTemperature
-                    -
-                    distance * 2
+                    baseTemperature -
+
+                    distance * 2.5
 
                 );
 
@@ -1173,16 +1388,9 @@ function startGrid() {
     );
 
 
-    /*
-    ================================================
-    GRID INFO
-    ================================================
-    */
-
-
     gridInfo.textContent =
 
-        "GRID: " +
+        "GRID " +
 
         weatherGrid.getSize() +
 
@@ -1197,25 +1405,357 @@ function startGrid() {
         " points";
 
 
-    systemStatus.textContent =
-        "SHOHIN V5.2 • GRID ✓";
-
-
-    status.textContent =
-        "🌡 Weather Grid создан";
-
-
-    console.log(
-        "SHOHIN WEATHER GRID:",
-        weatherGrid.getGrid()
-    );
+    return grid;
 
 }
 
 
 /*
 ====================================================
- UPDATE WEATHER
+ COLOR
+====================================================
+*/
+
+
+function temperatureColor(
+    temperature
+) {
+
+
+    /*
+    ================================================
+    VERY COLD
+    ================================================
+    */
+
+    if (
+        temperature <= -20
+    ) {
+
+        return "#172554";
+
+    }
+
+
+    if (
+        temperature <= -10
+    ) {
+
+        return "#1d4ed8";
+
+    }
+
+
+    if (
+        temperature <= 0
+    ) {
+
+        return "#38bdf8";
+
+    }
+
+
+    if (
+        temperature <= 10
+    ) {
+
+        return "#22d3ee";
+
+    }
+
+
+    if (
+        temperature <= 20
+    ) {
+
+        return "#4ade80";
+
+    }
+
+
+    if (
+        temperature <= 25
+    ) {
+
+        return "#facc15";
+
+    }
+
+
+    if (
+        temperature <= 30
+    ) {
+
+        return "#fb923c";
+
+    }
+
+
+    if (
+        temperature <= 35
+    ) {
+
+        return "#f97316";
+
+    }
+
+
+    if (
+        temperature <= 40
+    ) {
+
+        return "#ef4444";
+
+    }
+
+
+    return "#b91c1c";
+
+}
+
+
+/*
+====================================================
+ RENDER TEMPERATURE GRID
+====================================================
+*/
+
+
+function renderTemperatureGrid() {
+
+
+    if (
+        !mapEngine ||
+        !weatherGrid
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+    ================================================
+    REMOVE OLD LAYER
+    ================================================
+    */
+
+
+    if (
+        temperatureLayer
+    ) {
+
+        mapEngine
+            .map
+            ?.removeLayer(
+                temperatureLayer
+            );
+
+        temperatureLayer = null;
+
+    }
+
+
+    /*
+    ================================================
+    CREATE LEAFLET LAYER
+    ================================================
+    */
+
+
+    temperatureLayer =
+        L.layerGroup();
+
+
+    const grid =
+        weatherGrid.getGrid();
+
+
+    const size =
+        weatherGrid.getSize();
+
+
+    const step =
+        weatherGrid.getStep();
+
+
+    /*
+    ================================================
+    CELL RENDER
+    ================================================
+    */
+
+
+    grid.forEach(
+        point => {
+
+
+            const value =
+                Number(
+                    point.value
+                );
+
+
+            if (
+                !Number.isFinite(
+                    value
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+            ----------------------------------------
+            CELL BOUNDS
+            ----------------------------------------
+            */
+
+
+            const halfStep =
+                step / 2;
+
+
+            const bounds = [
+
+                [
+
+                    point.latitude -
+                    halfStep,
+
+                    point.longitude -
+                    halfStep
+
+                ],
+
+                [
+
+                    point.latitude +
+                    halfStep,
+
+                    point.longitude +
+                    halfStep
+
+                ]
+
+            ];
+
+
+            /*
+            ----------------------------------------
+            COLOR
+            ----------------------------------------
+            */
+
+
+            const color =
+                temperatureColor(
+                    value
+                );
+
+
+            /*
+            ----------------------------------------
+            RECTANGLE
+            ----------------------------------------
+            */
+
+
+            const rectangle =
+                L.rectangle(
+
+                    bounds,
+
+                    {
+
+                        stroke:
+                            false,
+
+                        fill:
+                            true,
+
+                        fillColor:
+                            color,
+
+                        fillOpacity:
+                            0.38,
+
+                        interactive:
+                            false
+
+                    }
+
+                );
+
+
+            rectangle.addTo(
+                temperatureLayer
+            );
+
+
+        }
+    );
+
+
+    /*
+    ================================================
+    ADD TO MAP
+    ================================================
+    */
+
+
+    temperatureLayer.addTo(
+        mapEngine.map
+    );
+
+
+    gridVisible = true;
+
+
+    $("gridLayer")
+        .classList
+        .add(
+            "active"
+        );
+
+
+}
+
+
+/*
+====================================================
+ HIDE GRID
+====================================================
+*/
+
+
+function hideGrid() {
+
+
+    if (
+        temperatureLayer
+    ) {
+
+        mapEngine
+            .map
+            ?.removeLayer(
+                temperatureLayer
+            );
+
+    }
+
+
+    gridVisible = false;
+
+
+}
+
+
+/*
+====================================================
+ WEATHER UI
 ====================================================
 */
 
@@ -1232,7 +1772,7 @@ function updateWeather() {
     ) {
 
         throw new Error(
-            "В API нет hourly данных"
+            "В API отсутствует hourly"
         );
 
     }
@@ -1241,186 +1781,384 @@ function updateWeather() {
     const i = 0;
 
 
+    /*
+    ================================================
+    TEMPERATURE
+    ================================================
+    */
+
+
+    const temperature =
+        Number(
+            hourly
+                ?.temperature_2m
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.temperature_2m
+        Number.isFinite(
+            temperature
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .temperature_2m[i]
-            );
+        $("temperature")
+            .textContent =
 
+            Math.round(
+                temperature
+            ) +
 
-        if (
-            Number.isFinite(value)
-        ) {
-
-            $("temperature")
-                .textContent =
-
-                Math.round(
-                    value
-                ) +
-
-                "°C";
-
-        }
+            "°C";
 
     }
 
 
+    /*
+    ================================================
+    HUMIDITY
+    ================================================
+    */
+
+
+    const humidity =
+        Number(
+            hourly
+                ?.relative_humidity_2m
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.relative_humidity_2m
+        Number.isFinite(
+            humidity
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .relative_humidity_2m[i]
-            );
+        $("humidity")
+            .textContent =
 
+            Math.round(
+                humidity
+            ) +
 
-        if (
-            Number.isFinite(value)
-        ) {
-
-            $("humidity")
-                .textContent =
-
-                Math.round(
-                    value
-                ) +
-
-                "%";
-
-        }
+            "%";
 
     }
 
 
+    /*
+    ================================================
+    RAIN
+    ================================================
+    */
+
+
+    const rain =
+        Number(
+            hourly
+                ?.precipitation
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.precipitation
+        Number.isFinite(
+            rain
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .precipitation[i]
-            );
+        $("rain")
+            .textContent =
 
+            rain.toFixed(1) +
 
-        if (
-            Number.isFinite(value)
-        ) {
-
-            $("rain")
-                .textContent =
-
-                value.toFixed(1) +
-
-                " mm";
-
-        }
+            " mm";
 
     }
 
 
+    /*
+    ================================================
+    WIND
+    ================================================
+    */
+
+
+    const wind =
+        Number(
+            hourly
+                ?.wind_speed_10m
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.wind_speed_10m
+        Number.isFinite(
+            wind
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .wind_speed_10m[i]
-            );
+        $("wind")
+            .textContent =
 
+            wind.toFixed(1) +
 
-        if (
-            Number.isFinite(value)
-        ) {
-
-            $("wind")
-                .textContent =
-
-                value.toFixed(1) +
-
-                " km/h";
-
-        }
+            " km/h";
 
     }
 
 
+    /*
+    ================================================
+    CLOUDS
+    ================================================
+    */
+
+
+    const clouds =
+        Number(
+            hourly
+                ?.cloud_cover
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.cloud_cover
+        Number.isFinite(
+            clouds
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .cloud_cover[i]
-            );
+        $("clouds")
+            .textContent =
 
+            Math.round(
+                clouds
+            ) +
 
-        if (
-            Number.isFinite(value)
-        ) {
-
-            $("clouds")
-                .textContent =
-
-                Math.round(
-                    value
-                ) +
-
-                "%";
-
-        }
+            "%";
 
     }
 
 
+    /*
+    ================================================
+    PRESSURE
+    ================================================
+    */
+
+
+    const pressure =
+        Number(
+            hourly
+                ?.pressure_msl
+                ?.at(i)
+        );
+
+
     if (
-        Array.isArray(
-            hourly.pressure_msl
+        Number.isFinite(
+            pressure
         )
     ) {
 
-        const value =
-            Number(
-                hourly
-                    .pressure_msl[i]
-            );
+        $("pressure")
+            .textContent =
+
+            Math.round(
+                pressure
+            ) +
+
+            " hPa";
+
+    }
+
+
+    status.textContent =
+        "🌡 Реальная температура + Grid";
+
+}
+
+
+/*
+====================================================
+ LAYER BUTTONS
+====================================================
+*/
+
+
+$("temperatureLayer")
+.addEventListener(
+    "click",
+    () => {
 
 
         if (
-            Number.isFinite(value)
+            !gridVisible
         ) {
 
-            $("pressure")
-                .textContent =
-
-                Math.round(
-                    value
-                ) +
-
-                " hPa";
+            renderTemperatureGrid();
 
         }
 
+
+        setActive(
+            "temperatureLayer"
+        );
+
+
+        status.textContent =
+            "🌡 Temperature";
+
+
     }
+);
+
+
+$("gridLayer")
+.addEventListener(
+    "click",
+    () => {
+
+
+        if (
+            gridVisible
+        ) {
+
+            hideGrid();
+
+        }
+        else {
+
+            renderTemperatureGrid();
+
+        }
+
+
+        setActive(
+            "gridLayer"
+        );
+
+
+        status.textContent =
+            gridVisible
+
+            ? "🌡 Temperature Grid"
+
+            : "🌡 Grid hidden";
+
+
+    }
+);
+
+
+$("rainLayer")
+.addEventListener(
+    "click",
+    () => {
+
+
+        setActive(
+            "rainLayer"
+        );
+
+
+        status.textContent =
+            "🌧 Rain — следующий модуль";
+
+    }
+);
+
+
+$("windLayer")
+.addEventListener(
+    "click",
+    () => {
+
+
+        setActive(
+            "windLayer"
+        );
+
+
+        status.textContent =
+            "💨 Wind — следующий модуль";
+
+    }
+);
+
+
+$("cloudLayer")
+.addEventListener(
+    "click",
+    () => {
+
+
+        setActive(
+            "cloudLayer"
+        );
+
+
+        status.textContent =
+            "☁ Clouds — следующий модуль";
+
+    }
+);
+
+
+$("pressureLayer")
+.addEventListener(
+    "click",
+    () => {
+
+
+        setActive(
+            "pressureLayer"
+        );
+
+
+        status.textContent =
+            "🌀 Pressure — следующий модуль";
+
+    }
+);
+
+
+/*
+====================================================
+ ACTIVE BUTTON
+====================================================
+*/
+
+
+function setActive(
+    id
+) {
+
+
+    document
+        .querySelectorAll(
+            ".layerButton"
+        )
+        .forEach(
+            button => {
+
+                button
+                    .classList
+                    .remove(
+                        "active"
+                    );
+
+            }
+        );
+
+
+    $(id)
+        .classList
+        .add(
+            "active"
+        );
 
 }
 
@@ -1440,17 +2178,17 @@ async function start() {
 
         /*
         ============================================
-        1. MODULES
+        MODULES
         ============================================
         */
 
 
-        await loadCore();
+        await loadModules();
 
 
         /*
         ============================================
-        2. WEATHER API
+        API
         ============================================
         */
 
@@ -1460,7 +2198,7 @@ async function start() {
 
         /*
         ============================================
-        3. MAP
+        MAP
         ============================================
         */
 
@@ -1470,17 +2208,17 @@ async function start() {
 
         /*
         ============================================
-        4. GRID
+        GRID
         ============================================
         */
 
 
-        startGrid();
+        createGrid();
 
 
         /*
         ============================================
-        5. UI
+        UI
         ============================================
         */
 
@@ -1490,7 +2228,17 @@ async function start() {
 
         /*
         ============================================
-        LOCATION
+        TEMPERATURE RENDERER
+        ============================================
+        */
+
+
+        renderTemperatureGrid();
+
+
+        /*
+        ============================================
+        COORDINATES
         ============================================
         */
 
@@ -1550,18 +2298,22 @@ async function start() {
             "#4ade80";
 
 
+        systemStatus.textContent =
+            "SHOHIN V5.3 • API ✓ • MAP ✓ • GRID ✓";
+
+
         loading.classList.add(
             "hidden"
         );
 
 
         console.log(
-            "================================"
+            "===================================="
         );
 
 
         console.log(
-            "SHOHIN WEATHER V5.2 READY"
+            "SHOHIN WEATHER V5.3 READY"
         );
 
 
@@ -1584,13 +2336,13 @@ async function start() {
 
 
         console.log(
-            "Grid:",
-            weatherGrid.getGrid()
+            "Temperature Layer:",
+            temperatureLayer
         );
 
 
         console.log(
-            "================================"
+            "===================================="
         );
 
 
@@ -1601,7 +2353,7 @@ async function start() {
 
 
         console.error(
-            "SHOHIN V5.2 ERROR:",
+            "SHOHIN V5.3 ERROR:",
             error
         );
 
@@ -1614,13 +2366,13 @@ async function start() {
             "#fb7185";
 
 
+        systemStatus.textContent =
+            "SHOHIN V5.3 • ERROR";
+
+
         loading.classList.add(
             "hidden"
         );
-
-
-        systemStatus.textContent =
-            "SHOHIN V5.2 • ERROR";
 
 
         showError(
@@ -1657,7 +2409,7 @@ function showError(
 
     errorBox.textContent =
 
-        "❌ SHOHIN WEATHER V5.2\n\n" +
+        "❌ SHOHIN WEATHER V5.3\n\n" +
 
         message;
 
