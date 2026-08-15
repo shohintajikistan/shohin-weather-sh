@@ -19,33 +19,13 @@ export class ECMWF {
                 latitude,
                 longitude,
 
-                hourly: [
-                    "temperature_2m",
-                    "relative_humidity_2m",
-                    "precipitation",
-                    "rain",
-                    "snowfall",
-                    "cloud_cover",
-                    "wind_speed_10m",
-                    "wind_direction_10m",
-                    "wind_gusts_10m",
-                    "pressure_msl",
-                    "visibility",
-                    "cape",
-                    "shortwave_radiation"
-                ].join(","),
+                hourly:
+                    "temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,pressure_msl",
 
-                daily: [
-                    "temperature_2m_max",
-                    "temperature_2m_min",
-                    "precipitation_sum",
-                    "snowfall_sum",
-                    "sunrise",
-                    "sunset",
-                    "uv_index_max"
-                ].join(","),
+                daily:
+                    "temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset",
 
-                forecast_days: "15",
+                forecast_days: "7",
 
                 timezone: "auto"
 
@@ -63,14 +43,14 @@ export class ECMWF {
         if (!response.ok) {
 
             throw new Error(
-                "ECMWF API error: " +
+                "Weather API: HTTP " +
                 response.status
             );
 
         }
 
 
-        return await response.json();
+        return response.json();
 
     }
 
