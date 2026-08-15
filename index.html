@@ -10,7 +10,7 @@
     content="width=device-width,initial-scale=1.0"
 >
 
-<title>SHOHIN Weather V5.9</title>
+<title>SHOHIN Weather V6.0</title>
 
 <link
     rel="stylesheet"
@@ -44,10 +44,10 @@ body{
 
 #app{
 
+    position:relative;
+
     width:100%;
     height:100%;
-
-    position:relative;
 }
 
 #map{
@@ -224,7 +224,7 @@ body{
 
 
 /* =================================================
- LAYER PANEL
+ LAYERS
 ================================================= */
 
 #layers{
@@ -236,7 +236,7 @@ body{
     top:80px;
     right:12px;
 
-    width:190px;
+    width:195px;
 
     max-height:
         calc(100vh - 120px);
@@ -302,6 +302,73 @@ body{
 
     background:
         rgba(56,189,248,.30);
+}
+
+
+/* =================================================
+ RADAR CONTROL
+================================================= */
+
+#radarControls{
+
+    display:none;
+
+    margin-top:7px;
+
+    padding:8px;
+
+    border-radius:10px;
+
+    background:
+        rgba(56,189,248,.08);
+
+    border:
+        1px solid
+        rgba(56,189,248,.14);
+}
+
+#radarControls.visible{
+
+    display:block;
+}
+
+.radarButton{
+
+    width:100%;
+
+    margin:3px 0;
+
+    padding:7px;
+
+    border:0;
+
+    border-radius:8px;
+
+    color:white;
+
+    background:
+        rgba(255,255,255,.08);
+
+    cursor:pointer;
+
+    font-size:11px;
+}
+
+.radarButton:hover{
+
+    background:
+        rgba(56,189,248,.22);
+}
+
+#radarTime{
+
+    padding:5px;
+
+    text-align:center;
+
+    color:#8fa8bd;
+
+    font-size:10px;
 }
 
 
@@ -531,19 +598,6 @@ body{
 
 
 /* =================================================
- WIND
-================================================= */
-
-.shohin-wind-arrow{
-
-    background:
-        transparent !important;
-
-    border:0 !important;
-}
-
-
-/* =================================================
  MOBILE
 ================================================= */
 
@@ -571,10 +625,10 @@ body{
         top:68px;
         right:6px;
 
-        width:150px;
+        width:155px;
 
         max-height:
-            56vh;
+            58vh;
     }
 
     #temperature{
@@ -598,11 +652,12 @@ body{
 
 <div id="app">
 
+
 <div id="map"></div>
 
 
 <!-- =================================================
- TOP
+ TOP BAR
 ================================================= -->
 
 <div id="topbar">
@@ -624,7 +679,7 @@ body{
 
 
 <!-- =================================================
- WEATHER
+ WEATHER PANEL
 ================================================= -->
 
 <div id="weatherPanel">
@@ -660,18 +715,14 @@ Dushanbe
 <div class="metric">
 
 <div class="metric-title">
-
 💧 Влажность
-
 </div>
 
 <div
 id="humidity"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -680,18 +731,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 🌧 Осадки
-
 </div>
 
 <div
 id="rain"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -700,18 +747,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 💨 Ветер
-
 </div>
 
 <div
 id="wind"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -720,18 +763,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 ☁ Облака
-
 </div>
 
 <div
 id="clouds"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -740,18 +779,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 🌀 Давление
-
 </div>
 
 <div
 id="pressure"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -760,18 +795,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 ☀️ UV
-
 </div>
 
 <div
 id="uv"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -780,18 +811,14 @@ class="metric-value"
 <div class="metric">
 
 <div class="metric-title">
-
 ⚡ CAPE
-
 </div>
 
 <div
 id="cape"
 class="metric-value"
 >
-
 --
-
 </div>
 
 </div>
@@ -810,7 +837,7 @@ class="metric-value"
 
 <div class="layerTitle">
 
-SHOHIN WEATHER LAYERS
+SHOHIN WEATHER V6.0
 
 </div>
 
@@ -900,9 +927,62 @@ id="radarLayer"
 class="layerButton"
 >
 
-📡 Radar
+📡 REAL RADAR
 
 </button>
+
+
+<div id="radarControls">
+
+
+<div id="radarTime">
+
+Radar: --
+
+</div>
+
+
+<button
+id="radarLatest"
+class="radarButton"
+>
+
+⏱ Latest
+
+</button>
+
+
+<button
+id="radarPrevious"
+class="radarButton"
+>
+
+◀ Previous
+
+</button>
+
+
+<button
+id="radarNext"
+class="radarButton"
+>
+
+Next ▶
+
+</button>
+
+
+<button
+id="radarPlay"
+class="radarButton"
+>
+
+▶ Animate Radar
+
+</button>
+
+
+</div>
 
 
 <button
@@ -949,13 +1029,9 @@ Loading...
 </div>
 
 
-<!-- =================================================
- STATUS
-================================================= -->
-
 <div id="systemStatus">
 
-SHOHIN V5.9 • Starting...
+SHOHIN V6.0 • Starting...
 
 </div>
 
@@ -977,7 +1053,7 @@ GRID: starting...
 
 <div>
 
-🌍 SHOHIN Weather V5.9
+🌍 SHOHIN Weather V6.0
 
 </div>
 
@@ -1010,11 +1086,11 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
 <script type="module">
 
-
 /*
 ====================================================
- SHOHIN WEATHER V5.9
+ SHOHIN WEATHER V6.0
  MAIN CONTROLLER
+ REAL RADAR CONNECTED
 ====================================================
 */
 
@@ -1056,7 +1132,8 @@ let CloudLayer;
 let PressureLayer;
 let UVLayer;
 let StormLayer;
-let RadarLayer;
+
+let RealRadarLayer;
 
 let ForecastLayer;
 let AnimationEngine;
@@ -1072,7 +1149,8 @@ let cloudLayer;
 let pressureLayer;
 let uvLayer;
 let stormLayer;
-let radarLayer;
+
+let realRadarLayer;
 
 let forecastLayer;
 let animationEngine;
@@ -1082,6 +1160,8 @@ let weatherData;
 let temperatureLayer = null;
 
 let gridVisible = true;
+
+let radarControlsVisible = false;
 
 
 /* =================================================
@@ -1218,16 +1298,18 @@ StormLayer =
 module.StormLayer;
 
 
-/* Radar */
+/* =================================================
+ REAL RADAR
+================================================= */
 
 module =
 await safeImport(
-    "./js/RadarLayer.js",
-    "RadarLayer"
+    "./js/RealRadarLayer.js",
+    "Real Radar"
 );
 
-RadarLayer =
-module.RadarLayer;
+RealRadarLayer =
+module.RealRadarLayer;
 
 
 /* Forecast */
@@ -1379,7 +1461,7 @@ const base =
 weatherGrid.applyValues(
 
     grid.map(
-        point =>
+        () =>
             base
     )
 
@@ -1681,7 +1763,7 @@ Math.round(
 
 
 /* =================================================
- ACTIVE BUTTON
+ BUTTON
 ================================================= */
 
 function setActive(id){
@@ -1707,10 +1789,10 @@ $(id)
 
 
 /* =================================================
- HIDE ALL LAYERS
+ HIDE WEATHER LAYERS
 ================================================= */
 
-function hideLayers(){
+function hideWeatherLayers(){
 
 if(rainLayer)
     rainLayer.hide();
@@ -1730,9 +1812,6 @@ if(uvLayer)
 if(stormLayer)
     stormLayer.hide();
 
-if(radarLayer)
-    radarLayer.hide();
-
 }
 
 
@@ -1744,9 +1823,17 @@ $("temperatureLayer")
 .onclick =
 ()=>{
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 renderTemperatureGrid();
+
+$("radarControls")
+.classList.remove(
+    "visible"
+);
 
 setActive(
     "temperatureLayer"
@@ -1792,7 +1879,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!rainLayer){
@@ -1812,11 +1902,16 @@ setActive(
     "rainLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "🌧 Rain Layer";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • RAIN ✓";
+    "SHOHIN V6.0 • RAIN ✓";
 
 }
 catch(error){
@@ -1840,7 +1935,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!windLayer){
@@ -1860,11 +1958,16 @@ setActive(
     "windLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "💨 Wind Layer";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • WIND ✓";
+    "SHOHIN V6.0 • WIND ✓";
 
 }
 catch(error){
@@ -1888,7 +1991,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!cloudLayer){
@@ -1908,11 +2014,16 @@ setActive(
     "cloudLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "☁ Cloud Layer";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • CLOUD ✓";
+    "SHOHIN V6.0 • CLOUD ✓";
 
 }
 catch(error){
@@ -1936,7 +2047,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!pressureLayer){
@@ -1956,11 +2070,16 @@ setActive(
     "pressureLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "🌀 Pressure Layer";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • PRESSURE ✓";
+    "SHOHIN V6.0 • PRESSURE ✓";
 
 }
 catch(error){
@@ -1984,7 +2103,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!uvLayer){
@@ -2004,11 +2126,16 @@ setActive(
     "uvLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "☀️ UV Layer";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • UV ✓";
+    "SHOHIN V6.0 • UV ✓";
 
 }
 catch(error){
@@ -2032,7 +2159,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!stormLayer){
@@ -2052,11 +2182,16 @@ setActive(
     "stormLayer"
 );
 
+$("radarControls")
+.classList.remove(
+    "visible"
+);
+
 status.textContent =
     "⚡ Storm / CAPE";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • STORM ✓";
+    "SHOHIN V6.0 • STORM ✓";
 
 }
 catch(error){
@@ -2069,42 +2204,296 @@ showError(error);
 
 
 /* =================================================
- RADAR
+ REAL RADAR
 ================================================= */
 
 $("radarLayer")
 .onclick =
-()=>{
+async ()=>{
 
 try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
 
 
-if(!radarLayer){
+if(!realRadarLayer){
 
-    radarLayer =
-        new RadarLayer(
+    realRadarLayer =
+        new RealRadarLayer(
             mapEngine,
-            weatherData
+            {
+                opacity:
+                    0.70,
+
+                maxZoom:
+                    7
+            }
         );
 
 }
 
 
-radarLayer.show();
+if(
+    realRadarLayer.isVisible()
+){
+
+    realRadarLayer.hide();
+
+    $("radarControls")
+        .classList.remove(
+            "visible"
+        );
+
+    setActive(
+        "radarLayer"
+    );
+
+    status.textContent =
+        "📡 Radar OFF";
+
+    systemStatus.textContent =
+        "SHOHIN V6.0 • RADAR OFF";
+
+    return;
+
+}
+
+
+status.textContent =
+    "📡 Загрузка реального радара...";
+
+
+systemStatus.textContent =
+    "SHOHIN V6.0 • RADAR LOADING";
+
+
+await realRadarLayer.show();
+
+
+$("radarControls")
+.classList.add(
+    "visible"
+);
+
+
+updateRadarTime();
+
 
 setActive(
     "radarLayer"
 );
 
+
 status.textContent =
-    "📡 Radar";
+    "📡 REAL RADAR";
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • RADAR ✓";
+    "SHOHIN V6.0 • REAL RADAR ✓";
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+
+/* =================================================
+ RADAR TIME
+================================================= */
+
+function updateRadarTime(){
+
+if(!realRadarLayer)
+return;
+
+
+const date =
+    realRadarLayer
+        .getCurrentTime();
+
+
+if(!date){
+
+    $("radarTime")
+        .textContent =
+        "Radar: --";
+
+    return;
+
+}
+
+
+$("radarTime")
+.textContent =
+
+"Radar: " +
+
+date.toLocaleTimeString(
+    "ru-RU",
+    {
+        hour:
+            "2-digit",
+
+        minute:
+            "2-digit"
+    }
+);
+
+}
+
+
+/* =================================================
+ RADAR LATEST
+================================================= */
+
+$("radarLatest")
+.onclick =
+()=>{
+
+try{
+
+if(!realRadarLayer)
+return;
+
+
+realRadarLayer.latest();
+
+updateRadarTime();
+
+status.textContent =
+    "📡 Latest radar";
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+
+/* =================================================
+ RADAR PREVIOUS
+================================================= */
+
+$("radarPrevious")
+.onclick =
+()=>{
+
+try{
+
+if(!realRadarLayer)
+return;
+
+
+realRadarLayer.previous();
+
+updateRadarTime();
+
+status.textContent =
+    "📡 Previous radar";
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+
+/* =================================================
+ RADAR NEXT
+================================================= */
+
+$("radarNext")
+.onclick =
+()=>{
+
+try{
+
+if(!realRadarLayer)
+return;
+
+
+realRadarLayer.next();
+
+updateRadarTime();
+
+status.textContent =
+    "📡 Next radar";
+
+}
+catch(error){
+
+showError(error);
+
+}
+
+};
+
+
+/* =================================================
+ RADAR ANIMATION
+================================================= */
+
+let radarPlaying = false;
+
+
+$("radarPlay")
+.onclick =
+()=>{
+
+try{
+
+if(!realRadarLayer)
+return;
+
+
+if(
+    radarPlaying
+){
+
+    realRadarLayer
+        .stopAnimation();
+
+    radarPlaying = false;
+
+    $("radarPlay")
+        .textContent =
+        "▶ Animate Radar";
+
+    status.textContent =
+        "📡 Radar paused";
+
+    return;
+
+}
+
+
+realRadarLayer
+    .startAnimation(
+        700
+    );
+
+
+radarPlaying = true;
+
+$("radarPlay")
+.textContent =
+    "⏸ Stop Radar";
+
+
+status.textContent =
+    "📡 Radar animation";
+
 
 }
 catch(error){
@@ -2206,25 +2595,19 @@ const dateText =
 element.innerHTML = `
 
 <div class="forecastDate">
-
 ${dateText}
-
 </div>
 
 <div class="forecastIcon">
-
 ${weatherIcon(
     day.weatherCode
 )}
-
 </div>
 
 <div class="forecastTemp">
-
 ${Math.round(day.min)}°
 /
 ${Math.round(day.max)}°
-
 </div>
 
 `;
@@ -2251,7 +2634,10 @@ try{
 
 hideTemperatureGrid();
 
-hideLayers();
+hideWeatherLayers();
+
+if(realRadarLayer)
+    realRadarLayer.hide();
 
 
 if(!animationEngine){
@@ -2268,15 +2654,11 @@ if(
 
     animationEngine.stop();
 
-    setActive(
-        "animationLayer"
-    );
-
     status.textContent =
         "🎞️ Animation stopped";
 
     systemStatus.textContent =
-        "SHOHIN V5.9 • ANIMATION OFF";
+        "SHOHIN V6.0 • ANIMATION OFF";
 
     return;
 
@@ -2288,7 +2670,7 @@ animationEngine.start(
     progress => {
 
         systemStatus.textContent =
-            "SHOHIN V5.9 • ANIMATION " +
+            "SHOHIN V6.0 • ANIMATION " +
             Math.round(
                 progress * 100
             ) +
@@ -2299,6 +2681,7 @@ animationEngine.start(
     1200
 
 );
+
 
 setActive(
     "animationLayer"
@@ -2322,7 +2705,7 @@ showError(error);
 ================================================= */
 
 function showError(
-error
+    error
 ){
 
 console.error(error);
@@ -2330,7 +2713,7 @@ console.error(error);
 
 errorBox.textContent =
 
-"❌ SHOHIN WEATHER V5.9\n\n" +
+"❌ SHOHIN WEATHER V6.0\n\n" +
 
 (
     error?.stack ||
@@ -2384,7 +2767,7 @@ online.style.color =
 
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • ALL SYSTEMS ✓";
+    "SHOHIN V6.0 • ALL SYSTEMS ✓";
 
 
 status.textContent =
@@ -2397,9 +2780,8 @@ loading.classList.add(
 
 
 console.log(
-    "SHOHIN WEATHER V5.9 READY"
+    "SHOHIN WEATHER V6.0 READY"
 );
-
 
 }
 catch(error){
@@ -2420,7 +2802,7 @@ online.style.color =
 
 
 systemStatus.textContent =
-    "SHOHIN V5.9 • ERROR";
+    "SHOHIN V6.0 • ERROR";
 
 
 showError(
