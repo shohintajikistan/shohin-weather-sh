@@ -64,7 +64,7 @@ body {
 
 
 /* =========================================
-   TOP
+   TOP BAR
 ========================================= */
 
 #topbar {
@@ -750,7 +750,7 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 /*
 ====================================================
  SHOHIN WEATHER V5
- SAFE BOOT
+ STABLE BOOT
 ====================================================
 */
 
@@ -782,16 +782,19 @@ const status =
 
 /*
 ====================================================
- MODULES
+ MODULE VARIABLES
 ====================================================
 */
 
 
 let WeatherEngine;
+
 let MapEngine;
+
 let WeatherLayers;
-let RainLayer;
+
 let WeatherGrid;
+
 let WeatherRenderer;
 
 
@@ -807,8 +810,6 @@ let weatherEngine = null;
 let mapEngine = null;
 
 let weatherLayers = null;
-
-let rainLayer = null;
 
 let weatherGrid = null;
 
@@ -860,7 +861,7 @@ function timeout(
 
 /*
 ====================================================
- SAFE MODULE IMPORT
+ MODULE LOADING
 ====================================================
 */
 
@@ -873,33 +874,37 @@ async function loadModules() {
 
 
     const modules =
-        await Promise.all([
+        await timeout(
 
-            import(
-                "./js/WeatherEngine.js"
-            ),
+            Promise.all([
 
-            import(
-                "./js/MapEngine.js"
-            ),
+                import(
+                    "./js/WeatherEngine.js"
+                ),
 
-            import(
-                "./js/WeatherLayers.js"
-            ),
+                import(
+                    "./js/MapEngine.js"
+                ),
 
-            import(
-                "./js/RainLayer.js"
-            ),
+                import(
+                    "./js/WeatherLayers.js"
+                ),
 
-            import(
-                "./js/WeatherGrid.js"
-            ),
+                import(
+                    "./js/WeatherGrid.js"
+                ),
 
-            import(
-                "./js/WeatherRenderer.js"
-            )
+                import(
+                    "./js/WeatherRenderer.js"
+                )
 
-        ]);
+            ]),
+
+            10000,
+
+            "Один из JS-модулей не загрузился"
+
+        );
 
 
     WeatherEngine =
@@ -914,16 +919,12 @@ async function loadModules() {
         modules[2].WeatherLayers;
 
 
-    RainLayer =
-        modules[3].RainLayer;
-
-
     WeatherGrid =
-        modules[4].WeatherGrid;
+        modules[3].WeatherGrid;
 
 
     WeatherRenderer =
-        modules[5].WeatherRenderer;
+        modules[4].WeatherRenderer;
 
 }
 
@@ -943,7 +944,7 @@ async function start() {
 
         /*
         ============================================
-        STEP 1
+        1. MODULES
         ============================================
         */
 
@@ -952,20 +953,12 @@ async function start() {
             "● MODULES";
 
 
-        await timeout(
-
-            loadModules(),
-
-            10000,
-
-            "Модули не загрузились за 10 секунд"
-
-        );
+        await loadModules();
 
 
         /*
         ============================================
-        STEP 2
+        2. WEATHER ENGINE
         ============================================
         */
 
@@ -984,7 +977,7 @@ async function start() {
 
         /*
         ============================================
-        API TIMEOUT
+        API WITH TIMEOUT
         ============================================
         */
 
@@ -1003,7 +996,7 @@ async function start() {
 
         /*
         ============================================
-        STEP 3
+        3. MAP
         ============================================
         */
 
@@ -1044,20 +1037,20 @@ async function start() {
 
             10000,
 
-            "Карта не инициализировалась"
+            "MapEngine не запустился"
 
         );
 
 
         /*
         ============================================
-        STEP 4
+        4. WEATHER LAYERS
         ============================================
         */
 
 
         loadingText.textContent =
-            "Подключение Weather Layers...";
+            "Создание погодных слоёв...";
 
 
         weatherLayers =
@@ -1072,28 +1065,7 @@ async function start() {
 
         /*
         ============================================
-        STEP 5
-        ============================================
-        */
-
-
-        loadingText.textContent =
-            "Подключение Rain Layer...";
-
-
-        rainLayer =
-            new RainLayer(
-
-                mapEngine,
-
-                weatherData
-
-            );
-
-
-        /*
-        ============================================
-        STEP 6
+        5. GRID
         ============================================
         */
 
@@ -1130,7 +1102,7 @@ async function start() {
 
         /*
         ============================================
-        REAL CURRENT TEMPERATURE
+        CURRENT TEMPERATURE
         ============================================
         */
 
@@ -1213,7 +1185,7 @@ async function start() {
 
         /*
         ============================================
-        STEP 7
+        6. RENDERER
         ============================================
         */
 
@@ -1325,7 +1297,7 @@ async function start() {
 
 /*
 ====================================================
- WEATHER UI
+ WEATHER DATA
 ====================================================
 */
 
@@ -1475,15 +1447,6 @@ $("temperatureLayer")
         }
 
 
-        if (
-            rainLayer
-        ) {
-
-            rainLayer.hide();
-
-        }
-
-
         setActive(
             "temperatureLayer"
         );
@@ -1518,34 +1481,14 @@ $("rainLayer")
         }
 
 
-        if (
-            rainLayer
-        ) {
-
-            rainLayer.show();
-
-        }
-
-
         setActive(
             "rainLayer"
         );
 
 
-        const value =
-            rainLayer
-                ?.getCurrentValue();
-
-
         status.textContent =
+            "🌧 Rain Layer — подключим отдельно";
 
-            "🌧 Rain: " +
-
-            Number(
-                value || 0
-            ).toFixed(1) +
-
-            " mm";
 
     }
 );
@@ -1573,22 +1516,13 @@ $("windLayer")
         }
 
 
-        if (
-            rainLayer
-        ) {
-
-            rainLayer.hide();
-
-        }
-
-
         setActive(
             "windLayer"
         );
 
 
         status.textContent =
-            "💨 Wind — скоро";
+            "💨 Wind — следующий модуль";
 
     }
 );
@@ -1616,22 +1550,13 @@ $("cloudLayer")
         }
 
 
-        if (
-            rainLayer
-        ) {
-
-            rainLayer.hide();
-
-        }
-
-
         setActive(
             "cloudLayer"
         );
 
 
         status.textContent =
-            "☁ Clouds — скоро";
+            "☁ Clouds — следующий модуль";
 
     }
 );
@@ -1659,22 +1584,13 @@ $("pressureLayer")
         }
 
 
-        if (
-            rainLayer
-        ) {
-
-            rainLayer.hide();
-
-        }
-
-
         setActive(
             "pressureLayer"
         );
 
 
         status.textContent =
-            "🌀 Pressure — скоро";
+            "🌀 Pressure — следующий модуль";
 
     }
 );
@@ -1682,7 +1598,7 @@ $("pressureLayer")
 
 /*
 ====================================================
- ACTIVE
+ ACTIVE BUTTON
 ====================================================
 */
 
@@ -1756,7 +1672,7 @@ function showError(
 
 /*
 ====================================================
- RUN
+ BOOT
 ====================================================
 */
 
