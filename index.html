@@ -7,12 +7,11 @@
 
 <meta
     name="viewport"
-    content="width=device-width,initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0"
 >
 
 <title>SHOHIN Weather V5</title>
 
-<!-- Leaflet -->
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -28,25 +27,40 @@ html,
 body {
 
     margin: 0;
+    padding: 0;
+
     width: 100%;
     height: 100%;
 
-    background: #07111f;
+    overflow: hidden;
 
     font-family:
         Arial,
+        Helvetica,
         sans-serif;
+
+    background: #07111f;
 
 }
 
+
+/* =========================================
+   APP
+========================================= */
+
 #app {
+
+    position: relative;
 
     width: 100%;
     height: 100%;
 
-    position: relative;
-
 }
+
+
+/* =========================================
+   MAP
+========================================= */
 
 #map {
 
@@ -54,44 +68,62 @@ body {
 
     inset: 0;
 
+    background: #091827;
+
 }
 
-#panel {
+
+/* =========================================
+   TOP BAR
+========================================= */
+
+#topbar {
 
     position: absolute;
 
-    z-index: 1000;
+    top: 15px;
+    left: 15px;
+    right: 15px;
 
-    top: 20px;
-    left: 20px;
+    height: 58px;
 
-    width: 300px;
+    z-index: 2000;
 
-    padding: 20px;
+    display: flex;
 
-    border-radius: 20px;
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    border-radius: 17px;
 
     background:
         rgba(5,15,28,.88);
 
-    color: white;
+    border:
+        1px solid
+        rgba(255,255,255,.12);
 
     backdrop-filter:
         blur(15px);
 
-    box-shadow:
-        0 15px 50px
-        rgba(0,0,0,.35);
+    color: white;
 
 }
+
 
 .logo {
 
-    font-size: 22px;
+    font-size: 21px;
 
     font-weight: 800;
 
+    letter-spacing: .4px;
+
 }
+
 
 .logo span {
 
@@ -99,37 +131,103 @@ body {
 
 }
 
-.location {
 
-    margin-top: 18px;
+#online {
 
-    font-size: 18px;
+    font-size: 12px;
+
+    color: #4ade80;
+
+}
+
+
+/* =========================================
+   WEATHER PANEL
+========================================= */
+
+#weatherPanel {
+
+    position: absolute;
+
+    z-index: 2000;
+
+    top: 88px;
+    left: 15px;
+
+    width: 315px;
+
+    padding: 19px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(5,15,28,.88);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(18px);
+
+    color: white;
+
+    box-shadow:
+        0 15px 50px
+        rgba(0,0,0,.3);
+
+}
+
+
+#location {
+
+    font-size: 19px;
 
     font-weight: 700;
 
 }
 
-.temperature {
 
-    margin-top: 8px;
+#coordinates {
 
-    font-size: 54px;
+    margin-top: 4px;
+
+    color: #8fa8bd;
+
+    font-size: 12px;
+
+}
+
+
+#temperature {
+
+    margin-top: 12px;
+
+    font-size: 56px;
+
+    line-height: 1;
 
     font-weight: 300;
 
 }
 
-.status {
+
+#weatherStatus {
 
     margin-top: 8px;
 
-    color: #8fa8bd;
+    color: #9eb3c6;
 
     font-size: 13px;
 
 }
 
-.metrics {
+
+/* =========================================
+   METRICS
+========================================= */
+
+#metrics {
 
     margin-top: 18px;
 
@@ -142,42 +240,138 @@ body {
 
 }
 
+
 .metric {
 
-    padding: 10px;
+    padding: 11px;
 
     border-radius: 12px;
 
     background:
-        rgba(255,255,255,.07);
+        rgba(255,255,255,.06);
 
 }
 
-.metric small {
 
-    display: block;
+.metric-title {
+
+    font-size: 11px;
 
     color: #8fa8bd;
 
-    margin-bottom: 4px;
+}
+
+
+.metric-value {
+
+    margin-top: 5px;
+
+    font-size: 15px;
+
+    font-weight: 600;
 
 }
 
-.metric strong {
 
-    font-size: 14px;
+/* =========================================
+   LAYERS PANEL
+========================================= */
+
+#layers {
+
+    position: absolute;
+
+    z-index: 2000;
+
+    top: 88px;
+    right: 15px;
+
+    width: 155px;
+
+    padding: 10px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(5,15,28,.9);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(15px);
 
 }
+
+
+.layerTitle {
+
+    color: #8fa8bd;
+
+    font-size: 11px;
+
+    padding:
+        5px 8px 8px;
+
+}
+
+
+.layerButton {
+
+    width: 100%;
+
+    margin: 3px 0;
+
+    padding: 10px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    color: white;
+
+    background:
+        rgba(255,255,255,.06);
+
+    cursor: pointer;
+
+    text-align: left;
+
+}
+
+
+.layerButton:hover {
+
+    background:
+        rgba(56,189,248,.2);
+
+}
+
+
+.layerButton.active {
+
+    background:
+        rgba(56,189,248,.28);
+
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
 
 #loading {
 
-    position: fixed;
+    position: absolute;
 
     inset: 0;
 
     z-index: 5000;
 
     display: flex;
+
+    flex-direction: column;
 
     align-items: center;
 
@@ -188,13 +382,144 @@ body {
 
     color: white;
 
-    font-size: 18px;
+    transition:
+        opacity .4s ease;
 
 }
 
+
 #loading.hidden {
 
+    opacity: 0;
+
+    pointer-events: none;
+
+}
+
+
+.loader {
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    border:
+        4px solid
+        rgba(255,255,255,.12);
+
+    border-top-color:
+        #38bdf8;
+
+    animation:
+        spin .8s linear infinite;
+
+    margin-bottom: 15px;
+
+}
+
+
+@keyframes spin {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+#error {
+
     display: none;
+
+    position: absolute;
+
+    z-index: 6000;
+
+    left: 15px;
+    right: 15px;
+
+    bottom: 15px;
+
+    padding: 15px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(127,29,29,.95);
+
+    color: white;
+
+}
+
+
+#error.show {
+
+    display: block;
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (
+    max-width: 650px
+) {
+
+    #topbar {
+
+        top: 8px;
+        left: 8px;
+        right: 8px;
+
+    }
+
+
+    #weatherPanel {
+
+        top: 75px;
+        left: 8px;
+
+        width: 275px;
+
+        padding: 15px;
+
+    }
+
+
+    #layers {
+
+        top: 75px;
+        right: 8px;
+
+        width: 135px;
+
+    }
+
+
+    #temperature {
+
+        font-size: 48px;
+
+    }
+
+
+    .layerButton {
+
+        font-size: 12px;
+
+        padding: 8px;
+
+    }
 
 }
 
@@ -209,10 +534,14 @@ body {
 <div id="app">
 
 
+    <!-- MAP -->
+
     <div id="map"></div>
 
 
-    <div id="panel">
+    <!-- TOP BAR -->
+
+    <div id="topbar">
 
         <div class="logo">
 
@@ -222,10 +551,21 @@ body {
         </div>
 
 
-        <div
-            id="location"
-            class="location"
-        >
+        <div id="online">
+
+            ● CONNECTING
+
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div id="weatherPanel">
+
+
+        <div id="location">
 
             Dushanbe
 
@@ -233,79 +573,130 @@ body {
 
 
         <div
-            id="temperature"
-            class="temperature"
+            id="coordinates"
         >
 
-            --°
+            38.5598° N,
+            68.7870° E
+
+        </div>
+
+
+        <div id="temperature">
+
+            --°C
 
         </div>
 
 
         <div
-            id="status"
-            class="status"
+            id="weatherStatus"
         >
 
-            Запуск SHOHIN Weather V5...
+            Получение данных...
 
         </div>
 
 
-        <div class="metrics">
+        <div id="metrics">
 
 
             <div class="metric">
 
-                <small>💧 Влажность</small>
+                <div class="metric-title">
 
-                <strong id="humidity">
+                    💧 Влажность
+
+                </div>
+
+                <div
+                    id="humidity"
+                    class="metric-value"
+                >
+
                     --
-                </strong>
+
+                </div>
 
             </div>
 
 
             <div class="metric">
 
-                <small>🌧 Осадки</small>
+                <div class="metric-title">
 
-                <strong id="rain">
+                    🌧 Осадки
+
+                </div>
+
+                <div
+                    id="rain"
+                    class="metric-value"
+                >
+
                     --
-                </strong>
+
+                </div>
 
             </div>
 
 
             <div class="metric">
 
-                <small>💨 Ветер</small>
+                <div class="metric-title">
 
-                <strong id="wind">
+                    💨 Ветер
+
+                </div>
+
+                <div
+                    id="wind"
+                    class="metric-value"
+                >
+
                     --
-                </strong>
+
+                </div>
 
             </div>
 
 
             <div class="metric">
 
-                <small>☁ Облака</small>
+                <div class="metric-title">
 
-                <strong id="clouds">
+                    ☁ Облака
+
+                </div>
+
+                <div
+                    id="clouds"
+                    class="metric-value"
+                >
+
                     --
-                </strong>
+
+                </div>
 
             </div>
 
 
             <div class="metric">
 
-                <small>🌀 Давление</small>
+                <div class="metric-title">
 
-                <strong id="pressure">
+                    🌀 Давление
+
+                </div>
+
+                <div
+                    id="pressure"
+                    class="metric-value"
+                >
+
                     --
-                </strong>
+
+                </div>
 
             </div>
 
@@ -315,28 +706,124 @@ body {
     </div>
 
 
-    <div
-        id="loading"
-    >
+    <!-- LAYERS -->
 
-        🌍 Запуск SHOHIN Weather...
+    <div id="layers">
+
+
+        <div class="layerTitle">
+
+            WEATHER LAYERS
+
+        </div>
+
+
+        <button
+            class="layerButton active"
+            id="temperatureLayer"
+        >
+
+            🌡 Temperature
+
+        </button>
+
+
+        <button
+            class="layerButton"
+            id="rainLayer"
+        >
+
+            🌧 Rain
+
+        </button>
+
+
+        <button
+            class="layerButton"
+            id="windLayer"
+        >
+
+            💨 Wind
+
+        </button>
+
+
+        <button
+            class="layerButton"
+            id="cloudLayer"
+        >
+
+            ☁ Clouds
+
+        </button>
+
+
+        <button
+            class="layerButton"
+            id="pressureLayer"
+        >
+
+            🌀 Pressure
+
+        </button>
+
 
     </div>
+
+
+    <!-- LOADING -->
+
+    <div id="loading">
+
+        <div class="loader"></div>
+
+        <div>
+
+            🌍 SHOHIN Weather V5
+
+        </div>
+
+        <div
+            style="
+                margin-top:6px;
+                color:#8fa8bd;
+                font-size:13px;
+            "
+        >
+
+            Загрузка метеосистемы...
+
+        </div>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div id="error"></div>
 
 
 </div>
 
 
-<!-- Leaflet JS -->
+<!-- LEAFLET -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
 
 
-<!-- SHOHIN V5 -->
+<!-- SHOHIN MODULES -->
 
 <script type="module">
+
+
+/*
+====================================================
+ SHOHIN WEATHER V5
+ MAIN APPLICATION
+====================================================
+*/
 
 
 import {
@@ -351,242 +838,583 @@ import {
 from "./js/MapEngine.js";
 
 
+import {
+    WeatherLayers
+}
+from "./js/WeatherLayers.js";
+
+
 /*
-========================================
- SHOHIN WEATHER V5
- START
-========================================
+====================================================
+ UI
+====================================================
 */
 
 
-const status =
-    document.getElementById(
-        "status"
-    );
+const $ =
+    id =>
+        document.getElementById(id);
 
 
 const loading =
-    document.getElementById(
-        "loading"
-    );
+    $("loading");
 
 
-const temperature =
-    document.getElementById(
-        "temperature"
-    );
+const errorBox =
+    $("error");
 
 
-const humidity =
-    document.getElementById(
-        "humidity"
-    );
+const online =
+    $("online");
 
 
-const rain =
-    document.getElementById(
-        "rain"
-    );
+const status =
+    $("weatherStatus");
 
 
-const wind =
-    document.getElementById(
-        "wind"
-    );
+/*
+====================================================
+ WEATHER ENGINE
+====================================================
+*/
 
 
-const clouds =
-    document.getElementById(
-        "clouds"
-    );
+let weather;
+
+let data;
+
+let map;
+
+let layers;
 
 
-const pressure =
-    document.getElementById(
-        "pressure"
-    );
+/*
+====================================================
+ START
+====================================================
+*/
 
 
-try {
+async function start() {
 
 
-    /*
-    ================================
-    1. WEATHER ENGINE
-    ================================
-    */
-
-    const weather =
-        new WeatherEngine();
+    try {
 
 
-    status.textContent =
-        "Получение погодных данных...";
+        online.textContent =
+            "● WEATHER CONNECTING";
 
 
-    const data =
-        await weather.load();
+        /*
+        ============================================
+        1. WEATHER ENGINE
+        ============================================
+        */
 
 
-    /*
-    ================================
-    2. MAP ENGINE
-    ================================
-    */
-
-    const map =
-        new MapEngine({
-
-            container: "map",
-
-            latitude:
-                weather.location.latitude,
-
-            longitude:
-                weather.location.longitude,
-
-            zoom: 6
-
-        });
+        weather =
+            new WeatherEngine();
 
 
-    await map.init();
+        data =
+            await weather.load();
 
 
-    /*
-    ================================
-    3. WEATHER DATA
-    ================================
-    */
+        /*
+        ============================================
+        2. MAP ENGINE
+        ============================================
+        */
+
+
+        map =
+            new MapEngine({
+
+                container:
+                    "map",
+
+                latitude:
+                    weather.location.latitude,
+
+                longitude:
+                    weather.location.longitude,
+
+                zoom:
+                    6
+
+            });
+
+
+        await map.init();
+
+
+        /*
+        ============================================
+        3. WEATHER LAYERS
+        ============================================
+        */
+
+
+        layers =
+            new WeatherLayers(
+
+                map,
+
+                data
+
+            );
+
+
+        /*
+        ============================================
+        4. CURRENT WEATHER
+        ============================================
+        */
+
+
+        updateWeather();
+
+
+        /*
+        ============================================
+        5. TEMPERATURE LAYER
+        ============================================
+        */
+
+
+        layers.temperature();
+
+
+        /*
+        ============================================
+        READY
+        ============================================
+        */
+
+
+        online.textContent =
+            "● SHOHIN ONLINE";
+
+
+        online.style.color =
+            "#4ade80";
+
+
+        status.textContent =
+            "🌡 Температурный слой активен";
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+
+    }
+    catch (
+        err
+    ) {
+
+
+        console.error(
+            "SHOHIN V5 ERROR:",
+            err
+        );
+
+
+        online.textContent =
+            "● ERROR";
+
+
+        online.style.color =
+            "#fb7185";
+
+
+        status.textContent =
+            "Ошибка запуска";
+
+
+        errorBox.textContent =
+            "❌ SHOHIN Weather V5\n\n" +
+            err.message;
+
+
+        errorBox.classList.add(
+            "show"
+        );
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/*
+====================================================
+ WEATHER UI
+====================================================
+*/
+
+
+function updateWeather() {
+
 
     const hourly =
-        data.hourly;
+        data?.hourly;
+
+
+    if (
+        !hourly
+    ) {
+
+        return;
+
+    }
 
 
     const i = 0;
+
+
+    /*
+    ============================================
+    TEMPERATURE
+    ============================================
+    */
 
 
     if (
         hourly.temperature_2m
     ) {
 
-        temperature.textContent =
+        $("temperature")
+            .textContent =
+
             Math.round(
                 hourly
                     .temperature_2m[i]
             ) +
+
             "°C";
 
     }
+
+
+    /*
+    ============================================
+    HUMIDITY
+    ============================================
+    */
 
 
     if (
         hourly.relative_humidity_2m
     ) {
 
-        humidity.textContent =
+        $("humidity")
+            .textContent =
+
             Math.round(
                 hourly
                     .relative_humidity_2m[i]
             ) +
+
             "%";
 
     }
+
+
+    /*
+    ============================================
+    RAIN
+    ============================================
+    */
 
 
     if (
         hourly.precipitation
     ) {
 
-        rain.textContent =
+        $("rain")
+            .textContent =
+
             Number(
                 hourly
                     .precipitation[i]
             ).toFixed(1) +
+
             " mm";
 
     }
+
+
+    /*
+    ============================================
+    WIND
+    ============================================
+    */
 
 
     if (
         hourly.wind_speed_10m
     ) {
 
-        wind.textContent =
+        $("wind")
+            .textContent =
+
             Number(
                 hourly
                     .wind_speed_10m[i]
             ).toFixed(1) +
+
             " km/h";
 
     }
+
+
+    /*
+    ============================================
+    CLOUDS
+    ============================================
+    */
 
 
     if (
         hourly.cloud_cover
     ) {
 
-        clouds.textContent =
+        $("clouds")
+            .textContent =
+
             Math.round(
                 hourly
                     .cloud_cover[i]
             ) +
+
             "%";
 
     }
+
+
+    /*
+    ============================================
+    PRESSURE
+    ============================================
+    */
 
 
     if (
         hourly.pressure_msl
     ) {
 
-        pressure.textContent =
+        $("pressure")
+            .textContent =
+
             Math.round(
                 hourly
                     .pressure_msl[i]
             ) +
+
             " hPa";
 
     }
 
 
-    /*
-    ================================
-    READY
-    ================================
-    */
-
-    status.textContent =
-        "✓ SHOHIN Weather V5 ONLINE";
-
-
-    loading.classList
-        .add(
-            "hidden"
-        );
-
-
 }
-catch (
-    error
+
+
+/*
+====================================================
+ TEMPERATURE BUTTON
+====================================================
+*/
+
+
+$("temperatureLayer")
+    .addEventListener(
+        "click",
+        () => {
+
+
+            try {
+
+
+                layers.temperature();
+
+
+                setActive(
+                    "temperatureLayer"
+                );
+
+
+                status.textContent =
+                    "🌡 Температура";
+
+
+            }
+            catch (
+                error
+            ) {
+
+                showError(
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+/*
+====================================================
+ OTHER BUTTONS
+====================================================
+
+ Пока они показывают сообщение.
+ Следующими модулями подключим
+ реальные Rain / Wind / Clouds / Pressure.
+*/
+
+
+$("rainLayer")
+    .addEventListener(
+        "click",
+        () => {
+
+            setActive(
+                "rainLayer"
+            );
+
+            status.textContent =
+                "🌧 Rain — следующий модуль";
+
+        }
+    );
+
+
+$("windLayer")
+    .addEventListener(
+        "click",
+        () => {
+
+            setActive(
+                "windLayer"
+            );
+
+            status.textContent =
+                "💨 Wind — следующий модуль";
+
+        }
+    );
+
+
+$("cloudLayer")
+    .addEventListener(
+        "click",
+        () => {
+
+            setActive(
+                "cloudLayer"
+            );
+
+            status.textContent =
+                "☁ Clouds — следующий модуль";
+
+        }
+    );
+
+
+$("pressureLayer")
+    .addEventListener(
+        "click",
+        () => {
+
+            setActive(
+                "pressureLayer"
+            );
+
+            status.textContent =
+                "🌀 Pressure — следующий модуль";
+
+        }
+    );
+
+
+/*
+====================================================
+ ACTIVE BUTTON
+====================================================
+*/
+
+
+function setActive(
+    id
 ) {
 
 
+    document
+        .querySelectorAll(
+            ".layerButton"
+        )
+        .forEach(
+            button => {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    $(id)
+        .classList.add(
+            "active"
+        );
+
+}
+
+
+/*
+====================================================
+ ERROR
+====================================================
+*/
+
+
+function showError(
+    error
+) {
+
     console.error(
-        "SHOHIN V5 ERROR:",
         error
     );
 
 
-    status.textContent =
-        "❌ Ошибка запуска";
-
-
-    loading.textContent =
+    errorBox.textContent =
         "❌ " +
         error.message;
 
+
+    errorBox.classList.add(
+        "show"
+    );
+
 }
+
+
+/*
+====================================================
+ START APPLICATION
+====================================================
+*/
+
+
+start();
+
 
 </script>
 
